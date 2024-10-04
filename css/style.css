@@ -1,9 +1,9 @@
 body {
     font-family: Arial, sans-serif;
     background-image: url('https://cdn.pixabay.com/photo/2017/06/06/22/37/italian-cuisine-2378729_1280.jpg');
-    background-size:cover;
-    background-position:center;
-    background-repeat:no-repeat;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     background-attachment: fixed;
     margin: 0;
     padding: 0;
@@ -13,12 +13,12 @@ header {
     background-color: rgba(0, 0, 0, 0.7);
     padding: 20px;
     text-align: center;
-    color:aqua;
+    color: aqua;
 }
 
 h1 {
     margin: 0;
-    font-size: 2.5rem;
+    font-size: 3rem;
 }
 
 nav {
@@ -30,20 +30,22 @@ nav button {
     padding: 10px 20px;
     font-size: 1rem;
     cursor: pointer;
-    background-color: #fff;
+    background-color: #671010;
     border: none;
     border-radius: 5px;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    box-shadow: none;
 }
 
 nav button:hover {
     background-color: #f0f0f0;
+    box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2);
 }
 
 section {
     margin: 40px auto;
     padding: 20px;
-    background-color: rgba(255, 255, 255, 0.9);
+    background-color:transparent;
     width: 50%;
     border-radius: 10px;
 }
@@ -52,17 +54,50 @@ section {
     display: none;
 }
 
-#recipe-form input, #recipe-form textarea, #recipe-form select {
+/* Stylizacja wygenerowanego przycisku */
+.BUTTON_BVY {
+    background: #3D94F6;
+    background-image: -webkit-linear-gradient(top, #3D94F6, #1E62D0);
+    background-image: -moz-linear-gradient(top, #3D94F6, #1E62D0);
+    background-image: -ms-linear-gradient(top, #3D94F6, #1E62D0);
+    background-image: -o-linear-gradient(top, #3D94F6, #1E62D0);
+    background-image: linear-gradient(to bottom, #3D94F6, #1E62D0);
+    border-radius: 20px;
+    border: 2px solid #0059A0;
+    color: #FFFFFF;
+    font-family: Arial;
+    font-size: 1.1rem;
+    padding: 10px 20px;
+    margin: 10px;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.BUTTON_BVY:hover {
+    background: #1E62D0;
+    background-image: linear-gradient(to bottom, #1E62D0, #3D94F6);
+    border-radius: 25px;
+    border: 2px solid #337FED;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+#recipe-form input,
+#recipe-form textarea,
+#recipe-form select {
     width: 100%;
     padding: 10px;
     margin-bottom: 20px;
-    border: 1px solid #ccc;
+    border: 1px solid #b78b8bb3;
     border-radius: 5px;
+    background-color: #fdfdfd; /* Kolor tła */
+    color: #000000; /* Kolor tekstu */
 }
 
 #recipe-form button {
     padding: 10px 20px;
-    background-color: #4CAF50;
+    background-color: #05c90b;
     color: white;
     border: none;
     border-radius: 5px;
@@ -71,24 +106,52 @@ section {
 }
 
 #recipe-form button:hover {
-    background-color: #45a049;
+    background-color: #587259;
+}
+
+/* Ulepszenie stylu formularza */
+#add-recipe-section h2 {
+    color: #ffffff; /* Kolor tekstu (możesz zmienić) */
+    font-size: 1.9rem; /* Zmieniony rozmiar tekstu */
+    text-align: left; /* Wyrównanie do lewej (możesz dostosować) */
+    margin-bottom: 20px; /* Odstęp dolny */
+}
+
+#recipe-form label {
+    color: #ffffff; /* Kolor tekstu etykiet */
+    font-size: 1.rem; /* Rozmiar tekstu */
+    font-weight: bold; /* Pogrubienie tekstu */
+    display: block; /* Wyświetl jako blok, aby etykiety były nad polami */
+    margin-bottom: 10px; /* Odstęp dolny od pól formularza */
 }
 
 /* Stylizacja dla przycisków kategorii */
 #category-section button {
-    background-color: #007BFF;
-    color: white;
-    border: none;
+    background: #3D94F6;
+    background-image: -webkit-linear-gradient(top, #3D94F6, #1E62D0);
+    background-image: -moz-linear-gradient(top, #3D94F6, #1E62D0);
+    background-image: -ms-linear-gradient(top, #3D94F6, #1E62D0);
+    background-image: -o-linear-gradient(top, #3D94F6, #1E62D0);
+    background-image: linear-gradient(to bottom, #3D94F6, #1E62D0);
+    border-radius: 20px;
+    border: 2px solid #0059A0;
+    color: #FFFFFF;
+    font-family: Arial;
+    font-size: 1.1rem;
     padding: 10px 20px;
     margin: 10px;
-    border-radius: 5px;
+    text-decoration: none;
+    display: inline-block;
     cursor: pointer;
-    font-size: 1.1rem;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, box-shadow 0.3s;
 }
 
 #category-section button:hover {
-    background-color: #0056b3;
+    background: #1E62D0;
+    background-image: linear-gradient(to bottom, #1E62D0, #3D94F6);
+    border-radius: 25px;
+    border: 2px solid #337FED;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
 /* Sekcja kategorii */
@@ -97,15 +160,13 @@ section {
 }
 
 #category-section h2 {
-    margin-bottom: 20px;
-    font-size: 1.8rem;
-    color: #333;
+    margin-bottom: 20px; /* Odstęp dolny */
+    color: #a0fafe; /* Zmieniony kolor na pomarańczowy (możesz wybrać inny) */
+    font-size: 2rem; /* Zwiększono rozmiar tekstu */
+    text-align:center; /* Wyrównanie do lewej (możesz dostosować) */
 }
 
-/* Ulepszenie stylu formularza */
-#add-recipe-section {
-    width: 60%;
-}
+
 
 /* Możesz zmienić szerokość i margines, jeśli chcesz bardziej responsywny design */
 section {
@@ -121,7 +182,8 @@ section {
         width: 80%;
     }
 
-    #category-section button, #recipe-form button {
+    #category-section button,
+    #recipe-form button {
         width: 100%;
         margin: 10px 0;
     }
@@ -136,7 +198,23 @@ section {
         font-size: 0.9rem;
     }
 
-    #recipe-form input, #recipe-form textarea, #recipe-form select {
+    #recipe-form input,
+    #recipe-form textarea,
+    #recipe-form select {
         font-size: 0.9rem;
     }
+}
+
+/* Styl dla sekcji listy przepisów */
+#recipes-list {
+    color: #ffeeee; /* Możesz tutaj ustawić dowolny kolor */
+    font-size: 1rem; /* Dostosuj rozmiar czcionki, jeśli potrzebujesz */
+}
+
+#recipes-list li {
+    color: #faf4f3; /* Kolor tekstu dla każdego elementu listy */
+}
+
+#recipes-section h2 {
+    color: #3333ff; /* Kolor nagłówka */
 }
