@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CookBook</title>
+    <link rel="stylesheet" href="css/style.css"> <!-- Ścieżka do pliku CSS -->
+</head>
+<body>
+    <header>
+        <h1>CookBook</h1>
+        <nav>
+            <button id="view-recipes-btn">Przepisy</button>
+            <button id="add-recipe-btn">Dodaj Przepis</button>
+        </nav>
+    </header>
+
+    <!-- Sekcja z listą przepisów -->
+    <section id="recipes-section" class="hidden">
+        <h2>Lista Przepisów</h2>
+        <ul id="recipes-list">
+            <!-- Lista przepisów zostanie wygenerowana tutaj przez JavaScript -->
+        </ul>
+    </section>
+
+    <!-- Sekcja dodawania przepisu -->
+    <section id="add-recipe-section" class="hidden">
+        <h2>Dodaj Nowy Przepis</h2>
+        <form id="recipe-form">
+            <label for="name">Nazwa przepisu:</label>
+            <input type="text" id="name" name="name" required><br>
+
+            <label for="ingredients">Składniki:</label>
+            <textarea id="ingredients" name="ingredients" required></textarea><br>
+
+            <label for="steps">Kroki przygotowania:</label>
+            <textarea id="steps" name="steps" required></textarea><br>
+
+            <label for="category">Kategoria:</label>
+            <select id="category" name="category">
+                <option value="1">Breakfast</option>
+                <option value="2">Lunch</option>
+                <option value="3">Dinner</option>
+                <option value="4">Snack</option>
+            </select><br>
+
+            <button type="submit">Dodaj Przepis</button>
+        </form>
+    </section>
+
+    <!-- Link do pliku JavaScript -->
+    <script src="js/script.js"></script> <!-- Ścieżka do pliku JavaScript -->
+</body>
+</html>
