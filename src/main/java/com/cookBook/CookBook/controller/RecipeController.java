@@ -33,6 +33,14 @@ public class RecipeController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @GetMapping("/name/{recipeName}")
+    public ResponseEntity<Recipe> getRecipeByName(@PathVariable String recipeName) {
+        Optional<Recipe> recipe = recipeService.getRecipeByName(recipeName);
+        return recipe.map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+
     @PostMapping
     public Recipe addRecipe(@RequestBody Recipe recipe) {
         return recipeService.addRecipe(recipe);
