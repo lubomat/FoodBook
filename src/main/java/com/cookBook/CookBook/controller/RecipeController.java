@@ -21,6 +21,11 @@ public class RecipeController {
         return recipeService.getAllRecipes();
     }
 
+    @GetMapping("/category/{categoryId}")
+    public List<Recipe> getRecipesByCategory(@PathVariable Long categoryId) {
+        return recipeService.getRecipesByCategory(categoryId);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Recipe> getRecipeById(@PathVariable Long id) {
         Optional<Recipe> recipe = recipeService.getRecipeById(id);

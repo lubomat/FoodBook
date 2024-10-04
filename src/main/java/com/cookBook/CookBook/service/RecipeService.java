@@ -18,6 +18,10 @@ public class RecipeService {
         return recipeRepository.findAll();
     }
 
+    public List<Recipe> getRecipesByCategory(Long categoryId) {
+        return recipeRepository.findByCategoryId(categoryId);
+    }
+
     public Optional<Recipe> getRecipeById(Long id) {
         return recipeRepository.findById(id);
     }
