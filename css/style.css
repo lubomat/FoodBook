@@ -218,3 +218,35 @@ section {
 #recipes-section h2 {
     color: #3333ff; /* Kolor nagłówka */
 }
+
+
+.recipe-button {
+    background-color: #3D94F6;
+    color: white;
+    border: none;
+    padding: 10px;
+    margin: 10px 0;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 1.1rem;
+}
+
+.recipe-button:hover {
+    background-color: #1E62D0;
+}
+
+
+#back-to-categories-btn {
+    background-color: #f0ad4e;
+    color: white;
+    border: none;
+    padding: 10px;
+    margin-top: 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 1.1rem;
+}
+
+#back-to-categories-btn:hover {
+    background-color: #ec971f;
+}

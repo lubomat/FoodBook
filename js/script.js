@@ -7,6 +7,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const recipesList = document.getElementById("recipes-list");
     const categoryList = document.getElementById("category-list");
     const recipeForm = document.getElementById("recipe-form");
+    let previousView = null;
+
 
     // Pokaż listę kategorii po kliknięciu "Przepisy"
     viewRecipesBtn.addEventListener("click", function () {
@@ -23,15 +25,42 @@ document.addEventListener("DOMContentLoaded", function () {
                 console.log('Dane przepisów:', data);
                 recipesList.innerHTML = ""; // Wyczyść istniejącą listę
                 data.forEach(recipe => {
-                    const li = document.createElement("li");
-                    li.textContent = `${recipe.name}: ${recipe.ingredients}`;
-                    recipesList.appendChild(li);
+                    const button = document.createElement("button");
+                    button.textContent = recipe.name;
+                    button.classList.add("recipe-button");
+                    button.addEventListener("click", function () {
+                        fetchRecipeDetails(recipe.name);
+                    });
+                    recipesList.appendChild(button);
                 });
                 categorySection.classList.add("hidden");
                 recipesSection.classList.remove("hidden");
             })
             .catch(error => console.error("Błąd podczas pobierania przepisów:", error));
     }
+
+    function fetchRecipeDetails(recipeName) {
+        fetch(`http://localhost:8080/api/recipes/name/${recipeName}`)
+            .then(response => response.json())
+            .then(data => {
+                console.log('Szczegóły przepisu:', data);
+                recipesList.innerHTML = ""; // Wyczyść istniejącą listę
+                const nameElement = document.createElement("h3");
+                nameElement.textContent = data.name;
+                recipesList.appendChild(nameElement);
+    
+                const ingredientsElement = document.createElement("p");
+                ingredientsElement.innerHTML = `<strong>Składniki:</strong> ${data.ingredients}`;
+                recipesList.appendChild(ingredientsElement);
+    
+                const stepsElement = document.createElement("p");
+                stepsElement.innerHTML = `<strong>Kroki:</strong> ${data.steps}`;
+                recipesList.appendChild(stepsElement);
+            })
+            .catch(error => console.error("Błąd podczas pobierania szczegółów przepisu:", error));
+    }
+    
+    
 
     // Dodaj event listener dla każdej kategorii
     document.getElementById("breakfast-btn").addEventListener("click", function () {

@@ -8,13 +8,13 @@
 </head>
 <body>
     <header>
-        <h1>FoodBook</h1>
+        <h1 id="foodbook-header">FoodBook</h1> <!-- Dodaj id, aby przypisać do niego event listener -->
         <nav>
             <button id="view-recipes-btn" class="BUTTON_BVY">Przepisy</button>
             <button id="add-recipe-btn" class="BUTTON_BVY">Dodaj przepis</button>
-
         </nav>
     </header>
+    
 
     <!-- Sekcja z listą kategorii -->
     <section id="category-section" class="hidden">
@@ -27,10 +27,11 @@
 
     <!-- Sekcja z listą przepisów -->
     <section id="recipes-section" class="hidden">
-        <h2>Lista Przepisów</h2>
+        <h2></h2>
         <ul id="recipes-list">
             <!-- Lista przepisów wygenerowana przez JS -->
         </ul>
+        <button id="back-to-categories-btn" class="hidden">Powrót do kategorii</button>
     </section>
 
     <!-- Sekcja dodawania przepisu -->
