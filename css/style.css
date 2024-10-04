@@ -1,8 +1,10 @@
 body {
     font-family: Arial, sans-serif;
-    background-image: url('https://images.unsplash.com/photo-1512058564366-c9c1ed5f33e6');
-    background-size: cover;
-    background-position: center;
+    background-image: url('https://cdn.pixabay.com/photo/2017/06/06/22/37/italian-cuisine-2378729_1280.jpg');
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+    background-attachment: fixed;
     margin: 0;
     padding: 0;
 }
@@ -11,7 +13,7 @@ header {
     background-color: rgba(0, 0, 0, 0.7);
     padding: 20px;
     text-align: center;
-    color: white;
+    color:aqua;
 }
 
 h1 {
@@ -70,4 +72,71 @@ section {
 
 #recipe-form button:hover {
     background-color: #45a049;
+}
+
+/* Stylizacja dla przycisków kategorii */
+#category-section button {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: background-color 0.3s;
+}
+
+#category-section button:hover {
+    background-color: #0056b3;
+}
+
+/* Sekcja kategorii */
+#category-section {
+    text-align: center;
+}
+
+#category-section h2 {
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+    color: #333;
+}
+
+/* Ulepszenie stylu formularza */
+#add-recipe-section {
+    width: 60%;
+}
+
+/* Możesz zmienić szerokość i margines, jeśli chcesz bardziej responsywny design */
+section {
+    margin: 20px auto;
+    padding: 30px;
+    width: 60%;
+    max-width: 800px;
+}
+
+/* Responsywność dla mniejszych ekranów */
+@media (max-width: 768px) {
+    section {
+        width: 80%;
+    }
+
+    #category-section button, #recipe-form button {
+        width: 100%;
+        margin: 10px 0;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 2rem;
+    }
+
+    #category-section button {
+        font-size: 0.9rem;
+    }
+
+    #recipe-form input, #recipe-form textarea, #recipe-form select {
+        font-size: 0.9rem;
+    }
 }

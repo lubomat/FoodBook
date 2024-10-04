@@ -4,22 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CookBook</title>
-    <link rel="stylesheet" href="css/style.css"> <!-- Ścieżka do pliku CSS -->
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <header>
-        <h1>CookBook</h1>
+        <h1>FoodBook</h1>
         <nav>
             <button id="view-recipes-btn">Przepisy</button>
             <button id="add-recipe-btn">Dodaj Przepis</button>
         </nav>
     </header>
 
+    <!-- Sekcja z listą kategorii -->
+    <section id="category-section" class="hidden">
+        <h2>Wybierz Kategorię</h2>
+        <button id="breakfast-btn">Śniadanie</button>
+        <button id="lunch-btn">Obiad</button>
+        <button id="dinner-btn">Kolacja</button>
+        <button id="snack-btn">Przekąska</button>
+    </section>
+
     <!-- Sekcja z listą przepisów -->
     <section id="recipes-section" class="hidden">
         <h2>Lista Przepisów</h2>
         <ul id="recipes-list">
-            <!-- Lista przepisów zostanie wygenerowana tutaj przez JavaScript -->
+            <!-- Lista przepisów wygenerowana przez JS -->
         </ul>
     </section>
 
@@ -49,6 +58,6 @@
     </section>
 
     <!-- Link do pliku JavaScript -->
-    <script src="js/script.js"></script> <!-- Ścieżka do pliku JavaScript -->
+    <script src="js/script.js"></script>
 </body>
 </html>
