@@ -20,7 +20,6 @@ public class RecipeStep {
     @Column(name = "description", columnDefinition = "TEXT", nullable = false)
     private String description;
 
-    // Gettery i settery
     public Long getId() {
         return id;
     }

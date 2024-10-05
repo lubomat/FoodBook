@@ -26,11 +26,9 @@ public class Recipe {
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
-    // Dodajemy powiązanie z krokami
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RecipeStep> steps;
 
-    // Gettery i settery
     public Long getId() {
         return id;
     }

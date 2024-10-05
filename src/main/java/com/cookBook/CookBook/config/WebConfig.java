@@ -10,7 +10,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/api/**")
-                .allowedOrigins("http://127.0.0.1:5500")  // Tutaj podajesz adres frontendu
+                .allowedOrigins("http://127.0.0.1:5500")
                 .allowedMethods("GET", "POST", "PUT", "DELETE")
                 .allowedHeaders("*")
                 .allowCredentials(true);
@@ -18,9 +18,8 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // Udostępnianie plików z katalogu "uploads/" pod adresem URL "/uploads/**"
         registry.addResourceHandler("/uploads/**")
-                .addResourceLocations("file:uploads/"); // Lokalizacja folderu z plikami
+                .addResourceLocations("file:uploads/");
     }
 }
 

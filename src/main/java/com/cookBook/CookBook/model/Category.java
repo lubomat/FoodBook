@@ -19,7 +19,6 @@ public class Category {
     @JsonManagedReference
     private List<Recipe> recipes;
 
-    // Gettery i settery
     public Long getId() {
         return id;
     }

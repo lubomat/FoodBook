@@ -58,10 +58,8 @@ public class RecipeService {
                     recipe.setIngredients(updatedRecipe.getIngredients());
                     recipe.setCategory(updatedRecipe.getCategory());
 
-                    // Usuwamy stare kroki
                     recipeStepRepository.deleteAll(recipe.getSteps());
 
-                    // Dodajemy zaktualizowane kroki
                     for (RecipeStep step : updatedSteps) {
                         step.setRecipe(recipe);
                         recipeStepRepository.save(step);
