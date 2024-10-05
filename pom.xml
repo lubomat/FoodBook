@@ -45,14 +45,14 @@
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<scope>runtime</scope>
+			<version>42.7.3</version>
 		</dependency>
 
 		<!-- Flyway do zarządzania migracjami -->
 		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-core</artifactId>
-			<version>10.15.0</version>
+			<version>10.19.0</version>
 		</dependency>
 
 		<!-- Zależności do testów -->

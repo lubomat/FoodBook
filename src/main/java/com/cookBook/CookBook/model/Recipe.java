@@ -2,6 +2,7 @@ package com.cookBook.CookBook.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "recipe", schema = "recipes")
@@ -17,15 +18,19 @@ public class Recipe {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String ingredients;
 
-    @Column(columnDefinition = "TEXT", nullable = false)
-    private String steps;
-
+    @Column(name = "image_url")
+    private String imageUrl;
 
     @ManyToOne
     @JsonBackReference
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
+    // Dodajemy powiązanie z krokami
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RecipeStep> steps;
+
+    // Gettery i settery
     public Long getId() {
         return id;
     }
@@ -50,12 +55,12 @@ public class Recipe {
         this.ingredients = ingredients;
     }
 
-    public String getSteps() {
-        return steps;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setSteps(String steps) {
-        this.steps = steps;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public Category getCategory() {
@@ -64,5 +69,13 @@ public class Recipe {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public List<RecipeStep> getSteps() {
+        return steps;
+    }
+
+    public void setSteps(List<RecipeStep> steps) {
+        this.steps = steps;
     }
 }
