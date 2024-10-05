@@ -1,6 +1,7 @@
 package com.cookBook.CookBook.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.util.List;
 
@@ -27,6 +28,7 @@ public class Recipe {
     private Category category;
 
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<RecipeStep> steps;
 
     public Long getId() {

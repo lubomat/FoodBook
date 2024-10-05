@@ -1,5 +1,6 @@
 package com.cookBook.CookBook.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -11,6 +12,7 @@ public class RecipeStep {
     private Long id;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "recipe_id", nullable = false)
     private Recipe recipe;
 
