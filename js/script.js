@@ -1,118 +1,178 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const viewRecipesBtn = document.getElementById("view-recipes-btn");
-    const addRecipeBtn = document.getElementById("add-recipe-btn");
-    const recipesSection = document.getElementById("recipes-section");
-    const addRecipeSection = document.getElementById("add-recipe-section");
-    const categorySection = document.getElementById("category-section");
-    const recipesList = document.getElementById("recipes-list");
-    const categoryList = document.getElementById("category-list");
-    const recipeForm = document.getElementById("recipe-form");
-    let previousView = null;
+document.addEventListener('DOMContentLoaded', function () {
+	const viewRecipesBtn = document.getElementById('view-recipes-btn');
+	const addRecipeBtn = document.getElementById('add-recipe-btn');
+	const recipesSection = document.getElementById('recipes-section');
+	const addRecipeSection = document.getElementById('add-recipe-section');
+	const categorySection = document.getElementById('category-section');
+	const recipesList = document.getElementById('recipes-list');
+	const recipeForm = document.getElementById('recipe-form');
+	const backToCategoriesBtn = document.getElementById('back-to-categories-btn');
+	const addStepBtn = document.getElementById('add-step-btn');
+	const stepsContainer = document.getElementById('steps-container');
 
+	let currentPage = 1;
+	const recipesPerPage = 10;
 
-    // Pokaż listę kategorii po kliknięciu "Przepisy"
-    viewRecipesBtn.addEventListener("click", function () {
-        categorySection.classList.remove("hidden");
-        recipesSection.classList.add("hidden");
-        addRecipeSection.classList.add("hidden");
-    });
+	viewRecipesBtn.addEventListener('click', function () {
+		categorySection.classList.remove('hidden');
+		recipesSection.classList.add('hidden');
+		addRecipeSection.classList.add('hidden');
+	});
 
-    // Funkcja do wyświetlania listy przepisów dla danej kategorii
-    function fetchRecipesByCategory(categoryId) {
-        fetch(`http://localhost:8080/api/recipes/category/${categoryId}`)
-            .then(response => response.json())
-            .then(data => {
-                console.log('Dane przepisów:', data);
-                recipesList.innerHTML = ""; // Wyczyść istniejącą listę
-                data.forEach(recipe => {
-                    const button = document.createElement("button");
-                    button.textContent = recipe.name;
-                    button.classList.add("recipe-button");
-                    button.addEventListener("click", function () {
+	addRecipeBtn.addEventListener('click', function () {
+		addRecipeSection.classList.remove('hidden');
+		recipesSection.classList.add('hidden');
+		categorySection.classList.add('hidden');
+	});
+
+	addStepBtn.addEventListener('click', function () {
+		const stepCount = stepsContainer.children.length + 1;
+		const newStepInput = document.createElement('textarea');
+		newStepInput.name = 'steps';
+		newStepInput.placeholder = `Krok ${stepCount}`;
+		newStepInput.required = true;
+		stepsContainer.appendChild(newStepInput);
+	});
+
+	function fetchRecipesByCategory(categoryId, page = 1) {
+		fetch(`http://localhost:8080/api/recipes/category/${categoryId}`)
+			.then((response) => response.json())
+			.then((data) => {
+				console.log('Dane przepisów:', data);
+				recipesList.innerHTML = '';
+
+				const totalRecipes = data.length;
+				const totalPages = Math.ceil(totalRecipes / recipesPerPage);
+				const paginatedRecipes = data.slice(
+					(page - 1) * recipesPerPage,
+					page * recipesPerPage
+				);
+
+				paginatedRecipes.forEach((recipe) => {
+                    const recipeDiv = document.createElement('div');
+                    recipeDiv.classList.add('recipe-tile');
+
+                    
+                    const fullImageUrl = `http://localhost:8080${recipe.imageUrl}`;
+                    const recipeImage = document.createElement('img');
+                    recipeImage.src = fullImageUrl; // Używamy pełnej ścieżki do obrazu
+                    recipeImage.alt = recipe.name;
+                    recipeImage.style.width = '100%';
+                    recipeImage.style.height = '100%';
+                    recipeDiv.appendChild(recipeImage);
+
+                    const recipeTitle = document.createElement('h3');
+                    recipeTitle.textContent = recipe.name;
+                    recipeTitle.classList.add('recipe-title');
+                    recipeDiv.appendChild(recipeTitle);
+
+                    recipeDiv.addEventListener('click', function () {
                         fetchRecipeDetails(recipe.name);
                     });
-                    recipesList.appendChild(button);
+
+                    recipesList.appendChild(recipeDiv);
                 });
-                categorySection.classList.add("hidden");
-                recipesSection.classList.remove("hidden");
-            })
-            .catch(error => console.error("Błąd podczas pobierania przepisów:", error));
-    }
 
-    function fetchRecipeDetails(recipeName) {
-        fetch(`http://localhost:8080/api/recipes/name/${recipeName}`)
-            .then(response => response.json())
-            .then(data => {
-                console.log('Szczegóły przepisu:', data);
-                recipesList.innerHTML = ""; // Wyczyść istniejącą listę
-                const nameElement = document.createElement("h3");
-                nameElement.textContent = data.name;
-                recipesList.appendChild(nameElement);
-    
-                const ingredientsElement = document.createElement("p");
-                ingredientsElement.innerHTML = `<strong>Składniki:</strong> ${data.ingredients}`;
-                recipesList.appendChild(ingredientsElement);
-    
-                const stepsElement = document.createElement("p");
-                stepsElement.innerHTML = `<strong>Kroki:</strong> ${data.steps}`;
-                recipesList.appendChild(stepsElement);
-            })
-            .catch(error => console.error("Błąd podczas pobierania szczegółów przepisu:", error));
-    }
-    
-    
+				if (totalPages > 1) {
+					createPagination(totalPages, categoryId);
+				}
 
-    // Dodaj event listener dla każdej kategorii
-    document.getElementById("breakfast-btn").addEventListener("click", function () {
-        fetchRecipesByCategory(1); // Id kategorii "Breakfast"
-    });
+				categorySection.classList.add('hidden');
+				recipesSection.classList.remove('hidden');
+			})
+			.catch((error) =>
+				console.error('Błąd podczas pobierania przepisów:', error)
+			);
+	}
 
-    document.getElementById("lunch-btn").addEventListener("click", function () {
-        fetchRecipesByCategory(2); // Id kategorii "Lunch"
-    });
+	function createPagination(totalPages, categoryId) {
+		const paginationDiv = document.createElement('div');
+		paginationDiv.classList.add('pagination');
 
-    document.getElementById("dinner-btn").addEventListener("click", function () {
-        fetchRecipesByCategory(3); // Id kategorii "Dinner"
-    });
+		for (let i = 1; i <= totalPages; i++) {
+			const pageButton = document.createElement('button');
+			pageButton.textContent = i;
+			pageButton.addEventListener('click', function () {
+				currentPage = i;
+				fetchRecipesByCategory(categoryId, i);
+			});
+			paginationDiv.appendChild(pageButton);
+		}
 
-    document.getElementById("snack-btn").addEventListener("click", function () {
-        fetchRecipesByCategory(4); // Id kategorii "Snack"
-    });
+		recipesList.appendChild(paginationDiv);
+	}
 
-    // Pokaż formularz po kliknięciu "Dodaj Przepis"
-    addRecipeBtn.addEventListener("click", function () {
-        addRecipeSection.classList.remove("hidden");
-        recipesSection.classList.add("hidden");
-        categorySection.classList.add("hidden");
-    });
+	function fetchRecipeDetails(recipeName) {
+		fetch(`http://localhost:8080/api/recipes/name/${recipeName}`)
+			.then((response) => response.json())
+			.then((data) => {
+				console.log('Szczegóły przepisu:', data);
+				recipesList.innerHTML = '';
 
-    // Obsługa formularza dodawania przepisu
-    recipeForm.addEventListener("submit", function (e) {
-        e.preventDefault();
+				const nameElement = document.createElement('h3');
+				nameElement.textContent = data.name;
+				recipesList.appendChild(nameElement);
 
-        const recipe = {
-            name: recipeForm.name.value,
-            ingredients: recipeForm.ingredients.value,
-            steps: recipeForm.steps.value,
-            category: { id: recipeForm.category.value }
-        };
+				const ingredientsElement = document.createElement('p');
+				ingredientsElement.innerHTML = `<strong>Składniki:</strong> ${data.ingredients}`;
+				recipesList.appendChild(ingredientsElement);
 
-        console.log('Wysyłanie przepisu:', recipe);
+				const stepsElement = document.createElement('p');
+				stepsElement.innerHTML = `<strong>Kroki:</strong> ${data.steps
+					.map((step) => step.description)
+					.join('<br>')}`;
+				recipesList.appendChild(stepsElement);
 
-        // Wysyłanie przepisu do backendu
-        fetch('http://localhost:8080/api/recipes', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(recipe)
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log('Odpowiedź serwera:', data);
-            alert("Przepis został dodany!");
-            recipeForm.reset(); // Wyczyść formularz
-        })
-        .catch(error => console.error("Błąd podczas dodawania przepisu:", error));
-    });
+				backToCategoriesBtn.classList.remove('hidden');
+			})
+			.catch((error) =>
+				console.error('Błąd podczas pobierania szczegółów przepisu:', error)
+			);
+	}
+
+	backToCategoriesBtn.addEventListener('click', function () {
+		categorySection.classList.remove('hidden');
+		recipesSection.classList.add('hidden');
+		backToCategoriesBtn.classList.add('hidden');
+	});
+
+	document
+		.getElementById('breakfast-btn')
+		.addEventListener('click', function () {
+			fetchRecipesByCategory(1);
+		});
+
+	document.getElementById('lunch-btn').addEventListener('click', function () {
+		fetchRecipesByCategory(2);
+	});
+
+	document.getElementById('dinner-btn').addEventListener('click', function () {
+		fetchRecipesByCategory(3);
+	});
+
+	document.getElementById('snack-btn').addEventListener('click', function () {
+		fetchRecipesByCategory(4);
+	});
+
+	recipeForm.addEventListener('submit', function (e) {
+		e.preventDefault();
+
+		const formData = new FormData(recipeForm);
+
+		console.log('Wysyłanie przepisu:', formData);
+
+		fetch('http://localhost:8080/api/recipes', {
+			method: 'POST',
+			body: formData,
+		})
+			.then((response) => response.json())
+			.then((data) => {
+				console.log('Odpowiedź serwera:', data);
+				alert('Przepis został dodany!');
+				recipeForm.reset();
+			})
+			.catch((error) =>
+				console.error('Błąd podczas dodawania przepisu:', error)
+			);
+	});
 });
