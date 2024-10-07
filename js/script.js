@@ -7,22 +7,29 @@ document.addEventListener('DOMContentLoaded', function () {
 	const recipesList = document.getElementById('recipes-list');
 	const recipeForm = document.getElementById('recipe-form');
 	const backToCategoriesBtn = document.getElementById('back-to-categories-btn');
+	const backToRecipesBtn = document.createElement('button'); 
+	backToRecipesBtn.textContent = 'Powrót do listy przepisów'; 
+	backToRecipesBtn.classList.add('hidden'); 
+	document.body.appendChild(backToRecipesBtn); 
 	const addStepBtn = document.getElementById('add-step-btn');
 	const stepsContainer = document.getElementById('steps-container');
 
 	let currentPage = 1;
 	const recipesPerPage = 10;
+	let currentCategory = null;
 
 	viewRecipesBtn.addEventListener('click', function () {
 		categorySection.classList.remove('hidden');
 		recipesSection.classList.add('hidden');
 		addRecipeSection.classList.add('hidden');
+		backToRecipesBtn.classList.add('hidden');
 	});
 
 	addRecipeBtn.addEventListener('click', function () {
 		addRecipeSection.classList.remove('hidden');
 		recipesSection.classList.add('hidden');
 		categorySection.classList.add('hidden');
+		backToRecipesBtn.classList.add('hidden');
 	});
 
 	addStepBtn.addEventListener('click', function () {
@@ -35,6 +42,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	});
 
 	function fetchRecipesByCategory(categoryId, page = 1) {
+		currentCategory = categoryId;
 		fetch(`http://localhost:8080/api/recipes/category/${categoryId}`)
 			.then((response) => response.json())
 			.then((data) => {
@@ -55,10 +63,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     
                     const fullImageUrl = `http://localhost:8080${recipe.imageUrl}`;
                     const recipeImage = document.createElement('img');
-                    recipeImage.src = fullImageUrl; // Używamy pełnej ścieżki do obrazu
+                    recipeImage.src = fullImageUrl; 
                     recipeImage.alt = recipe.name;
                     recipeImage.style.width = '100%';
                     recipeImage.style.height = '100%';
+					recipeImage.style.objectFit = 'cover';
                     recipeDiv.appendChild(recipeImage);
 
                     const recipeTitle = document.createElement('h3');
@@ -79,6 +88,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
 				categorySection.classList.add('hidden');
 				recipesSection.classList.remove('hidden');
+				backToCategoriesBtn.classList.remove('hidden');
+				backToRecipesBtn.classList.add('hidden'); 
 			})
 			.catch((error) =>
 				console.error('Błąd podczas pobierania przepisów:', error)
@@ -103,6 +114,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	}
 
 	function fetchRecipeDetails(recipeName) {
+		viewingRecipeDetails = true;
 		fetch(`http://localhost:8080/api/recipes/name/${recipeName}`)
 			.then((response) => response.json())
 			.then((data) => {
@@ -123,7 +135,8 @@ document.addEventListener('DOMContentLoaded', function () {
 					.join('<br>')}`;
 				recipesList.appendChild(stepsElement);
 
-				backToCategoriesBtn.classList.remove('hidden');
+				backToRecipesBtn.classList.remove('hidden'); 
+				backToCategoriesBtn.classList.add('hidden');
 			})
 			.catch((error) =>
 				console.error('Błąd podczas pobierania szczegółów przepisu:', error)
@@ -133,7 +146,14 @@ document.addEventListener('DOMContentLoaded', function () {
 	backToCategoriesBtn.addEventListener('click', function () {
 		categorySection.classList.remove('hidden');
 		recipesSection.classList.add('hidden');
-		backToCategoriesBtn.classList.add('hidden');
+		backToCategoriesBtn.classList.add('hidden'); 
+	});
+
+	backToRecipesBtn.addEventListener('click', function () {
+		backToRecipesBtn.setAttribute('id', 'back-to-recipes');
+		fetchRecipesByCategory(currentCategory, currentPage); 
+		backToRecipesBtn.classList.add('hidden'); 
+		backToCategoriesBtn.classList.remove('hidden'); 
 	});
 
 	document

@@ -97,7 +97,7 @@ section {
 
 #recipe-form button {
     padding: 10px 20px;
-    background-color: #05c90b;
+    background-color: #f0ad4e;
     color: white;
     border: none;
     border-radius: 5px;
@@ -311,6 +311,25 @@ section {
 
 .hidden {
     display: none;
+}
+
+button.hidden {
+    display: none; /* Ukrywamy przycisk, gdy ma klasę 'hidden' */
+}
+
+button#back-to-recipes {
+    background-color: #f0ad4e;
+    color: white;
+    border: none;
+    padding: 10px;
+    margin-top: 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 1.1rem;
+}
+
+button#back-to-recipes:hover {
+    background-color: #ec971f;
 }
 
 
