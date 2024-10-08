@@ -1,6 +1,6 @@
 body {
     font-family: Arial, sans-serif;
-    background-image: url('https://cdn.pixabay.com/photo/2017/06/06/22/37/italian-cuisine-2378729_1280.jpg');
+    background-image: url('../images/wallpaper.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -10,8 +10,8 @@ body {
 }
 
 header {
-    background-color: rgba(0, 0, 0, 0.7);
-    padding: 20px;
+    background-color:transparent;
+    padding: 10px;
     text-align: center;
     color: aqua;
 }
@@ -54,7 +54,22 @@ section {
     display: none;
 }
 
-/* Stylizacja wygenerowanego przycisku */
+#foodbook-header {
+    font-family: 'Arial', sans-serif;  /* Zmień rodzinę czcionek */
+    font-size: 48px;                   /* Zmień rozmiar czcionki */
+    text-align: center;                /* Wyśrodkuj tekst */
+    font-weight: bold;                 /* Ustaw pogrubienie */
+    margin: 20px 0;                    /* Dodaj marginesy nad i pod */
+}
+
+#foodbook-header .food {
+    color: rgb(51, 125, 125);                      /* Ustaw kolor "Food" na biały */
+}
+
+#foodbook-header .book {
+    color: orange;                     /* Ustaw kolor "Book" na pomarańczowy */
+}
+
 .BUTTON_BVY {
     background: #3D94F6;
     background-image: -webkit-linear-gradient(top, #3D94F6, #1E62D0);
@@ -88,11 +103,13 @@ section {
 #recipe-form select {
     width: 100%;
     padding: 10px;
-    margin-bottom: 20px;
-    border: 1px solid #b78b8bb3;
+    margin: 0 auto 20px auto;
+    margin-left: 9px;
+    border: 2px solid #b78b8bb3;
     border-radius: 5px;
-    background-color: #fdfdfd; /* Kolor tła */
-    color: #000000; /* Kolor tekstu */
+    background-color: #fdfdfd; 
+    color: #000000; 
+    box-sizing: border-box;
 }
 
 #recipe-form button {
@@ -103,29 +120,29 @@ section {
     border-radius: 5px;
     cursor: pointer;
     font-size: 1rem;
+    margin-left: 9px;
 }
 
 #recipe-form button:hover {
     background-color: #587259;
 }
 
-/* Ulepszenie stylu formularza */
 #add-recipe-section h2 {
-    color: #ffffff; /* Kolor tekstu (możesz zmienić) */
-    font-size: 1.9rem; /* Zmieniony rozmiar tekstu */
-    text-align: left; /* Wyrównanie do lewej (możesz dostosować) */
-    margin-bottom: 20px; /* Odstęp dolny */
+    color: #ffffff; 
+    font-size: 1.9rem; 
+    text-align: center; 
+    margin-bottom: 20px; 
 }
 
 #recipe-form label {
-    color: #ffffff; /* Kolor tekstu etykiet */
-    font-size: 1.rem; /* Rozmiar tekstu */
-    font-weight: bold; /* Pogrubienie tekstu */
-    display: block; /* Wyświetl jako blok, aby etykiety były nad polami */
-    margin-bottom: 10px; /* Odstęp dolny od pól formularza */
+    color: #ffffff; 
+    font-size: 1.rem; 
+    font-weight: bold; 
+    display: block; 
+    margin-bottom: 10px; 
+    margin-left: 20px;
 }
 
-/* Stylizacja dla przycisków kategorii */
 #category-section button {
     background: #3D94F6;
     background-image: -webkit-linear-gradient(top, #3D94F6, #1E62D0);
@@ -160,15 +177,14 @@ section {
 }
 
 #category-section h2 {
-    margin-bottom: 20px; /* Odstęp dolny */
-    color: #a0fafe; /* Zmieniony kolor na pomarańczowy (możesz wybrać inny) */
-    font-size: 2rem; /* Zwiększono rozmiar tekstu */
-    text-align:center; /* Wyrównanie do lewej (możesz dostosować) */
+    margin-bottom: 20px; 
+    color: #a0fafe; 
+    text-align:center; 
 }
 
 
 
-/* Możesz zmienić szerokość i margines, jeśli chcesz bardziej responsywny design */
+
 section {
     margin: 20px auto;
     padding: 30px;
@@ -176,7 +192,7 @@ section {
     max-width: 800px;
 }
 
-/* Responsywność dla mniejszych ekranów */
+
 @media (max-width: 768px) {
     section {
         width: 80%;
@@ -205,18 +221,18 @@ section {
     }
 }
 
-/* Styl dla sekcji listy przepisów */
+
 #recipes-list {
-    color: #ffeeee; /* Możesz tutaj ustawić dowolny kolor */
-    font-size: 1rem; /* Dostosuj rozmiar czcionki, jeśli potrzebujesz */
+    color: #ffffff; 
+    font-size: 1.3rem; 
 }
 
 #recipes-list li {
-    color: #faf4f3; /* Kolor tekstu dla każdego elementu listy */
+    color: #faf4f3; 
 }
 
 #recipes-section h2 {
-    color: #3333ff; /* Kolor nagłówka */
+    color: #3333ff; 
 }
 
 
@@ -252,7 +268,7 @@ section {
 }
 
 
-/* Stylizacja przycisku z obrazkiem jako tło */
+
 .recipe-button {
     width: 150px;
     height: 150px;
@@ -267,7 +283,7 @@ section {
     margin: 10px;
 }
 
-/* Ustawienia wyglądu kafelków z przepisami */
+
 .recipe-tile {
     width: 200px;
     height: 200px;
@@ -314,10 +330,10 @@ section {
 }
 
 button.hidden {
-    display: none; /* Ukrywamy przycisk, gdy ma klasę 'hidden' */
+    display: none; 
 }
 
-button#back-to-recipes {
+button#back-to-recipes-btn {
     background-color: #f0ad4e;
     color: white;
     border: none;
@@ -328,8 +344,20 @@ button#back-to-recipes {
     font-size: 1.1rem;
 }
 
-button#back-to-recipes:hover {
+button#back-to-recipes-btn:hover {
     background-color: #ec971f;
+}
+
+
+
+ol {
+    margin-left: 20px; 
+    padding-left: 10px;
+}
+
+ol li {
+    margin-bottom: 5px;
+    line-height: 1.5; 
 }
 
 

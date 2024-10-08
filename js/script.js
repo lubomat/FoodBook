@@ -7,10 +7,10 @@ document.addEventListener('DOMContentLoaded', function () {
 	const recipesList = document.getElementById('recipes-list');
 	const recipeForm = document.getElementById('recipe-form');
 	const backToCategoriesBtn = document.getElementById('back-to-categories-btn');
-	const backToRecipesBtn = document.createElement('button'); 
-	backToRecipesBtn.textContent = 'Powrót do listy przepisów'; 
-	backToRecipesBtn.classList.add('hidden'); 
-	document.body.appendChild(backToRecipesBtn); 
+	const backToRecipesBtn = document.getElementById('back-to-recipes-btn');
+	
+
+
 	const addStepBtn = document.getElementById('add-step-btn');
 	const stepsContainer = document.getElementById('steps-container');
 
@@ -114,33 +114,44 @@ document.addEventListener('DOMContentLoaded', function () {
 	}
 
 	function fetchRecipeDetails(recipeName) {
-		viewingRecipeDetails = true;
 		fetch(`http://localhost:8080/api/recipes/name/${recipeName}`)
 			.then((response) => response.json())
 			.then((data) => {
 				console.log('Szczegóły przepisu:', data);
 				recipesList.innerHTML = '';
-
+	
 				const nameElement = document.createElement('h3');
 				nameElement.textContent = data.name;
 				recipesList.appendChild(nameElement);
-
+	
 				const ingredientsElement = document.createElement('p');
 				ingredientsElement.innerHTML = `<strong>Składniki:</strong> ${data.ingredients}`;
 				recipesList.appendChild(ingredientsElement);
-
-				const stepsElement = document.createElement('p');
-				stepsElement.innerHTML = `<strong>Kroki:</strong> ${data.steps
-					.map((step) => step.description)
-					.join('<br>')}`;
+	
+				const stepsElement = document.createElement('div');
+				const stepsHeader = document.createElement('p');
+				stepsHeader.innerHTML = `<strong>Kroki:</strong>`;
+				stepsElement.appendChild(stepsHeader);
+	
+				const stepsList = document.createElement('ol'); 
+	
+				data.steps.forEach((step, index) => {
+					const stepItem = document.createElement('li');
+					stepItem.textContent = step.description;
+					stepsList.appendChild(stepItem);
+				});
+	
+				stepsElement.appendChild(stepsList);
 				recipesList.appendChild(stepsElement);
-
-				backToRecipesBtn.classList.remove('hidden'); 
+	
+				backToRecipesBtn.classList.remove('hidden');
 				backToCategoriesBtn.classList.add('hidden');
 			})
 			.catch((error) =>
 				console.error('Błąd podczas pobierania szczegółów przepisu:', error)
 			);
+	
+	
 	}
 
 	backToCategoriesBtn.addEventListener('click', function () {
@@ -150,7 +161,6 @@ document.addEventListener('DOMContentLoaded', function () {
 	});
 
 	backToRecipesBtn.addEventListener('click', function () {
-		backToRecipesBtn.setAttribute('id', 'back-to-recipes');
 		fetchRecipesByCategory(currentCategory, currentPage); 
 		backToRecipesBtn.classList.add('hidden'); 
 		backToCategoriesBtn.classList.remove('hidden'); 
