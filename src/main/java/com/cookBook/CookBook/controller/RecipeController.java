@@ -6,6 +6,7 @@ import com.cookBook.CookBook.service.RecipeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
@@ -23,6 +24,7 @@ public class RecipeController {
     @Autowired
     private RecipeService recipeService;
 
+    // Publiczne, nie wymaga autoryzacji
     @GetMapping
     public List<Recipe> getAllRecipes() {
         return recipeService.getAllRecipes();
@@ -47,6 +49,8 @@ public class RecipeController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    // Chronione, wymaga JWT tokenu (autoryzacja)
+    @Secured("ROLE_USER")  // Tylko zalogowani użytkownicy mogą dodawać przepisy
     @PostMapping
     public Recipe addRecipe(@RequestParam("name") String name,
                             @RequestParam("ingredients") String ingredients,
@@ -86,7 +90,7 @@ public class RecipeController {
         return recipeService.addRecipe(recipe, recipeSteps);
     }
 
-
+    // Prywatna metoda tworząca kroki przepisu
     private List<RecipeStep> createRecipeSteps(List<String> steps) {
         List<RecipeStep> recipeSteps = new ArrayList<>();
         for (int i = 0; i < steps.size(); i++) {
@@ -98,16 +102,18 @@ public class RecipeController {
         return recipeSteps;
     }
 
-
+    // Zabezpieczone, tylko zalogowani użytkownicy mogą edytować przepis
+    @Secured("ROLE_USER")
     @PutMapping("/{id}")
     public ResponseEntity<Recipe> updateRecipe(@PathVariable Long id,
                                                @RequestBody Recipe updatedRecipe,
                                                @RequestParam List<String> steps) {
         List<RecipeStep> recipeSteps = createRecipeSteps(steps);
-
         return ResponseEntity.ok(recipeService.updateRecipe(id, updatedRecipe, recipeSteps));
     }
 
+    // Zabezpieczone, tylko zalogowani użytkownicy mogą usuwać przepis
+    @Secured("ROLE_USER")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteRecipe(@PathVariable Long id) {
         recipeService.deleteRecipe(id);
