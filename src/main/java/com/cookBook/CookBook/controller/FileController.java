@@ -21,15 +21,12 @@ public class FileController {
     @GetMapping("/uploads/{filename:.+}")
     public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
         try {
-            // Ścieżka do folderu na dysku
             Path file = Paths.get("D:/obrazyfoodbook").resolve(filename);
             Resource resource = new UrlResource(file.toUri());
 
             if (resource.exists() || resource.isReadable()) {
-                // Ustalamy typ pliku na podstawie jego rozszerzenia
                 String contentType = Files.probeContentType(file);
 
-                // Zwracamy plik wraz z odpowiednimi nagłówkami, w tym typem MIME
                 return ResponseEntity.ok()
                         .contentType(MediaType.parseMediaType(contentType))
                         .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
