@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const registerBtn = document.getElementById('register-btn');
     const loginBtn = document.getElementById('login-btn');
 	
-    
     const recipesSection = document.getElementById('recipes-section');
     const addRecipeSection = document.getElementById('add-recipe-section');
     const categorySection = document.getElementById('category-section');
@@ -25,22 +24,28 @@ document.addEventListener('DOMContentLoaded', function () {
     const recipesPerPage = 10;
     let currentCategory = null;
 
+
+    function hideAllSections() {
+        // Ukrywa wszystkie sekcje
+        loginSection.classList.add('hidden');
+        registerSection.classList.add('hidden');
+        addRecipeSection.classList.add('hidden');
+        recipesSection.classList.add('hidden');
+        categorySection.classList.add('hidden');
+    }
+
     // Obsługa przycisku "Rejestracja"
     registerBtn.addEventListener('click', function () {
 		console.log("Przycisk 'Rejestracja' został kliknięty");
+        hideAllSections(); 
         registerSection.classList.remove('hidden');
-        loginSection.classList.add('hidden');
-        addRecipeSection.classList.add('hidden');
-        recipesSection.classList.add('hidden');
     });
 
     // Obsługa przycisku "Logowanie"
     loginBtn.addEventListener('click', function () {
 		console.log("Przycisk 'Logowanie' został kliknięty");
+        hideAllSections(); 
         loginSection.classList.remove('hidden');
-        registerSection.classList.add('hidden');
-        addRecipeSection.classList.add('hidden');
-        recipesSection.classList.add('hidden');
     });
 
     // Obsługa formularza logowania
@@ -60,9 +65,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 },
                 body: JSON.stringify({ username, password })
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Błąd HTTP! Status: ${response.status}`);
+                }
+                return response.json();
+            })
             .then(data => {
-				console.log("Odpowiedź serwera: ", data);
+                console.log("Odpowiedź serwera: ", data);
                 if (data.jwt) {
                     alert('Logowanie udane! Twój token JWT: ' + data.jwt);
                     localStorage.setItem('jwtToken', data.jwt);
@@ -70,10 +80,13 @@ document.addEventListener('DOMContentLoaded', function () {
                     alert('Błąd logowania: ' + data.message);
                 }
             })
-            .catch(error => console.error('Błąd podczas logowania:', error));
-        }else {
-			console.log("Brak nazwy użytkownika lub hasła!");  // Debugowanie
-		}
+            .catch(error => {
+                console.error('Błąd podczas logowania:', error);
+                alert('Błąd podczas logowania: ' + error.message);
+            });
+        } else {
+            console.log("Brak nazwy użytkownika lub hasła!");
+        }
     });
 
     // Obsługa formularza rejestracji
@@ -117,18 +130,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Obsługa wyświetlania przepisów
     viewRecipesBtn.addEventListener('click', function () {
+        hideAllSections(); 
         categorySection.classList.remove('hidden');
-        recipesSection.classList.add('hidden');
-        addRecipeSection.classList.add('hidden');
-        backToRecipesBtn.classList.add('hidden');
     });
 
     // Obsługa przechodzenia do formularza dodawania przepisu
     addRecipeBtn.addEventListener('click', function () {
+        hideAllSections();  
         addRecipeSection.classList.remove('hidden');
-        recipesSection.classList.add('hidden');
-        categorySection.classList.add('hidden');
-        backToRecipesBtn.classList.add('hidden');
     });
 
     // Funkcja pobierania przepisów po kategorii
@@ -176,10 +185,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     createPagination(totalPages, categoryId);
                 }
 
-                categorySection.classList.add('hidden');
+                hideAllSections(); 
                 recipesSection.classList.remove('hidden');
                 backToCategoriesBtn.classList.remove('hidden');
-                backToRecipesBtn.classList.add('hidden');
             })
             .catch((error) => console.error('Błąd podczas pobierania przepisów:', error));
     }
@@ -242,9 +250,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Obsługa powrotu do kategorii
     backToCategoriesBtn.addEventListener('click', function () {
+        hideAllSections();  
         categorySection.classList.remove('hidden');
-        recipesSection.classList.add('hidden');
-        backToCategoriesBtn.classList.add('hidden');
     });
 
     // Obsługa powrotu do przepisów z danej kategorii
