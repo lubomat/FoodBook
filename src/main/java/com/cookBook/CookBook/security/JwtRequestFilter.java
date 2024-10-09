@@ -28,12 +28,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
 
-        // Pomijanie filtrowania dla ścieżek /login i /register
-//        String requestPath = request.getServletPath();
-//        if (requestPath.equals("/login") || requestPath.equals("/register")) {
-//            chain.doFilter(request, response);
-//            return;
-//        }
 
         final String authorizationHeader = request.getHeader("Authorization");
 

@@ -24,7 +24,6 @@ public class RecipeController {
     @Autowired
     private RecipeService recipeService;
 
-    // Publiczne, nie wymaga autoryzacji
     @GetMapping
     public List<Recipe> getAllRecipes() {
         return recipeService.getAllRecipes();
@@ -49,12 +48,11 @@ public class RecipeController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // Chronione, wymaga JWT tokenu (autoryzacja)
-    @Secured("ROLE_USER")  // Tylko zalogowani użytkownicy mogą dodawać przepisy
+    @Secured("ROLE_USER")
     @PostMapping
     public Recipe addRecipe(@RequestParam("name") String name,
                             @RequestParam("ingredients") String ingredients,
-                            @RequestParam("steps") List<String> steps,  // Przyjmowanie listy kroków
+                            @RequestParam("steps") List<String> steps,
                             @RequestParam("category") Long categoryId,
                             @RequestParam("image") MultipartFile image) throws IOException {
 
@@ -102,7 +100,6 @@ public class RecipeController {
         return recipeSteps;
     }
 
-    // Zabezpieczone, tylko zalogowani użytkownicy mogą edytować przepis
     @Secured("ROLE_USER")
     @PutMapping("/{id}")
     public ResponseEntity<Recipe> updateRecipe(@PathVariable Long id,
@@ -112,7 +109,6 @@ public class RecipeController {
         return ResponseEntity.ok(recipeService.updateRecipe(id, updatedRecipe, recipeSteps));
     }
 
-    // Zabezpieczone, tylko zalogowani użytkownicy mogą usuwać przepis
     @Secured("ROLE_USER")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteRecipe(@PathVariable Long id) {
