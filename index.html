@@ -14,7 +14,10 @@
         <nav>
             <button id="view-recipes-btn" class="BUTTON_BVY">Przepisy</button>
             <button id="add-recipe-btn" class="BUTTON_BVY">Dodaj przepis</button>
-        </nav>
+            
+                <button id="register-btn" class="BUTTON_BVY">Rejestracja</button>
+                <button id="login-btn" class="BUTTON_BVY">Logowanie</button>
+            </nav>
     </header>
 
     <section id="category-section" class="hidden">
@@ -46,6 +49,7 @@
             <div id="steps-container">
                 <textarea name="steps" placeholder="Krok 1" required></textarea>
             </div>
+
             <button type="button" id="add-step-btn">Dodaj krok</button><br>
 
             <label for="category">Kategoria:</label>
@@ -64,6 +68,31 @@
             <button type="submit">Dodaj przepis</button>
         </form>
     </section>
+
+    <section id="register-section" class="hidden">
+        <h2>Zarejestruj się</h2>
+        <form id="register-form">
+            <label for="register-username">Nazwa użytkownika:</label>
+            <input type="text" id="register-username" name="username" required><br>
+            <label for="register-password">Hasło:</label>
+            <input type="password" id="register-password" name="password" required><br>
+            <button type="submit">Zarejestruj się</button>
+        </form>
+    </section>
+
+    <section id="login-section" class="hidden">
+        <h2>Zaloguj się</h2>
+        <form id="login-form">
+            <label for="login-username">Nazwa użytkownika:</label>
+            <input type="text" id="login-username" name="username" required><br>
+
+            <label for="login-password">Hasło:</label>
+            <input type="password" id="login-password" name="password" required><br>
+
+            <button type="submit">Zaloguj się</button>
+        </form>
+    </section>
+
 
     <script src="js/script.js"></script>
 </body>

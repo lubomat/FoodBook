@@ -70,6 +70,51 @@ section {
     color: orange;                     /* Ustaw kolor "Book" na pomarańczowy */
 }
 
+#register-form input,
+#register-form button,
+#login-form input,
+#login-form button {
+    width: 100%; /* Pełna szerokość */
+    padding: 10px;
+    margin-bottom: 15px; /* Margines między elementami */
+    font-size: 1rem; /* Zwiększona czcionka */
+    border-radius: 5px;
+    border: 2px solid #b78b8bb3; /* Ujednolicenie z formularzem przepisu */
+    box-sizing: border-box;
+}
+
+#register-form button,
+#login-form button {
+    background-color: #f0ad4e;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+#register-form button:hover,
+#login-form button:hover {
+    background-color: #ec971f;
+}
+
+#register-section h2,
+#login-section h2 {
+    color: #ffffff;
+    font-size: 1.9rem;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#register-form label,
+#login-form label {
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: bold;
+    margin-left: 5px;
+    margin-bottom: 10px;
+}
+
+
 .BUTTON_BVY {
     background: #3D94F6;
     background-image: -webkit-linear-gradient(top, #3D94F6, #1E62D0);
