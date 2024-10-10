@@ -5,8 +5,8 @@ document.addEventListener('DOMContentLoaded', function () {
 	const loginBtn = document.getElementById('login-btn');
 
 	const logoutBtn = document.getElementById('logout-btn'); // Nowy przycisk „Wyloguj”
-	const userInfoDisplay = document.createElement('div'); // Miejsce na info o użytkowniku
-	document.body.appendChild(userInfoDisplay);
+	// const userInfoDisplay = document.createElement('div'); // Miejsce na info o użytkowniku
+	// document.body.appendChild(userInfoDisplay);
 
 	const recipesSection = document.getElementById('recipes-section');
 	const addRecipeSection = document.getElementById('add-recipe-section');
@@ -36,6 +36,8 @@ document.addEventListener('DOMContentLoaded', function () {
 		addRecipeSection.classList.add('hidden');
 		recipesSection.classList.add('hidden');
 		categorySection.classList.add('hidden');
+		const userInfoDisplay = document.getElementById('user-info');
+  	    userInfoDisplay.classList.add('hidden');
 	}
 
 	function isUserLoggedIn() {
@@ -160,6 +162,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	// Funkcja do ustawiania stanu zalogowania
 	function updateLoginState() {
+		const userInfoDisplay = document.getElementById('user-info');
 		if (isUserLoggedIn()) {
 			const token = localStorage.getItem('jwtToken');
 			const username = getUsernameFromToken(token);
@@ -182,6 +185,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		localStorage.removeItem('jwtToken'); // Usunięcie tokena
 		alert('Zostałeś wylogowany.');
 		updateLoginState(); // Aktualizacja widoku
+		window.location.reload();
 	});
 
 	// Aktualizacja stanu zalogowania przy załadowaniu strony

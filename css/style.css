@@ -114,6 +114,28 @@ section {
     margin-bottom: 10px;
 }
 
+#user-info {
+    margin-right: 10px; /* Odstęp między informacją o użytkowniku a przyciskiem wylogowania */
+    color: rgb(5, 3, 3);
+    font-size: 1.15rem; /* Dostosowanie wielkości czcionki */
+    font-weight: bold;
+    display: inline-block; /* Ustawienie inline-block, aby być w linii z przyciskiem */
+}
+
+#logout-btn {
+    background-color: #ff5722; /* Kolor tła dla przycisku wylogowania */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+#logout-btn:hover {
+    background-color: #e64a19; /* Zmiana koloru po najechaniu */
+}
+
 
 .BUTTON_BVY {
     background: #3D94F6;
