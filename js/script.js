@@ -3,12 +3,17 @@ document.addEventListener('DOMContentLoaded', function () {
     const addRecipeBtn = document.getElementById('add-recipe-btn');
     const registerBtn = document.getElementById('register-btn');
     const loginBtn = document.getElementById('login-btn');
+
+    const logoutBtn = document.getElementById('logout-btn'); // Nowy przycisk „Wyloguj”
+    const userInfoDisplay = document.createElement('div'); // Miejsce na info o użytkowniku
+    document.body.appendChild(userInfoDisplay);
 	
     const recipesSection = document.getElementById('recipes-section');
     const addRecipeSection = document.getElementById('add-recipe-section');
     const categorySection = document.getElementById('category-section');
     const registerSection = document.getElementById('register-section');
     const loginSection = document.getElementById('login-section');
+
     const recipesList = document.getElementById('recipes-list');
     const recipeForm = document.getElementById('recipe-form');
     const backToCategoriesBtn = document.getElementById('back-to-categories-btn');
@@ -38,6 +43,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const token = localStorage.getItem('jwtToken');
         return token !== null;  // Zwraca true, jeśli token istnieje, co oznacza, że użytkownik jest zalogowany
     }
+
 
     // Obsługa przycisku "Rejestracja"
     registerBtn.addEventListener('click', function () {
@@ -79,8 +85,12 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(data => {
                 console.log("Odpowiedź serwera: ", data);
                 if (data.jwt) {
-                    alert('Logowanie udane! Twój token JWT: ' + data.jwt);
+                    alert('Logowanie udane!');
                     localStorage.setItem('jwtToken', data.jwt);
+
+                    updateLoginState();
+                    window.location.href = 'index.html'; // Zmień adres URL na stronę główną aplikacji
+
                 } else {
                     alert('Błąd logowania: ' + data.message);
                 }
@@ -103,6 +113,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (username && password) {
 			console.log("Wysyłanie zapytania do backendu...");
+            
             fetch('http://localhost:8080/register', {
                 method: 'POST',
                 headers: {
@@ -115,6 +126,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				console.log("Odpowiedź backendu: ", data);
                 if (data.success) {
                     alert('Rejestracja udana!');
+                    window.location.href = 'index.html';
                 } else {
                     alert('Błąd rejestracji: ' + data.message);
                 }
@@ -122,6 +134,41 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(error => console.error('Błąd podczas rejestracji:', error));
         }
     });
+
+    // Funkcja do pobierania nazwy użytkownika z tokena JWT
+    function getUsernameFromToken(token) {
+        const payload = JSON.parse(atob(token.split('.')[1])); 
+        return payload.sub || payload.username; 
+    }
+
+    // Funkcja do ustawiania stanu zalogowania
+    function updateLoginState() {
+        if (isUserLoggedIn()) {
+            const token = localStorage.getItem('jwtToken');
+            const username = getUsernameFromToken(token);
+
+            loginBtn.classList.add('hidden');
+            registerBtn.classList.add('hidden');
+            logoutBtn.classList.remove('hidden');
+            userInfoDisplay.textContent = `Zalogowany jako: ${username}`;
+            userInfoDisplay.classList.remove('hidden');
+        } else {
+            loginBtn.classList.remove('hidden');
+            registerBtn.classList.remove('hidden');
+            logoutBtn.classList.add('hidden');
+            userInfoDisplay.classList.add('hidden');
+        }
+    }
+
+    // Obsługa wylogowania
+    logoutBtn.addEventListener('click', function () {
+        localStorage.removeItem('jwtToken'); // Usunięcie tokena
+        alert('Zostałeś wylogowany.');
+        updateLoginState(); // Aktualizacja widoku
+    });
+
+    // Aktualizacja stanu zalogowania przy załadowaniu strony
+    updateLoginState();
 
     // Obsługa dodawania kroków do przepisu
     addStepBtn.addEventListener('click', function () {
