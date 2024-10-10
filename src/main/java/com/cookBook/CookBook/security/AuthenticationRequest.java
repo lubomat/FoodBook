@@ -1,15 +1,16 @@
 package com.cookBook.CookBook.security;
 
 public class AuthenticationRequest {
-    private String username;
+    private String usernameOrEmail;  // Zmiana nazwy pola
+
     private String password;
 
-    public String getUsername() {
-        return username;
+    public String getUsernameOrEmail() {  // Getter dla usernameOrEmail
+        return usernameOrEmail;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUsernameOrEmail(String usernameOrEmail) {  // Setter dla usernameOrEmail
+        this.usernameOrEmail = usernameOrEmail;
     }
 
     public String getPassword() {

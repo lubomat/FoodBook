@@ -17,11 +17,21 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
 
     public User saveUser(User user) {
+        // Zabezpieczenie przed powtórnym zarejestrowaniem z takim samym adresem email
+        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+            throw new RuntimeException("Email already registered.");
+        }
+
+        // Szyfrowanie hasła
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
     public Optional<User> findByUsername(String username) {
         return userRepository.findByUsername(username);
+    }
+
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 }
