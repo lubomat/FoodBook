@@ -137,7 +137,8 @@ document.addEventListener('DOMContentLoaded', function () {
 						window.location.href = 'index.html'; // Przekierowanie na stronę główną
 					} else if (typeof data === 'string') {
 						// Jeśli odpowiedź to tekst, wyświetl ten tekst w alert
-						alert('Odpowiedź serwera: ' + data);
+						alert('Użytkownik zarejestrowany !');
+						window.location.href = 'index.html';
 					} else {
 						alert('Błąd rejestracji: ' + data.message); // Obsługa błędów JSON
 					}
