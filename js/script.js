@@ -64,17 +64,17 @@ document.addEventListener('DOMContentLoaded', function () {
 		e.preventDefault();
 		console.log('Formularz logowania wysłany!');
 
-		const username = document.getElementById('login-username').value;
+		const usernameOrEmail = document.getElementById('login-usernameOrEmail').value;
 		const password = document.getElementById('login-password').value;
 
-		if (username && password) {
-			console.log('Dane logowania: ' + { username, password });
+		if (usernameOrEmail && password) {
+			console.log('Dane logowania: ' + { usernameOrEmail, password });
 			fetch('http://localhost:8080/login', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
 				},
-				body: JSON.stringify({ username, password }),
+				body: JSON.stringify({ usernameOrEmail, password }),
 			})
 				.then((response) => {
 					if (!response.ok) {
@@ -108,9 +108,10 @@ document.addEventListener('DOMContentLoaded', function () {
 		e.preventDefault();
 
 		const username = document.getElementById('register-username').value;
+		const email = document.getElementById('register-email').value;
 		const password = document.getElementById('register-password').value;
 
-		if (username && password) {
+		if (username && email && password) {
 			console.log('Wysyłanie zapytania do backendu...');
 
 			fetch('http://localhost:8080/register', {
@@ -118,7 +119,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				headers: {
 					'Content-Type': 'application/json',
 				},
-				body: JSON.stringify({ username, password }),
+				body: JSON.stringify({ username, email, password }),
 			})
 				.then((response) => {
 					// Sprawdzenie, czy odpowiedź jest w formacie JSON
@@ -150,7 +151,7 @@ document.addEventListener('DOMContentLoaded', function () {
 					alert('Wystąpił problem z rejestracją: ' + error.message); // Obsługa błędów sieciowych
 				});
 		} else {
-			alert('Wprowadź nazwę użytkownika i hasło.'); // Obsługa braku danych
+			alert('Wprowadź nazwę użytkownika, email i hasło.'); // Obsługa braku danych
 		}
 	});
 
