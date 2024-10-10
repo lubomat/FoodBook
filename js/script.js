@@ -34,6 +34,11 @@ document.addEventListener('DOMContentLoaded', function () {
         categorySection.classList.add('hidden');
     }
 
+    function isUserLoggedIn() {
+        const token = localStorage.getItem('jwtToken');
+        return token !== null;  // Zwraca true, jeśli token istnieje, co oznacza, że użytkownik jest zalogowany
+    }
+
     // Obsługa przycisku "Rejestracja"
     registerBtn.addEventListener('click', function () {
 		console.log("Przycisk 'Rejestracja' został kliknięty");
@@ -136,8 +141,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Obsługa przechodzenia do formularza dodawania przepisu
     addRecipeBtn.addEventListener('click', function () {
-        hideAllSections();  
-        addRecipeSection.classList.remove('hidden');
+        if (isUserLoggedIn()) {
+            // Jeśli użytkownik jest zalogowany, wyświetl formularz dodawania przepisu
+            hideAllSections();
+            addRecipeSection.classList.remove('hidden');
+        } else {
+            // Jeśli użytkownik nie jest zalogowany, wyświetl alert
+            alert('Dodawanie przepisu wymaga zalogowania.');
+        }
     });
 
     // Funkcja pobierania przepisów po kategorii
@@ -281,6 +292,11 @@ document.addEventListener('DOMContentLoaded', function () {
     // Obsługa formularza dodawania przepisu
     recipeForm.addEventListener('submit', function (e) {
         e.preventDefault();
+        if (!isUserLoggedIn()) {
+            // Zatrzymanie wysyłania formularza, jeśli użytkownik nie jest zalogowany
+            alert('Musisz być zalogowany, aby dodać przepis.');
+            return;
+        }
 
         const formData = new FormData(recipeForm);
 
@@ -307,6 +323,7 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .catch((error) => {
             console.error('Błąd podczas dodawania przepisu:', error);
+            alert('Dodawanie nowego przepisu wymaga zalogowania!');
         });
     });
 });
