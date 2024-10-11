@@ -3,9 +3,11 @@ package com.cookBook.CookBook.service;
 import com.cookBook.CookBook.model.Category;
 import com.cookBook.CookBook.model.Recipe;
 import com.cookBook.CookBook.model.RecipeStep;
+import com.cookBook.CookBook.model.User;
 import com.cookBook.CookBook.repository.CategoryRepository;
 import com.cookBook.CookBook.repository.RecipeRepository;
 import com.cookBook.CookBook.repository.RecipeStepRepository;
+import com.cookBook.CookBook.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,11 +21,14 @@ public class RecipeService {
     private final CategoryRepository categoryRepository;
     private final RecipeStepRepository recipeStepRepository;
 
+    private final UserRepository userRepository;
+
     @Autowired
-    public RecipeService(RecipeRepository recipeRepository, CategoryRepository categoryRepository, RecipeStepRepository recipeStepRepository) {
+    public RecipeService(RecipeRepository recipeRepository, CategoryRepository categoryRepository, RecipeStepRepository recipeStepRepository, UserRepository userRepository) {
         this.recipeRepository = recipeRepository;
         this.categoryRepository = categoryRepository;
         this.recipeStepRepository = recipeStepRepository;
+        this.userRepository = userRepository;
     }
 
     public List<Recipe> getAllRecipes() {
@@ -43,6 +48,11 @@ public class RecipeService {
     }
 
     public Recipe addRecipe(Recipe recipe, List<RecipeStep> steps) {
+        Optional<Recipe> existingRecipe = recipeRepository.findByName(recipe.getName());
+        if (existingRecipe.isPresent()) {
+            throw new RuntimeException("Przepis o nazwie " + recipe.getName() + " już istnieje.");
+        }
+
         Recipe savedRecipe = recipeRepository.save(recipe);
         for (RecipeStep step : steps) {
             step.setRecipe(savedRecipe);
@@ -77,5 +87,14 @@ public class RecipeService {
     public Category getCategoryById(Long categoryId) {
         return categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new RuntimeException("Category not found with id: " + categoryId));
+    }
+
+    public List<Recipe> getRecipesByUser(String username) {
+        Optional<User> user = userRepository.findByUsername(username);
+        if (user.isPresent()) {
+            return recipeRepository.findByUserId(user.get().getId()); // Pobieranie przepisów po ID użytkownika
+        } else {
+            throw new RuntimeException("Nie znaleziono użytkownika: " + username);
+        }
     }
 }

@@ -11,3 +11,11 @@ public class CookBookApplication {
 	}
 
 }
+
+
+/** !!!!!!!!!!!!!!!!!!!!INFO!!!!!!!!!!!!!!!!!!
+ *
+ * After first run use SQL in DB:
+ * INSERT INTO recipes.category (name)
+ * VALUES ('breakfast'), ('lunch'), ('dinner'), ('snack');
+ * */

@@ -11,4 +11,6 @@ import java.util.Optional;
 public interface RecipeRepository extends JpaRepository<Recipe, Long> {
     List<Recipe> findByCategoryId(Long categoryId);
     Optional<Recipe> findByName(String name);
+
+    List<Recipe> findByUserId(Long userId);
 }

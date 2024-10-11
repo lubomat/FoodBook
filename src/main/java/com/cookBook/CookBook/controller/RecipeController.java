@@ -1,12 +1,17 @@
 package com.cookBook.CookBook.controller;
 
+import com.cookBook.CookBook.model.Comment;
 import com.cookBook.CookBook.model.Recipe;
 import com.cookBook.CookBook.model.RecipeStep;
+import com.cookBook.CookBook.model.User;
+import com.cookBook.CookBook.service.CommentService;
 import com.cookBook.CookBook.service.RecipeService;
+import com.cookBook.CookBook.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
@@ -23,6 +28,12 @@ public class RecipeController {
 
     @Autowired
     private RecipeService recipeService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private CommentService commentService;
 
     @GetMapping
     public List<Recipe> getAllRecipes() {
@@ -54,7 +65,13 @@ public class RecipeController {
                             @RequestParam("ingredients") String ingredients,
                             @RequestParam("steps") List<String> steps,
                             @RequestParam("category") Long categoryId,
-                            @RequestParam("image") MultipartFile image) throws IOException {
+                            @RequestParam("image") MultipartFile image,
+                            Authentication authentication)throws IOException {
+
+
+        if (recipeService.getRecipeByName(name).isPresent()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Przepis o tej nazwie już istnieje.");
+        }
 
         String fileType = image.getContentType();
         if (!fileType.startsWith("image/")) {
@@ -74,7 +91,6 @@ public class RecipeController {
 
         File uploadFile = new File(uploadDir, image.getOriginalFilename());
         image.transferTo(uploadFile);
-
         String imageUrl = "/uploads/" + image.getOriginalFilename();
 
         Recipe recipe = new Recipe();
@@ -83,12 +99,15 @@ public class RecipeController {
         recipe.setImageUrl(imageUrl);
         recipe.setCategory(recipeService.getCategoryById(categoryId));
 
+        User currentUser = userService.findByUsername(authentication.getName())
+                .orElseThrow(() -> new RuntimeException("Użytkownik nie został znaleziony"));
+        recipe.setUser(currentUser);
+
         List<RecipeStep> recipeSteps = createRecipeSteps(steps);
 
         return recipeService.addRecipe(recipe, recipeSteps);
     }
 
-    // Prywatna metoda tworząca kroki przepisu
     private List<RecipeStep> createRecipeSteps(List<String> steps) {
         List<RecipeStep> recipeSteps = new ArrayList<>();
         for (int i = 0; i < steps.size(); i++) {
@@ -99,6 +118,28 @@ public class RecipeController {
         }
         return recipeSteps;
     }
+
+    @Secured("ROLE_USER")
+    @PostMapping("/{recipeId}/comments")
+    public ResponseEntity<Comment> addComment(@PathVariable Long recipeId,
+                                              @RequestParam("content") String content,
+                                              @RequestParam("rating") int rating,
+                                              Authentication authentication) {
+        User currentUser = userService.findByUsername(authentication.getName())
+                .orElseThrow(() -> new RuntimeException("Użytkownik nie został znaleziony"));
+        Recipe recipe = recipeService.getRecipeById(recipeId)
+                .orElseThrow(() -> new RuntimeException("Przepis nie został znaleziony"));
+
+        Comment comment = commentService.addComment(recipe, currentUser, content, rating);
+        return ResponseEntity.ok(comment);
+    }
+
+    @GetMapping("/{recipeId}/comments")
+    public ResponseEntity<List<Comment>> getCommentsByRecipe(@PathVariable Long recipeId) {
+        List<Comment> comments = commentService.getCommentsByRecipe(recipeId);
+        return ResponseEntity.ok(comments);
+    }
+
 
     @Secured("ROLE_USER")
     @PutMapping("/{id}")
@@ -114,5 +155,12 @@ public class RecipeController {
     public ResponseEntity<Void> deleteRecipe(@PathVariable Long id) {
         recipeService.deleteRecipe(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @Secured("ROLE_USER")
+    @GetMapping("/my-recipes")
+    public List<Recipe> getMyRecipes(Authentication authentication) {
+        String username = authentication.getName(); // Pobieranie nazwy użytkownika z kontekstu uwierzytelniania
+        return recipeService.getRecipesByUser(username); // Pobieranie przepisów dla zalogowanego użytkownika
     }
 }
