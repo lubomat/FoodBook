@@ -268,6 +268,8 @@ document.addEventListener('DOMContentLoaded', function () {
 				hideAllSections();
 				recipesSection.classList.remove('hidden');
 				backToCategoriesBtn.classList.remove('hidden');
+
+				backToRecipesBtn.classList.add('hidden');
 			})
 			.catch((error) =>
 				console.error('Błąd podczas pobierania przepisów:', error)
