@@ -3,16 +3,17 @@ document.addEventListener('DOMContentLoaded', function () {
 	const addRecipeBtn = document.getElementById('add-recipe-btn');
 	const registerBtn = document.getElementById('register-btn');
 	const loginBtn = document.getElementById('login-btn');
+	const logoutBtn = document.getElementById('logout-btn');
 
-	const logoutBtn = document.getElementById('logout-btn'); // Nowy przycisk „Wyloguj”
-	// const userInfoDisplay = document.createElement('div'); // Miejsce na info o użytkowniku
-	// document.body.appendChild(userInfoDisplay);
+	const accountBtn = document.getElementById('account-btn'); 
+	const myRecipesBtn = document.getElementById('my-recipes-btn');
 
 	const recipesSection = document.getElementById('recipes-section');
 	const addRecipeSection = document.getElementById('add-recipe-section');
 	const categorySection = document.getElementById('category-section');
 	const registerSection = document.getElementById('register-section');
 	const loginSection = document.getElementById('login-section');
+	const accountSection = document.getElementById('account-section');
 
 	const recipesList = document.getElementById('recipes-list');
 	const recipeForm = document.getElementById('recipe-form');
@@ -24,25 +25,27 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	const loginForm = document.getElementById('login-form');
 	const registerForm = document.getElementById('register-form');
+	const myRecipesList = document.getElementById('my-recipes-list');
 
 	let currentPage = 1;
 	const recipesPerPage = 10;
 	let currentCategory = null;
 
 	function hideAllSections() {
-		// Ukrywa wszystkie sekcje
 		loginSection.classList.add('hidden');
 		registerSection.classList.add('hidden');
 		addRecipeSection.classList.add('hidden');
 		recipesSection.classList.add('hidden');
 		categorySection.classList.add('hidden');
+		accountSection.classList.add('hidden');
 		const userInfoDisplay = document.getElementById('user-info');
   	    userInfoDisplay.classList.add('hidden');
 	}
 
 	function isUserLoggedIn() {
 		const token = localStorage.getItem('jwtToken');
-		return token !== null; // Zwraca true, jeśli token istnieje, co oznacza, że użytkownik jest zalogowany
+		console.log('Sprawdzanie tokena JWT:', token);
+		return token !== null; 
 	}
 
 	// Obsługa przycisku "Rejestracja"
@@ -157,29 +160,63 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	// Funkcja do pobierania nazwy użytkownika z tokena JWT
 	function getUsernameFromToken(token) {
-		const payload = JSON.parse(atob(token.split('.')[1]));
-		return payload.sub || payload.username;
-	}
+    try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        return payload.sub || payload.username;
+    } catch (error) {
+        console.error('Błąd podczas dekodowania tokena JWT:', error);
+        return null;
+    }
+}
 
 	// Funkcja do ustawiania stanu zalogowania
 	function updateLoginState() {
 		const userInfoDisplay = document.getElementById('user-info');
+		const token = localStorage.getItem('jwtToken');
+		console.log('Aktualny token JWT:', token);
+	
 		if (isUserLoggedIn()) {
-			const token = localStorage.getItem('jwtToken');
 			const username = getUsernameFromToken(token);
-
 			loginBtn.classList.add('hidden');
 			registerBtn.classList.add('hidden');
 			logoutBtn.classList.remove('hidden');
+			accountBtn.classList.remove('hidden');
 			userInfoDisplay.textContent = `Zalogowany jako: ${username}`;
 			userInfoDisplay.classList.remove('hidden');
 		} else {
 			loginBtn.classList.remove('hidden');
 			registerBtn.classList.remove('hidden');
 			logoutBtn.classList.add('hidden');
+			accountBtn.classList.add('hidden');
 			userInfoDisplay.classList.add('hidden');
 		}
 	}
+
+	accountBtn.addEventListener('click', function () {
+		hideAllSections();
+		accountSection.classList.remove('hidden'); // Pokazanie sekcji "Moje konto"
+	});
+
+	myRecipesBtn.addEventListener('click', function () {
+		fetch('http://localhost:8080/api/recipes/my-recipes', {
+			method: 'GET',
+			headers: {
+				'Authorization': 'Bearer ' + localStorage.getItem('jwtToken')
+			}
+		})
+		.then(response => response.json())
+		.then(data => {
+			console.log('Moje przepisy:', data);
+			myRecipesList.innerHTML = ''; // Wyczyść poprzednią listę
+
+			data.forEach(recipe => {
+				const recipeItem = document.createElement('li');
+				recipeItem.textContent = recipe.name;
+				myRecipesList.appendChild(recipeItem);
+			});
+		})
+		.catch(error => console.error('Błąd podczas pobierania przepisów użytkownika:', error));
+	});
 
 	// Obsługa wylogowania
 	logoutBtn.addEventListener('click', function () {
@@ -369,8 +406,14 @@ document.addEventListener('DOMContentLoaded', function () {
 	// Obsługa formularza dodawania przepisu
 	recipeForm.addEventListener('submit', function (e) {
 		e.preventDefault();
+	
+		const token = localStorage.getItem('jwtToken'); // Nowe sprawdzenie
+		if (!token) {
+			alert('Token JWT nie został znaleziony. Spróbuj ponownie się zalogować.');
+			return;
+		}
+	
 		if (!isUserLoggedIn()) {
-			// Zatrzymanie wysyłania formularza, jeśli użytkownik nie jest zalogowany
 			alert('Musisz być zalogowany, aby dodać przepis.');
 			return;
 		}
