@@ -30,6 +30,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	let currentPage = 1;
 	const recipesPerPage = 10;
 	let currentCategory = null;
+	let currentRecipeId = null;
 
 	function hideAllSections() {
 		loginSection.classList.add('hidden');
@@ -212,6 +213,9 @@ document.addEventListener('DOMContentLoaded', function () {
 			data.forEach(recipe => {
 				const recipeItem = document.createElement('li');
 				recipeItem.textContent = recipe.name;
+				recipeItem.addEventListener('click', () => {
+					fetchRecipeDetails(recipe.name); // Kliknięcie na przepis wyświetla szczegóły
+				});
 				myRecipesList.appendChild(recipeItem);
 			});
 		})
@@ -353,7 +357,6 @@ document.addEventListener('DOMContentLoaded', function () {
 				stepsElement.appendChild(stepsHeader);
 
 				const stepsList = document.createElement('ol');
-
 				data.steps.forEach((step, index) => {
 					const stepItem = document.createElement('li');
 					stepItem.textContent = step.description;
@@ -365,11 +368,78 @@ document.addEventListener('DOMContentLoaded', function () {
 
 				backToRecipesBtn.classList.remove('hidden');
 				backToCategoriesBtn.classList.add('hidden');
+				fetchCommentsForRecipe(data.id);
+
+				fetchCommentsForRecipe(data.id); // Pobierz komentarze do przepisu
+
+           		 // Zapisz ID przepisu do globalnej zmiennej
+          		 currentRecipeId = data.id;
+
+           		 // Wyświetlenie formularza dodawania komentarzy
+           		if (isUserLoggedIn()) {
+                	document.getElementById('add-comment-section').classList.remove('hidden');
+           		}
 			})
 			.catch((error) =>
 				console.error('Błąd podczas pobierania szczegółów przepisu:', error)
 			);
 	}
+
+	function fetchCommentsForRecipe(recipeId) {
+    fetch(`http://localhost:8080/api/recipes/${recipeId}/comments`)
+        .then((response) => response.json())
+        .then((comments) => {
+            const commentsList = document.getElementById('comments-list');
+            commentsList.innerHTML = '';
+            
+            if (comments.length > 0) {
+                comments.forEach((comment) => {
+                    const commentItem = document.createElement('li');
+                    commentItem.innerHTML = `<strong>${comment.user.username}</strong>: ${comment.content} (Ocena: ${comment.rating}/5)`;
+                    commentsList.appendChild(commentItem);
+                });
+            } else {
+                commentsList.innerHTML = '<p>Brak komentarzy.</p>';
+            }
+        })
+        .catch((error) => console.error('Błąd podczas pobierania komentarzy:', error));
+}
+
+// Obsługa formularza dodawania komentarzy
+document.getElementById('comment-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    const content = document.getElementById('comment-content').value;
+    const rating = document.getElementById('comment-rating').value;
+    const token = localStorage.getItem('jwtToken');
+	
+    if (!currentRecipeId) {
+        alert('Błąd: Brak ID przepisu.');
+        return;
+    }
+
+
+    fetch(`http://localhost:8080/api/recipes/${recipeId}/comments`, {
+        method: 'POST',
+        headers: {
+            'Authorization': 'Bearer ' + token,
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+            content: content,
+            rating: rating,
+        }),
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            alert('Komentarz dodany!');
+            document.getElementById('comment-form').reset();
+            fetchCommentsForRecipe(recipeId); // Odświeżenie listy komentarzy
+        })
+        .catch((error) => {
+            console.error('Błąd podczas dodawania komentarza:', error);
+            alert('Wystąpił błąd podczas dodawania komentarza.');
+        });
+});
 
 	// Obsługa powrotu do kategorii
 	backToCategoriesBtn.addEventListener('click', function () {
