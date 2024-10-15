@@ -496,11 +496,73 @@ ol li {
     line-height: 1.5; 
 }
 
+/* Stylizacja sekcji komentarzy */
+#comments-list {
+    background-color: rgba(255, 255, 255, 0.6); /* Białe tło z przezroczystością 60% */
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 800px;
+}
+
+#add-comment-section {
+    background-color: rgba(255, 255, 255, 0.6); /* Przezroczyste białe tło */
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 800px;
+}
+
+#comments-header {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #000000;
+}
+
+/* Stylizacja formularza dodawania komentarza */
+#comment-form textarea {
+    width: 95%;
+    padding: 15px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.8); /* Białe tło z przezroczystością 80% */
+}
+#comment-form .star-rating {
+    width: auto;
+    padding: 0px;
+    margin-bottom: 15px;
+    border: transparent;
+    border-radius: none;
+    background-color: transparent; 
+}
+
+#comment-form button {
+    background-color: #587259;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+#comment-form button:hover {
+    background-color: #457046;
+}
+
+
+
 /* Stylizacja gwiazdek do oceny */
 .star-rating {
-    direction: rtl;
-    display: inline-block;
-    padding: 20px 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: row-reverse;
+    
 }
 
 .star-rating input[type="radio"] {
@@ -509,12 +571,13 @@ ol li {
 
 .star-rating label {
     font-size: 2em;
-    color: #ddd;
+    color: #575757;
     cursor: pointer;
+    margin-right: 10px;
 }
 
 .star-rating input[type="radio"]:checked ~ label {
-    color: #ffc700;
+    color: #ffff00;
 }
 
 .star-rating label:hover,
@@ -530,9 +593,3 @@ ol li {
     display: inline-block; 
     font-family: Arial, sans-serif; 
 }
-
-
-
-
-
-
