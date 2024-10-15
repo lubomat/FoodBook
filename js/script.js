@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	let currentPage = 1;
 	const recipesPerPage = 10;
 	let currentCategory = null;
-	let currentRecipeId = null;
+	let currentRecipeId = null;;
 
 	function hideAllSections() {
 		loginSection.classList.add('hidden');
@@ -208,14 +208,19 @@ document.addEventListener('DOMContentLoaded', function () {
 		.then(response => response.json())
 		.then(data => {
 			console.log('Moje przepisy:', data);
-			myRecipesList.innerHTML = ''; // Wyczyść poprzednią listę
+			myRecipesList.innerHTML = ''; 
 
 			data.forEach(recipe => {
 				const recipeItem = document.createElement('li');
-				recipeItem.textContent = recipe.name;
-				recipeItem.addEventListener('click', () => {
-					fetchRecipeDetails(recipe.name); // Kliknięcie na przepis wyświetla szczegóły
+				const recipeLink = document.createElement('a');
+				recipeLink.textContent = recipe.name;
+				recipeLink.href = '#';
+				recipeLink.addEventListener('click', (e) => {
+					e.preventDefault();
+					fetchRecipeDetails(recipe.name); 
 				});
+				
+				recipeItem.appendChild(recipeLink);
 				myRecipesList.appendChild(recipeItem);
 			});
 		})
@@ -337,10 +342,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	// Funkcja pobierania szczegółów przepisu
 	function fetchRecipeDetails(recipeName) {
+		console.log('Fetching details for recipe:', recipeName);
+
 		fetch(`http://localhost:8080/api/recipes/name/${recipeName}`)
-			.then((response) => response.json())
+			.then((response) => {
+            if (!response.ok) {
+                throw new Error(`Błąd HTTP! Status: ${response.status}`);
+            }
+            return response.json();
+        })
 			.then((data) => {
 				console.log('Szczegóły przepisu:', data);
+
 				recipesList.innerHTML = '';
 
 				const nameElement = document.createElement('h3');
@@ -368,26 +381,33 @@ document.addEventListener('DOMContentLoaded', function () {
 
 				backToRecipesBtn.classList.remove('hidden');
 				backToCategoriesBtn.classList.add('hidden');
-				fetchCommentsForRecipe(data.id);
 
-				fetchCommentsForRecipe(data.id); // Pobierz komentarze do przepisu
+				currentRecipeId = data.id;
+				console.log('Ustawiono currentRecipeId:', currentRecipeId);
 
-           		 // Zapisz ID przepisu do globalnej zmiennej
-          		 currentRecipeId = data.id;
+				fetchCommentsForRecipe(currentRecipeId); 
 
+           		
            		 // Wyświetlenie formularza dodawania komentarzy
            		if (isUserLoggedIn()) {
                 	document.getElementById('add-comment-section').classList.remove('hidden');
            		}
 			})
-			.catch((error) =>
-				console.error('Błąd podczas pobierania szczegółów przepisu:', error)
-			);
+			.catch((error) => {
+				console.error('Błąd podczas pobierania szczegółów przepisu:', error);
+				alert(`Błąd podczas pobierania szczegółów przepisu: ${error.message}`);
+			});
 	}
 
 	function fetchCommentsForRecipe(recipeId) {
-    fetch(`http://localhost:8080/api/recipes/${recipeId}/comments`)
-        .then((response) => response.json())
+	console.log('Pobieranie komentarzy dla przepisu o ID:', recipeId);
+    fetch(`http://localhost:8080/api/comments/${recipeId}`)
+		.then((response) => {
+			if (!response.ok) {
+				throw new Error(`Błąd HTTP! Status: ${response.status}`);
+			}
+			return response.json();
+		})
         .then((comments) => {
             const commentsList = document.getElementById('comments-list');
             commentsList.innerHTML = '';
@@ -402,38 +422,48 @@ document.addEventListener('DOMContentLoaded', function () {
                 commentsList.innerHTML = '<p>Brak komentarzy.</p>';
             }
         })
-        .catch((error) => console.error('Błąd podczas pobierania komentarzy:', error));
+        .catch((error) => {
+            console.error('Błąd podczas pobierania komentarzy:', error);
+            alert(`Błąd podczas pobierania komentarzy: ${error.message}`);
+        });
 }
 
 // Obsługa formularza dodawania komentarzy
-document.getElementById('comment-form').addEventListener('submit', function (e) {
-    e.preventDefault();
-    const content = document.getElementById('comment-content').value;
-    const rating = document.getElementById('comment-rating').value;
-    const token = localStorage.getItem('jwtToken');
-	
-    if (!currentRecipeId) {
-        alert('Błąd: Brak ID przepisu.');
-        return;
-    }
+	document.getElementById('comment-form').addEventListener('submit', function (e) {
+    	e.preventDefault();
+    	const content = document.getElementById('comment-content').value;
+    	const rating = document.getElementById('comment-rating').value;
+    	const token = localStorage.getItem('jwtToken');
+		
+    	if (!currentRecipeId) {
+    	    alert('Błąd: Brak ID przepisu.');
+    	    return;
+    	}
+
+		console.log('Dodawanie komentarza dla przepisu o ID:', currentRecipeId);
 
 
-    fetch(`http://localhost:8080/api/recipes/${recipeId}/comments`, {
-        method: 'POST',
-        headers: {
-            'Authorization': 'Bearer ' + token,
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: new URLSearchParams({
-            content: content,
-            rating: rating,
-        }),
+  	    fetch(`http://localhost:8080/api/comments/${currentRecipeId}`, {
+      	    method: 'POST',
+        	headers: {
+          	    'Authorization': 'Bearer ' + token,
+            	'Content-Type': 'application/json',
+        	},
+        	body: JSON.stringify({
+            	content: content,
+            	rating: rating,
+        	}),
     })
-        .then((response) => response.json())
+		.then((response) => {
+			if (!response.ok) {
+				throw new Error(`Błąd HTTP! Status: ${response.status}`);
+			}
+			return response.json();
+		})
         .then((data) => {
             alert('Komentarz dodany!');
             document.getElementById('comment-form').reset();
-            fetchCommentsForRecipe(recipeId); // Odświeżenie listy komentarzy
+            fetchCommentsForRecipe(currentRecipeId);
         })
         .catch((error) => {
             console.error('Błąd podczas dodawania komentarza:', error);
@@ -477,7 +507,7 @@ document.getElementById('comment-form').addEventListener('submit', function (e) 
 	recipeForm.addEventListener('submit', function (e) {
 		e.preventDefault();
 	
-		const token = localStorage.getItem('jwtToken'); // Nowe sprawdzenie
+		const token = localStorage.getItem('jwtToken');
 		if (!token) {
 			alert('Token JWT nie został znaleziony. Spróbuj ponownie się zalogować.');
 			return;
