@@ -558,10 +558,10 @@ ol li {
 
 /* Stylizacja gwiazdek do oceny */
 .star-rating {
-    display: flex;
+    display: table;
     align-items: center;
     justify-content: flex-start;
-    flex-direction: row-reverse;
+    direction: rtl;
     
 }
 
