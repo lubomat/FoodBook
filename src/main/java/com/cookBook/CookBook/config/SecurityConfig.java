@@ -27,8 +27,9 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/register", "/api/recipes", "/api/recipes/category/**", "/api/recipes/name/**", "/api/recipes/{id}", "/uploads/**").permitAll()
+                        .requestMatchers("/login", "/register", "/api/recipes", "/api/recipes/category/**", "/api/recipes/name/**", "/api/recipes/{id}", "/uploads/**","/api/comments/**").permitAll()
                         .requestMatchers("/api/recipes", "/api/recipes/**").hasRole("USER")
+                        .requestMatchers("/api/comments","/api/comments/**").hasRole("USER")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);

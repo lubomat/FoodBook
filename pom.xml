@@ -51,8 +51,8 @@
 		<!-- Flyway do zarządzania migracjami -->
 		<dependency>
 			<groupId>org.flywaydb</groupId>
-			<artifactId>flyway-core</artifactId>
-			<version>10.19.0</version>
+			<artifactId>flyway-database-postgresql</artifactId>
+			<version>10.4.0</version>
 		</dependency>
 
 		<!-- Zależności do testów -->

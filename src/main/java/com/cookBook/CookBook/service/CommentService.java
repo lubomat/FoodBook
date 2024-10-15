@@ -19,7 +19,6 @@ public class CommentService {
         this.commentRepository = commentRepository;
     }
 
-    // Dodanie komentarza do przepisu
     public Comment addComment(Recipe recipe, User user, String content, int rating) {
         Comment comment = new Comment();
         comment.setRecipe(recipe);
@@ -29,7 +28,6 @@ public class CommentService {
         return commentRepository.save(comment);
     }
 
-    // Pobranie komentarzy dla przepisu
     public List<Comment> getCommentsByRecipe(Long recipeId) {
         return commentRepository.findByRecipeId(recipeId);
     }

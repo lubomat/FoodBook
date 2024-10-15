@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
-    List<Comment> findByRecipeId(Long recipeId);  // Pobiera komentarze dla danego przepisu
+    List<Comment> findByRecipeId(Long recipeId);
 }

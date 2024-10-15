@@ -32,9 +32,6 @@ public class RecipeController {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private CommentService commentService;
-
     @GetMapping
     public List<Recipe> getAllRecipes() {
         return recipeService.getAllRecipes();
@@ -117,27 +114,6 @@ public class RecipeController {
             recipeSteps.add(step);
         }
         return recipeSteps;
-    }
-
-    @Secured("ROLE_USER")
-    @PostMapping("/{recipeId}/comments")
-    public ResponseEntity<Comment> addComment(@PathVariable Long recipeId,
-                                              @RequestParam("content") String content,
-                                              @RequestParam("rating") int rating,
-                                              Authentication authentication) {
-        User currentUser = userService.findByUsername(authentication.getName())
-                .orElseThrow(() -> new RuntimeException("Użytkownik nie został znaleziony"));
-        Recipe recipe = recipeService.getRecipeById(recipeId)
-                .orElseThrow(() -> new RuntimeException("Przepis nie został znaleziony"));
-
-        Comment comment = commentService.addComment(recipe, currentUser, content, rating);
-        return ResponseEntity.ok(comment);
-    }
-
-    @GetMapping("/{recipeId}/comments")
-    public ResponseEntity<List<Comment>> getCommentsByRecipe(@PathVariable Long recipeId) {
-        List<Comment> comments = commentService.getCommentsByRecipe(recipeId);
-        return ResponseEntity.ok(comments);
     }
 
 
