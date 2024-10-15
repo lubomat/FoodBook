@@ -496,6 +496,42 @@ ol li {
     line-height: 1.5; 
 }
 
+/* Stylizacja gwiazdek do oceny */
+.star-rating {
+    direction: rtl;
+    display: inline-block;
+    padding: 20px 0;
+}
+
+.star-rating input[type="radio"] {
+    display: none;
+}
+
+.star-rating label {
+    font-size: 2em;
+    color: #ddd;
+    cursor: pointer;
+}
+
+.star-rating input[type="radio"]:checked ~ label {
+    color: #ffc700;
+}
+
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+    color: #deb217;
+}
+
+
+.stars {
+    color: #ffc700; 
+    font-size: 1.5em; 
+    margin-left: 10px; 
+    display: inline-block; 
+    font-family: Arial, sans-serif; 
+}
+
+
 
 
 
