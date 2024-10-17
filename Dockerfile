@@ -9,6 +9,9 @@ COPY pom.xml ./
 COPY mvnw ./
 COPY .mvn .mvn
 
+# Ustawiamy prawa do wykonywania skryptu mvnw
+RUN chmod +x ./mvnw
+
 # Pobieramy zależności projektu (bez budowania)
 RUN ./mvnw dependency:go-offline
 
