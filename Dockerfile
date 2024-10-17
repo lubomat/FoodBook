@@ -4,25 +4,22 @@ FROM openjdk:17-jdk-alpine
 # Ustawiamy katalog roboczy wewnątrz kontenera
 WORKDIR /app
 
-# Kopiujemy pliki Mavena do kontenera
+# Kopiujemy plik pom.xml i skrypty Mavena do kontenera
 COPY pom.xml ./
 COPY mvnw ./
 COPY .mvn .mvn
 
-# Pobieramy zależności projektu
-RUN ./mvnw dependency:resolve
+# Pobieramy zależności projektu (bez budowania)
+RUN ./mvnw dependency:go-offline
 
-# Kopiujemy cały projekt do kontenera
+# Kopiujemy cały projekt (kod źródłowy)
 COPY src ./src
 
 # Budujemy projekt (generujemy plik .jar)
 RUN ./mvnw clean package -DskipTests
 
-# Kopiujemy plik .jar do katalogu /app w kontenerze
-COPY target/FoodBook-0.0.1-SNAPSHOT.jar /app/FoodBook.jar
+# Używamy skompilowanego pliku .jar
+CMD ["java", "-jar", "./target/FoodBook-0.0.1-SNAPSHOT.jar"]
 
 # Wystawiamy port 8080, na którym działa aplikacja Spring Boot
 EXPOSE 8080
-
-# Uruchamiamy aplikację
-CMD ["java", "-jar", "/app/FoodBook.jar"]
