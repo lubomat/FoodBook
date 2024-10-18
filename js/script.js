@@ -25,7 +25,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	const loginForm = document.getElementById('login-form');
 	const registerForm = document.getElementById('register-form');
+
 	const myRecipesList = document.getElementById('my-recipes-list');
+	const backToMyRecipesBtn = document.getElementById('back-to-my-recipes-btn');
 
 	let currentPage = 1;
 	const recipesPerPage = 10;
@@ -198,12 +200,30 @@ document.addEventListener('DOMContentLoaded', function () {
 		}
 	}
 
+	// Obsługa wylogowania
+	logoutBtn.addEventListener('click', function () {
+		localStorage.removeItem('jwtToken'); // Usunięcie tokena
+		alert('Zostałeś wylogowany.');
+		updateLoginState(); // Aktualizacja widoku
+		window.location.reload();
+	});
+
+	// Aktualizacja stanu zalogowania przy załadowaniu strony
+	updateLoginState();
+
+
 	accountBtn.addEventListener('click', function () {
 		hideAllSections();
 		accountSection.classList.remove('hidden'); // Pokazanie sekcji "Moje konto"
 	});
 
+
+
 	myRecipesBtn.addEventListener('click', function () {
+		
+		
+		recipesSection.classList.add('hidden');
+		recipesSection.innerHTML = '';
 		fetch('http://localhost:8080/api/recipes/my-recipes', {
 			method: 'GET',
 			headers: {
@@ -222,27 +242,87 @@ document.addEventListener('DOMContentLoaded', function () {
 				recipeLink.href = '#';
 				recipeLink.addEventListener('click', (e) => {
 					e.preventDefault();
-					fetchRecipeDetails(recipe.name); 
+					fetchRecipeDetailsFromMyRecipes(recipe.id); 
 				});
 				
 				recipeItem.appendChild(recipeLink);
 				myRecipesList.appendChild(recipeItem);
 			});
+
+				myRecipesList.classList.remove('hidden');
+      			backToMyRecipesBtn.classList.add('hidden');
 		})
-		.catch(error => console.error('Błąd podczas pobierania przepisów użytkownika:', error));
+		.catch(error => {
+			console.error('Błąd podczas pobierania przepisów użytkownika:', error);
+			alert('Wystąpił problem z pobieraniem przepisów. Spróbuj ponownie.');
+		});
 	});
 
-	// Obsługa wylogowania
-	logoutBtn.addEventListener('click', function () {
-		localStorage.removeItem('jwtToken'); // Usunięcie tokena
-		alert('Zostałeś wylogowany.');
-		updateLoginState(); // Aktualizacja widoku
-		window.location.reload();
+
+		// Obsługa powrotu do listy moich przepisów
+	backToMyRecipesBtn.addEventListener('click', function () {
+    	myRecipesList.classList.remove('hidden'); // Pokaż listę moich przepisów
+    	recipesSection.classList.add('hidden'); // Ukryj sekcję szczegółów przepisu
+    	recipesSection.innerHTML = ''; // Wyczyść sekcję szczegółów przepisu
+    	backToMyRecipesBtn.classList.add('hidden'); // Ukryj przycisk powrotu
 	});
 
-	// Aktualizacja stanu zalogowania przy załadowaniu strony
-	updateLoginState();
 
+	function fetchRecipeDetailsFromMyRecipes(recipeId) {
+		console.log('Fetching details for recipe ID:', recipeId);
+	
+		fetch(`http://localhost:8080/api/recipes/${recipeId}`)
+			.then((response) => {
+				if (!response.ok) {
+					throw new Error(`Błąd HTTP! Status: ${response.status}`);
+				}
+				return response.json();
+			})
+			.then((data) => {
+				console.log('Szczegóły przepisu:', data);
+	
+				// Ukryj listę przepisów w sekcji "Moje konto"
+				myRecipesList.classList.add('hidden');
+	
+				// Wyświetl szczegóły przepisu w sekcji "recipes-section"
+				recipesSection.innerHTML = ''; // Wyczyść sekcję
+	
+				const nameElement = document.createElement('h3');
+				nameElement.textContent = data.name;
+				recipesSection.appendChild(nameElement);
+	
+				const ingredientsElement = document.createElement('p');
+				ingredientsElement.innerHTML = `<strong>Składniki:</strong> ${data.ingredients}`;
+				recipesSection.appendChild(ingredientsElement);
+	
+				const stepsElement = document.createElement('div');
+				const stepsHeader = document.createElement('p');
+				stepsHeader.innerHTML = `<strong>Kroki:</strong>`;
+				stepsElement.appendChild(stepsHeader);
+	
+				const stepsList = document.createElement('ol');
+				data.steps.forEach((step) => {
+					const stepItem = document.createElement('li');
+					stepItem.textContent = step.description;
+					stepsList.appendChild(stepItem);
+				});
+	
+				stepsElement.appendChild(stepsList);
+				recipesSection.appendChild(stepsElement);
+	
+				// Pokaż przycisk powrotu do moich przepisów
+				backToMyRecipesBtn.classList.remove('hidden');
+				recipesSection.classList.remove('hidden');
+			})
+			.catch((error) => {
+				console.error('Błąd podczas pobierania szczegółów przepisu:', error);
+       			alert('Wystąpił błąd podczas pobierania szczegółów przepisu. Spróbuj ponownie.');
+        		// backToMyRecipesBtn.classList.remove('hidden');
+			});
+	}
+	
+	
+	
 	// Obsługa dodawania kroków do przepisu
 	addStepBtn.addEventListener('click', function () {
 		const stepCount = stepsContainer.children.length + 1;
