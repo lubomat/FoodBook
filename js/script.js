@@ -35,19 +35,29 @@ document.addEventListener('DOMContentLoaded', function () {
 	let currentRecipeId = null;;
 
 	function hideAllSections() {
-		loginSection.classList.add('hidden');
-		registerSection.classList.add('hidden');
-		addRecipeSection.classList.add('hidden');
-		recipesSection.classList.add('hidden');
-		categorySection.classList.add('hidden');
-		accountSection.classList.add('hidden');
-
-		document.getElementById('comments-list').classList.add('hidden');  
-   		document.getElementById('add-comment-section').classList.add('hidden');  
-   		document.getElementById('comments-header').classList.add('hidden');
-
+		console.log("loginSection:", loginSection);
+		console.log("registerSection:", registerSection);
+		console.log("addRecipeSection:", addRecipeSection);
+		console.log("recipesSection:", recipesSection);
+		console.log("categorySection:", categorySection);
+		console.log("accountSection:", accountSection);
+		console.log("comments-list:", document.getElementById('comments-list'));
+		console.log("add-comment-section:", document.getElementById('add-comment-section'));
+		console.log("comments-header:", document.getElementById('comments-header'));
+		console.log("user-info:", document.getElementById('user-info'));
+	
+		loginSection?.classList.add('hidden');
+		registerSection?.classList.add('hidden');
+		addRecipeSection?.classList.add('hidden');
+		recipesSection?.classList.add('hidden');
+		categorySection?.classList.add('hidden');
+		accountSection?.classList.add('hidden');
+		document.getElementById('comments-list')?.classList.add('hidden');
+		document.getElementById('add-comment-section')?.classList.add('hidden');
+		document.getElementById('comments-header')?.classList.add('hidden');
+	
 		const userInfoDisplay = document.getElementById('user-info');
-  	    userInfoDisplay.classList.add('hidden');
+		userInfoDisplay?.classList.add('hidden');
 	}
 
 	function isUserLoggedIn() {
@@ -212,18 +222,20 @@ document.addEventListener('DOMContentLoaded', function () {
 	updateLoginState();
 
 
+	// Obsługa przycisku "Moje konto"
 	accountBtn.addEventListener('click', function () {
-		hideAllSections();
-		accountSection.classList.remove('hidden'); // Pokazanie sekcji "Moje konto"
+    	hideAllSections();
+    	accountSection.classList.remove('hidden'); // Pokazanie sekcji "Moje konto"
+    	myRecipesList.classList.remove('hidden'); // Upewnienie się, że lista przepisów jest widoczna
 	});
 
 
 
 	myRecipesBtn.addEventListener('click', function () {
-		
-		
 		recipesSection.classList.add('hidden');
 		recipesSection.innerHTML = '';
+		myRecipesList.innerHTML = '';
+
 		fetch('http://localhost:8080/api/recipes/my-recipes', {
 			method: 'GET',
 			headers: {
@@ -267,7 +279,7 @@ document.addEventListener('DOMContentLoaded', function () {
     	backToMyRecipesBtn.classList.add('hidden'); // Ukryj przycisk powrotu
 	});
 
-
+	// Funkcja do pobierania szczegółów przepisu z sekcji "Moje konto"
 	function fetchRecipeDetailsFromMyRecipes(recipeId) {
 		console.log('Fetching details for recipe ID:', recipeId);
 	
