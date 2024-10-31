@@ -58,6 +58,9 @@ document.addEventListener('DOMContentLoaded', function () {
 	
 		const userInfoDisplay = document.getElementById('user-info');
 		userInfoDisplay?.classList.add('hidden');
+
+		// recipesList.innerHTML = ''; // Wyczyść listę przepisów
+    	// recipesSection.innerHTML = '';
 	}
 
 	function isUserLoggedIn() {
@@ -281,6 +284,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	// Funkcja do pobierania szczegółów przepisu z sekcji "Moje konto"
 	function fetchRecipeDetailsFromMyRecipes(recipeId) {
+		currentRecipeId = null;
 		console.log('Fetching details for recipe ID:', recipeId);
 	
 		fetch(`http://localhost:8080/api/recipes/${recipeId}`)
@@ -348,6 +352,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	// Obsługa wyświetlania przepisów
 	viewRecipesBtn.addEventListener('click', function () {
 		hideAllSections();
+		currentRecipeId = null;
 		categorySection.classList.remove('hidden');
 	});
 
@@ -362,6 +367,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			alert('Dodawanie przepisu wymaga zalogowania.');
 		}
 	});
+
 
 	// Funkcja pobierania przepisów po kategorii
 	function fetchRecipesByCategory(categoryId, page = 1) {
@@ -443,6 +449,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	// Funkcja pobierania szczegółów przepisu
 	function fetchRecipeDetails(recipeName) {
+		// currentRecipeId = null;
 		console.log('Fetching details for recipe:', recipeName);
 
 		fetch(`http://localhost:8080/api/recipes/name/${recipeName}`)
@@ -604,11 +611,15 @@ document.getElementById('comment-form').addEventListener('submit', function (e) 
 	// Obsługa powrotu do kategorii
 	backToCategoriesBtn.addEventListener('click', function () {
 		hideAllSections();
+		recipesSection.innerHTML = ''; // Wyczyść zawartość sekcji
+    	currentRecipeId = null;
 		categorySection.classList.remove('hidden');
 	});
 
 	// Obsługa powrotu do przepisów z danej kategorii
 	backToRecipesBtn.addEventListener('click', function () {
+		recipesSection.innerHTML = ''; // Wyczyść szczegóły przepisu
+		currentRecipeId = null; // Zresetuj currentRecipeId
 		fetchRecipesByCategory(currentCategory, currentPage);
 		backToRecipesBtn.classList.add('hidden');
 		backToCategoriesBtn.classList.remove('hidden');
