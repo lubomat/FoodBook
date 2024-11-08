@@ -55,12 +55,13 @@ document.addEventListener('DOMContentLoaded', function () {
 		document.getElementById('comments-list')?.classList.add('hidden');
 		document.getElementById('add-comment-section')?.classList.add('hidden');
 		document.getElementById('comments-header')?.classList.add('hidden');
+		document.getElementById('user-info')?.classList.add('hidden');
 	
 		const userInfoDisplay = document.getElementById('user-info');
 		userInfoDisplay?.classList.add('hidden');
 
-		// recipesList.innerHTML = ''; // Wyczyść listę przepisów
-    	// recipesSection.innerHTML = '';
+		recipesList.innerHTML = '';
+		// recipesSection.innerHTML = ''; 
 	}
 
 	function isUserLoggedIn() {
@@ -273,7 +274,6 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 	});
 
-
 	// Funkcja do pobierania szczegółów przepisu z sekcji "Moje konto"
 	function fetchRecipeDetailsFromMyRecipes(recipeId) {
 		currentRecipeId = null;
@@ -293,7 +293,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				myRecipesList.classList.add('hidden');
 	
 				// Wyświetl szczegóły przepisu w sekcji "recipes-section"
-				recipesSection.innerHTML = ''; // Wyczyść sekcję
+				recipesSection.innerHTML = ''; 
 	
 				const nameElement = document.createElement('h3');
 				nameElement.textContent = data.name;
@@ -328,6 +328,7 @@ document.addEventListener('DOMContentLoaded', function () {
         		// backToMyRecipesBtn.classList.remove('hidden');
 			});
 	}
+	
 
 		// Obsługa powrotu do listy moich przepisów
 		backToMyRecipesBtn.addEventListener('click', function () {
@@ -361,11 +362,9 @@ document.addEventListener('DOMContentLoaded', function () {
 	});
 
 	// Obsługa kliknięcia kategorii
-	document
-		.getElementById('breakfast-btn')
-		.addEventListener('click', function () {
+	document.getElementById('breakfast-btn').addEventListener('click', function () {
 			fetchRecipesByCategory(1);
-		});
+	});
 
 	document.getElementById('lunch-btn').addEventListener('click', function () {
 		fetchRecipesByCategory(2);
@@ -382,29 +381,30 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	// Funkcja pobierania przepisów po kategorii
 	function fetchRecipesByCategory(categoryId, page = 1) {
+		currentRecipeId = null;
 		currentCategory = categoryId;
+	
+		hideAllSections();
 
-		document.getElementById('comments-list').classList.add('hidden'); // Wyczyść i ukryj komentarze
-  	    document.getElementById('add-comment-section').classList.add('hidden');
-		document.getElementById('comments-header').classList.add('hidden');
-
+		// recipesSection.innerHTML = '';
+		recipesList.innerHTML = '';
+	
 		fetch(`http://localhost:8080/api/recipes/category/${categoryId}`)
 			.then((response) => response.json())
 			.then((data) => {
 				console.log('Dane przepisów:', data);
-				recipesList.innerHTML = '';
-
+	
 				const totalRecipes = data.length;
 				const totalPages = Math.ceil(totalRecipes / recipesPerPage);
 				const paginatedRecipes = data.slice(
 					(page - 1) * recipesPerPage,
 					page * recipesPerPage
 				);
-
+	
 				paginatedRecipes.forEach((recipe) => {
 					const recipeDiv = document.createElement('div');
 					recipeDiv.classList.add('recipe-tile');
-
+	
 					const fullImageUrl = `http://localhost:8080${recipe.imageUrl}`;
 					const recipeImage = document.createElement('img');
 					recipeImage.src = fullImageUrl;
@@ -413,32 +413,33 @@ document.addEventListener('DOMContentLoaded', function () {
 					recipeImage.style.height = '100%';
 					recipeImage.style.objectFit = 'cover';
 					recipeDiv.appendChild(recipeImage);
-
+	
 					const recipeTitle = document.createElement('h3');
 					recipeTitle.textContent = recipe.name;
 					recipeTitle.classList.add('recipe-title');
 					recipeDiv.appendChild(recipeTitle);
-
+	
 					recipeDiv.addEventListener('click', function () {
 						fetchRecipeDetails(recipe.name);
 					});
-
+	
 					recipesList.appendChild(recipeDiv);
 				});
-
+	
 				if (totalPages > 1) {
 					createPagination(totalPages, categoryId);
 				}
-
-				hideAllSections();
+	
 				recipesSection.classList.remove('hidden');
 				backToCategoriesBtn.classList.remove('hidden');
 				backToRecipesBtn.classList.add('hidden');
 			})
-			.catch((error) =>
-				console.error('Błąd podczas pobierania przepisów:', error)
-			);
+			.catch((error) => {
+				console.error('Błąd podczas pobierania przepisów:', error);
+				alert('Wystąpił problem z pobieraniem przepisów.');
+			});
 	}
+	
 
 	// Obsługa wyświetlania przepisów
 	viewRecipesBtn.addEventListener('click', function () {
@@ -450,8 +451,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	// Funkcja pobierania szczegółów przepisu
 	function fetchRecipeDetails(recipeName) {
-		// currentRecipeId = null;
+		currentRecipeId = null;
 		console.log('Fetching details for recipe:', recipeName);
+
+		hideAllSections();
+ 	    // recipesSection.innerHTML = '';
+		recipesList.innerHTML = '';
+   	    currentRecipeId = null;
 
 		fetch(`http://localhost:8080/api/recipes/name/${recipeName}`)
 			.then((response) => {
@@ -463,7 +469,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			.then((data) => {
 				console.log('Szczegóły przepisu:', data);
 
-				recipesList.innerHTML = '';
+				// recipesList.innerHTML = '';
 
 				const nameElement = document.createElement('h3');
 				nameElement.textContent = data.name;
@@ -488,46 +494,51 @@ document.addEventListener('DOMContentLoaded', function () {
 				stepsElement.appendChild(stepsList);
 				recipesList.appendChild(stepsElement);
 
-				currentRecipeId = data.id;
-				console.log('Ustawiono currentRecipeId:', currentRecipeId);
-
-				// Pokaż sekcję komentarzy i formularz
-				document.getElementById('comments-header').classList.remove('hidden'); // Pokaż nagłówek "Komentarze"
-				document.getElementById('comments-list').classList.remove('hidden');
-				fetchCommentsForRecipe(currentRecipeId); // Pobierz i pokaż komentarze
-
-           		
-           		 // Wyświetlenie formularza dodawania komentarzy
-           		if (isUserLoggedIn()) {
-                	document.getElementById('add-comment-section').classList.remove('hidden');
-           		}
-
-				backToRecipesBtn.classList.remove('hidden');
-				backToCategoriesBtn.classList.add('hidden');
-
-			})
-			.catch((error) => {
-				console.error('Błąd podczas pobierania szczegółów przepisu:', error);
-				alert(`Błąd podczas pobierania szczegółów przepisu: ${error.message}`);
-			});
+				 // Ustawiamy aktualne ID przepisu i wyświetlamy sekcję komentarzy
+				 currentRecipeId = data.id;
+				 document.getElementById('comments-header').classList.remove('hidden');
+				 document.getElementById('comments-list').classList.remove('hidden');
+				 if (isUserLoggedIn()) {
+					 document.getElementById('add-comment-section').classList.remove('hidden');
+				 }
+	 
+				 fetchCommentsForRecipe(currentRecipeId);
+				 backToRecipesBtn.classList.remove('hidden');
+				 recipesSection.classList.remove('hidden');
+			 })
+			 .catch((error) => {
+				 console.error('Błąd podczas pobierania szczegółów przepisu:', error);
+				 alert(`Błąd podczas pobierania szczegółów przepisu: ${error.message}`);
+			 });
 	}
 
 	// Obsługa powrotu do kategorii
 	backToCategoriesBtn.addEventListener('click', function () {
 		hideAllSections();
-		recipesSection.innerHTML = ''; // Wyczyść zawartość sekcji
+		// recipesSection.innerHTML = ''; // Wyczyść zawartość sekcji
     	currentRecipeId = null;
 		categorySection.classList.remove('hidden');
 	});
 
+
 	// Obsługa powrotu do przepisów z danej kategorii
 	backToRecipesBtn.addEventListener('click', function () {
-		recipesSection.innerHTML = ''; // Wyczyść szczegóły przepisu
+		// recipesSection.innerHTML = ''; // Wyczyść szczegóły przepisu
 		currentRecipeId = null; // Zresetuj currentRecipeId
 		fetchRecipesByCategory(currentCategory, currentPage);
 		backToRecipesBtn.classList.add('hidden');
 		backToCategoriesBtn.classList.remove('hidden');
 	});
+
+	// backToRecipesBtn.addEventListener('click', function () {
+	// 	hideAllSections();
+	// 	recipesSection.innerHTML = '';
+	// 	currentRecipeId = null;
+	// 	fetchRecipesByCategory(currentCategory, currentPage);
+	// 	backToRecipesBtn.classList.add('hidden');
+	// 	backToCategoriesBtn.classList.remove('hidden');
+	// });
+	
 
 	// Funkcja tworzenia paginacji
 	function createPagination(totalPages, categoryId) {
