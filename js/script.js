@@ -473,7 +473,7 @@ document.addEventListener('DOMContentLoaded', function () {
 					createPagination(totalPages, categoryId);
 				}
 	
-				recipesSection.classList.remove('hidden');
+			
 				backToCategoriesBtn.classList.remove('hidden');
 				backToRecipesBtn.classList.add('hidden');
 			})
@@ -550,7 +550,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	 
 				 fetchCommentsForRecipe(currentRecipeId);
 				 backToRecipesBtn.classList.remove('hidden');
-				 recipesSection.classList.remove('hidden');
+				//  recipesSection.classList.remove('hidden');
 			 })
 			 .catch((error) => {
 				 console.error('Błąd podczas pobierania szczegółów przepisu:', error);
