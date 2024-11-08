@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		const userInfoDisplay = document.getElementById('user-info');
 		userInfoDisplay?.classList.add('hidden');
 
-		currentRecipeId = null;
+		// currentRecipeId = null;
 		recipesList.innerHTML = '';
 		myRecipesList.innerHTML = '';
 		// recipesSection.innerHTML = '';
@@ -227,6 +227,15 @@ document.addEventListener('DOMContentLoaded', function () {
 	// Aktualizacja stanu zalogowania przy załadowaniu strony
 	updateLoginState();
 
+	// Obsługa przechodzenia do formularza dodawania przepisu
+	addRecipeBtn.addEventListener('click', function () {
+		if (isUserLoggedIn()) {
+			hideAllSections();
+			addRecipeSection.classList.remove('hidden');
+		} else {
+			alert('Dodawanie przepisu wymaga zalogowania.');
+		}
+	});
 
 	// Obsługa formularza dodawania przepisu
 	recipeForm.addEventListener('submit', function (e) {
@@ -280,6 +289,24 @@ document.addEventListener('DOMContentLoaded', function () {
 		newStepInput.placeholder = `Krok ${stepCount}`;
 		newStepInput.required = true;
 		stepsContainer.appendChild(newStepInput);
+	});
+
+
+	// Obsługa kliknięcia kategorii
+	document.getElementById('breakfast-btn').addEventListener('click', function () {
+			fetchRecipesByCategory(1);
+	});
+
+	document.getElementById('lunch-btn').addEventListener('click', function () {
+		fetchRecipesByCategory(2);
+	});
+
+	document.getElementById('dinner-btn').addEventListener('click', function () {
+		fetchRecipesByCategory(3);
+	});
+
+	document.getElementById('snack-btn').addEventListener('click', function () {
+		fetchRecipesByCategory(4);
 	});
 
 
@@ -373,7 +400,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				stepsElement.appendChild(stepsList);
 				recipesSection.appendChild(stepsElement);
 	
-				backToMyRecipesBtn.classList.remove('hidden');
+				// backToMyRecipesBtn.classList.remove('hidden');
 				recipesSection.classList.remove('hidden');
 			})
 			.catch((error) => {
@@ -388,36 +415,8 @@ document.addEventListener('DOMContentLoaded', function () {
 			myRecipesList.classList.remove('hidden');
 			recipesSection.classList.add('hidden'); 
 			recipesSection.innerHTML = ''; 
-			backToMyRecipesBtn.classList.add('hidden'); 
+			// backToMyRecipesBtn.classList.add('hidden'); 
 		});
-	
-	
-	// Obsługa przechodzenia do formularza dodawania przepisu
-	addRecipeBtn.addEventListener('click', function () {
-		if (isUserLoggedIn()) {
-			hideAllSections();
-			addRecipeSection.classList.remove('hidden');
-		} else {
-			alert('Dodawanie przepisu wymaga zalogowania.');
-		}
-	});
-
-	// Obsługa kliknięcia kategorii
-	document.getElementById('breakfast-btn').addEventListener('click', function () {
-			fetchRecipesByCategory(1);
-	});
-
-	document.getElementById('lunch-btn').addEventListener('click', function () {
-		fetchRecipesByCategory(2);
-	});
-
-	document.getElementById('dinner-btn').addEventListener('click', function () {
-		fetchRecipesByCategory(3);
-	});
-
-	document.getElementById('snack-btn').addEventListener('click', function () {
-		fetchRecipesByCategory(4);
-	});
 
 	
 	// Funkcja pobierania przepisów po kategorii
