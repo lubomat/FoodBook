@@ -13,7 +13,7 @@ header {
     background-color:transparent;
     padding: 10px;
     text-align: center;
-    color: rgb(255, 0, 0);
+    color: rgb(24, 85, 27);
 }
 
 h1 {
@@ -181,7 +181,6 @@ section {
 }
 
 
-/* Styl dla przycisku "Moje konto" */
 #account-btn {
     background-color: #3D94F6; /* Niebieski kolor tła */
     color: white;
@@ -199,7 +198,6 @@ section {
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); /* Cień po najechaniu */
 }
 
-/* Styl dla przycisku "Wyświetl moje przepisy" */
 #my-recipes-btn {
     background-color: #f0ad4e; /* Pomarańczowy kolor tła */
     color: white;
@@ -368,9 +366,8 @@ section {
     }
 }
 
-
+/* Sekcja wszystkich przepisów */
 #recipes-list {
-    /* background-color: rgba(246, 243, 243, 0.7); */
     color: #ffffff; 
     font-size: 1.3rem; 
 }
@@ -381,6 +378,17 @@ section {
 
 #recipes-section h2 {
     color: #3333ff; 
+}
+
+.recipe-details-background {
+    color: #000000;
+    background-color: rgba(244, 244, 244, 0.7);
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+.recipe-details-background ol li {
+    color: #000000 !important; /* Czarny kolor tekstu dla kroków */
 }
 
 
@@ -607,10 +615,5 @@ ol li {
 }
 
 
-/* .recipe-details-background {
-    background-color: rgba(255, 255, 255, 0.7);
-    padding: 20px;
-    border-radius: 10px;
-    margin-bottom: 20px;
-} */
+
 

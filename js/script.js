@@ -504,65 +504,69 @@ document.addEventListener('DOMContentLoaded', function () {
 	function fetchRecipeDetails(recipeName) {
 		currentRecipeId = null;
 		console.log('Fetching details for recipe:', recipeName);
-
+	
 		hideAllSections();
 		recipesList.innerHTML = '';
 		myRecipesList.innerHTML = '';
-   	    currentRecipeId = null;
-
+		currentRecipeId = null;
+	
 		fetch(`http://localhost:8080/api/recipes/name/${recipeName}`)
 			.then((response) => {
-            if (!response.ok) {
-                throw new Error(`Błąd HTTP! Status: ${response.status}`);
-            }
-            return response.json();
-        })
+				if (!response.ok) {
+					throw new Error(`Błąd HTTP! Status: ${response.status}`);
+				}
+				return response.json();
+			})
 			.then((data) => {
 				console.log('Szczegóły przepisu:', data);
-
+	
+				// Utwórz kontener dla szczegółów przepisu z tłem
 				const detailsContainer = document.createElement('div');
-          	    detailsContainer.classList.add('recipe-details-background');
-
+				detailsContainer.classList.add('recipe-details-background'); // Dodajemy klasę z tłem
+	
+				// Tworzenie elementów szczegółów przepisu
 				const nameElement = document.createElement('h3');
 				nameElement.textContent = data.name;
-				recipesList.appendChild(nameElement);
-
+				detailsContainer.appendChild(nameElement);
+	
 				const ingredientsElement = document.createElement('p');
 				ingredientsElement.innerHTML = `<strong>Składniki:</strong> ${data.ingredients}`;
-				recipesList.appendChild(ingredientsElement);
-
+				detailsContainer.appendChild(ingredientsElement);
+	
 				const stepsElement = document.createElement('div');
 				const stepsHeader = document.createElement('p');
 				stepsHeader.innerHTML = `<strong>Kroki:</strong>`;
 				stepsElement.appendChild(stepsHeader);
-
+	
 				const stepsList = document.createElement('ol');
 				data.steps.forEach((step, index) => {
 					const stepItem = document.createElement('li');
 					stepItem.textContent = step.description;
 					stepsList.appendChild(stepItem);
 				});
-
+	
 				stepsElement.appendChild(stepsList);
-				recipesList.appendChild(stepsElement);
-
+				detailsContainer.appendChild(stepsElement);
+	
+				// Dodajemy kontener do listy przepisów (teraz ma tło)
 				recipesList.appendChild(detailsContainer);
-
-				 currentRecipeId = data.id;
-				 document.getElementById('comments-header').classList.remove('hidden');
-				 document.getElementById('comments-list').classList.remove('hidden');
-				 if (isUserLoggedIn()) {
-					 document.getElementById('add-comment-section').classList.remove('hidden');
-				 }
-	 
-				 fetchCommentsForRecipe(currentRecipeId);
-				 backToRecipesBtn.classList.remove('hidden');
-			 })
-			 .catch((error) => {
-				 console.error('Błąd podczas pobierania szczegółów przepisu:', error);
-				 alert(`Błąd podczas pobierania szczegółów przepisu: ${error.message}`);
-			 });
+	
+				currentRecipeId = data.id;
+				document.getElementById('comments-header').classList.remove('hidden');
+				document.getElementById('comments-list').classList.remove('hidden');
+				if (isUserLoggedIn()) {
+					document.getElementById('add-comment-section').classList.remove('hidden');
+				}
+	
+				fetchCommentsForRecipe(currentRecipeId);
+				backToRecipesBtn.classList.remove('hidden');
+			})
+			.catch((error) => {
+				console.error('Błąd podczas pobierania szczegółów przepisu:', error);
+				alert(`Błąd podczas pobierania szczegółów przepisu: ${error.message}`);
+			});
 	}
+	
 
 	// Obsługa powrotu do kategorii
 	backToCategoriesBtn.addEventListener('click', function () {
