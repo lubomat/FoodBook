@@ -7,8 +7,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	const accountBtn = document.getElementById('account-btn'); 
 	const myRecipesBtn = document.getElementById('my-recipes-btn');
-
 	const recipesSection = document.getElementById('recipes-section');
+	
 	const addRecipeSection = document.getElementById('add-recipe-section');
 	const categorySection = document.getElementById('category-section');
 	const registerSection = document.getElementById('register-section');
@@ -375,7 +375,11 @@ document.addEventListener('DOMContentLoaded', function () {
 				console.log('Szczegóły przepisu:', data);
 	
 				myRecipesList.classList.add('hidden');
-					 
+
+				recipesSection.classList.add('recipe-details');
+
+				const recipeDetailsDiv = document.createElement('div');
+            	recipeDetailsDiv.classList.add('recipe-details');	 
 	
 				const nameElement = document.createElement('h3');
 				nameElement.textContent = data.name;
@@ -445,8 +449,11 @@ document.addEventListener('DOMContentLoaded', function () {
 				paginatedRecipes.forEach((recipe) => {
 					const recipeDiv = document.createElement('div');
 					recipeDiv.classList.add('recipe-tile');
-	
-					const fullImageUrl = `http://localhost:8080${recipe.imageUrl}`;
+					
+					// TO LOCAL USE
+					// const fullImageUrl = `http://localhost:8080${recipe.imageUrl}`;
+					const fullImageUrl = recipe.imageUrl;
+
 					const recipeImage = document.createElement('img');
 					recipeImage.src = fullImageUrl;
 					recipeImage.alt = recipe.name;
@@ -513,6 +520,9 @@ document.addEventListener('DOMContentLoaded', function () {
 			.then((data) => {
 				console.log('Szczegóły przepisu:', data);
 
+				const detailsContainer = document.createElement('div');
+          	    detailsContainer.classList.add('recipe-details-background');
+
 				const nameElement = document.createElement('h3');
 				nameElement.textContent = data.name;
 				recipesList.appendChild(nameElement);
@@ -535,6 +545,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
 				stepsElement.appendChild(stepsList);
 				recipesList.appendChild(stepsElement);
+
+				recipesList.appendChild(detailsContainer);
 
 				 currentRecipeId = data.id;
 				 document.getElementById('comments-header').classList.remove('hidden');
