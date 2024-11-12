@@ -55,31 +55,31 @@ section {
 }
 
 #foodbook-header {
-    font-family: 'Arial', sans-serif;  /* Zmień rodzinę czcionek */
-    font-size: 48px;                   /* Zmień rozmiar czcionki */
-    text-align: center;                /* Wyśrodkuj tekst */
-    font-weight: bold;                 /* Ustaw pogrubienie */
-    margin: 20px 0;                    /* Dodaj marginesy nad i pod */
+    font-family: 'Arial', sans-serif;  
+    font-size: 48px;                  
+    text-align: center;                
+    font-weight: bold;                
+    margin: 20px 0;                    
 }
 
 #foodbook-header .food {
-    color: rgb(51, 125, 125);                      /* Ustaw kolor "Food" na biały */
+    color: rgb(51, 125, 125);                    
 }
 
 #foodbook-header .book {
-    color: orange;                     /* Ustaw kolor "Book" na pomarańczowy */
+    color: orange;                     
 }
 
 #register-form input,
 #register-form button,
 #login-form input,
 #login-form button {
-    width: 100%; /* Pełna szerokość */
+    width: 100%; 
     padding: 10px;
-    margin-bottom: 15px; /* Margines między elementami */
-    font-size: 1rem; /* Zwiększona czcionka */
+    margin-bottom: 15px; 
+    font-size: 1rem; 
     border-radius: 5px;
-    border: 2px solid #b78b8bb3; /* Ujednolicenie z formularzem przepisu */
+    border: 2px solid #b78b8bb3; 
     box-sizing: border-box;
 }
 
@@ -116,15 +116,15 @@ section {
 }
 
 #user-info {
-    margin-right: 10px; /* Odstęp między informacją o użytkowniku a przyciskiem wylogowania */
+    margin-right: 10px; 
     color: rgb(5, 3, 3);
-    font-size: 1.15rem; /* Dostosowanie wielkości czcionki */
+    font-size: 1.15rem; 
     font-weight: bold;
-    display: inline-block; /* Ustawienie inline-block, aby być w linii z przyciskiem */
+    display: inline-block; 
 }
 
 #logout-btn {
-    background-color: #ff5722; /* Kolor tła dla przycisku wylogowania */
+    background-color: #ff5722; 
     color: white;
     padding: 10px 20px;
     border: none;
@@ -134,55 +134,59 @@ section {
 }
 
 #logout-btn:hover {
-    background-color: #e64a19; /* Zmiana koloru po najechaniu */
+    background-color: #e64a19; 
 }
 
-/* Nowa sekcja "Moje konto" */
+
 #account-section {
-    background-color: transparent; /* Przezroczyste tło */
+    background-color: transparent; 
     padding: 20px;
     border-radius: 10px;
     width: 50%;
     margin: 40px auto;
-    color: white; /* Kolor tekstu */
+    color: white; 
     text-align: center;
 }
 
 #account-section h2 {
-    color: #ffffff; /* Kolor nagłówka sekcji "Moje konto" */
+    color: #ffffff; 
     font-size: 1.9rem;
     margin-bottom: 20px;
 }
 
-/* Lista przepisów użytkownika w sekcji "Moje konto" */
+
 #my-recipes-list {
-    list-style-type: none; /* Usunięcie punktów listy */
+    list-style-type: none; 
     padding: 0;
     margin: 20px 0;
-    text-align: left; /* Wyśrodkowanie listy */
+    text-align: left;
 }
 
 #my-recipes-list li {
-    background-color: rgba(246, 243, 243, 0.7); /* Tło dla każdego przepisu */
-    color: #ececec; /* Kolor tekstu */
+    background-color: rgba(246, 243, 243, 0.7); 
+    color: #ececec; 
     padding: 10px;
     margin-bottom: 10px;
     border-radius: 5px;
     font-size: 1.2rem;
 }
 
+#my-recipes-list a {
+    color: #000000;
+}
+
 .recipe-details {
-    background-color: rgba(255, 255, 255, 0.6); /* Białe, przezroczyste tło */
+    background-color: rgba(255, 255, 255, 0.6);
     padding: 20px;
     border-radius: 10px;
     margin-top: 20px;
-    color: #000000; /* Kolor tekstu */
+    color: #000000; 
     font-size: 1.2rem;
 }
 
 
 #account-btn {
-    background-color: #3D94F6; /* Niebieski kolor tła */
+    background-color: #3D94F6; 
     color: white;
     padding: 10px 20px;
     border: none;
@@ -190,16 +194,16 @@ section {
     cursor: pointer;
     font-size: 1rem;
     transition: background-color 0.3s, box-shadow 0.3s;
-    margin-right: 10px; /* Odstęp między przyciskiem a resztą elementów */
+    margin-right: 10px; 
 }
 
 #account-btn:hover {
-    background-color: #1E62D0; /* Zmiana koloru tła po najechaniu */
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); /* Cień po najechaniu */
+    background-color: #1E62D0; 
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
 #my-recipes-btn {
-    background-color: #f0ad4e; /* Pomarańczowy kolor tła */
+    background-color: #f0ad4e; 
     color: white;
     padding: 10px 20px;
     border: none;
@@ -210,7 +214,7 @@ section {
 }
 
 #my-recipes-btn:hover {
-    background-color: #ec971f; /* Zmiana koloru tła po najechaniu */
+    background-color: #ec971f; 
 }
 
 
@@ -366,7 +370,7 @@ section {
     }
 }
 
-/* Sekcja wszystkich przepisów */
+
 #recipes-list {
     color: #ffffff; 
     font-size: 1.3rem; 
@@ -383,12 +387,20 @@ section {
 .recipe-details-background {
     color: #000000;
     background-color: rgba(244, 244, 244, 0.7);
-    padding: 20px;
+    padding: 15px;
     border-radius: 10px;
     margin-bottom: 20px;
+    width: 100%;
+    max-width: 800px;
 }
 .recipe-details-background ol li {
-    color: #000000 !important; /* Czarny kolor tekstu dla kroków */
+    color: #000000 !important; 
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 800px;
+    
 }
 
 
@@ -516,9 +528,9 @@ ol li {
     line-height: 1.5; 
 }
 
-/* Stylizacja sekcji komentarzy */
+
 #comments-list {
-    background-color: rgba(255, 255, 255, 0.6); /* Białe tło z przezroczystością 60% */
+    background-color: rgba(255, 255, 255, 0.7);
     padding: 15px;
     border-radius: 10px;
     margin-bottom: 20px;
@@ -527,7 +539,7 @@ ol li {
 }
 
 #add-comment-section {
-    background-color: rgba(255, 255, 255, 0.6); /* Przezroczyste białe tło */
+    background-color: rgba(255, 255, 255, 0.7);
     padding: 15px;
     border-radius: 10px;
     margin-bottom: 20px;
@@ -538,18 +550,19 @@ ol li {
 #comments-header {
     font-size: 1.5em;
     font-weight: bold;
+
     margin-bottom: 10px;
     color: #000000;
 }
 
-/* Stylizacja formularza dodawania komentarza */
+
 #comment-form textarea {
     width: 95%;
     padding: 15px;
     margin-bottom: 15px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    background-color: rgba(255, 255, 255, 0.8); /* Białe tło z przezroczystością 80% */
+    background-color: rgba(255, 255, 255, 0.8); 
 }
 #comment-form .star-rating {
     width: auto;
@@ -576,7 +589,6 @@ ol li {
 
 
 
-/* Stylizacja gwiazdek do oceny */
 .star-rating {
     display: table;
     align-items: center;
