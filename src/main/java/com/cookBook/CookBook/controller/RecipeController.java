@@ -113,7 +113,7 @@ public class RecipeController {
         Recipe recipe = new Recipe();
         recipe.setName(name);
         recipe.setIngredients(ingredients);
-        recipe.setImageUrl(imageUrl); // Zapisz URL do obrazu z Cloudinary
+        recipe.setImageUrl(imageUrl);
         recipe.setCategory(recipeService.getCategoryById(categoryId));
 
         User currentUser = userService.findByUsername(authentication.getName())
@@ -156,7 +156,7 @@ public class RecipeController {
     @Secured("ROLE_USER")
     @GetMapping("/my-recipes")
     public List<Recipe> getMyRecipes(Authentication authentication) {
-        String username = authentication.getName(); // Pobieranie nazwy użytkownika z kontekstu uwierzytelniania
-        return recipeService.getRecipesByUser(username); // Pobieranie przepisów dla zalogowanego użytkownika
+        String username = authentication.getName();
+        return recipeService.getRecipesByUser(username);
     }
 }
