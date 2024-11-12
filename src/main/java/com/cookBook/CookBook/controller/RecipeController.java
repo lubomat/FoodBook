@@ -4,6 +4,7 @@ import com.cookBook.CookBook.model.Comment;
 import com.cookBook.CookBook.model.Recipe;
 import com.cookBook.CookBook.model.RecipeStep;
 import com.cookBook.CookBook.model.User;
+import com.cookBook.CookBook.service.CloudinaryService;
 import com.cookBook.CookBook.service.CommentService;
 import com.cookBook.CookBook.service.RecipeService;
 import com.cookBook.CookBook.service.UserService;
@@ -31,6 +32,9 @@ public class RecipeController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private CloudinaryService cloudinaryService;
 
     @GetMapping
     public List<Recipe> getAllRecipes() {
@@ -80,20 +84,36 @@ public class RecipeController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Rozmiar pliku przekracza dozwolone 5 MB.");
         }
 
-        String uploadDir = "D:/obrazyfoodbook/";
-        File directory = new File(uploadDir);
-        if (!directory.exists()) {
-            directory.mkdirs();
-        }
+//        String uploadDir = "D:/obrazyfoodbook/";
+//        File directory = new File(uploadDir);
+//        if (!directory.exists()) {
+//            directory.mkdirs();
+//        }
+//
+//        File uploadFile = new File(uploadDir, image.getOriginalFilename());
+//        image.transferTo(uploadFile);
+//        String imageUrl = "/uploads/" + image.getOriginalFilename();
+//
+//        Recipe recipe = new Recipe();
+//        recipe.setName(name);
+//        recipe.setIngredients(ingredients);
+//        recipe.setImageUrl(imageUrl);
+//        recipe.setCategory(recipeService.getCategoryById(categoryId));
+//
+//        User currentUser = userService.findByUsername(authentication.getName())
+//                .orElseThrow(() -> new RuntimeException("Użytkownik nie został znaleziony"));
+//        recipe.setUser(currentUser);
+//
+//        List<RecipeStep> recipeSteps = createRecipeSteps(steps);
+//
+//        return recipeService.addRecipe(recipe, recipeSteps);
 
-        File uploadFile = new File(uploadDir, image.getOriginalFilename());
-        image.transferTo(uploadFile);
-        String imageUrl = "/uploads/" + image.getOriginalFilename();
+        String imageUrl = cloudinaryService.uploadFile(image);
 
         Recipe recipe = new Recipe();
         recipe.setName(name);
         recipe.setIngredients(ingredients);
-        recipe.setImageUrl(imageUrl);
+        recipe.setImageUrl(imageUrl); // Zapisz URL do obrazu z Cloudinary
         recipe.setCategory(recipeService.getCategoryById(categoryId));
 
         User currentUser = userService.findByUsername(authentication.getName())
