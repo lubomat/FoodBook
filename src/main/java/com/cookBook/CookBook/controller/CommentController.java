@@ -6,6 +6,8 @@ import com.cookBook.CookBook.model.User;
 import com.cookBook.CookBook.service.CommentService;
 import com.cookBook.CookBook.service.RecipeService;
 import com.cookBook.CookBook.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -17,6 +19,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/comments")
 public class CommentController {
+
+    private static final Logger logger = LoggerFactory.getLogger(CommentController.class);
 
     @Autowired
     private CommentService commentService;
@@ -32,24 +36,51 @@ public class CommentController {
     public ResponseEntity<Comment> addComment(@PathVariable Long recipeId,
                                               @RequestBody Comment comment,
                                               Authentication authentication) {
-        User currentUser = userService.findByUsername(authentication.getName())
-                .orElseThrow(() -> new RuntimeException("Użytkownik nie został znaleziony"));
+        logger.info("Received request to add a comment for recipeId: {}", recipeId);
 
-        Recipe recipe = recipeService.getRecipeById(recipeId)
-                .orElseThrow(() -> new RuntimeException("Przepis nie został znaleziony"));
+        try {
+            User currentUser = userService.findByUsername(authentication.getName())
+                    .orElseThrow(() -> {
+                        logger.error("User not found: {}", authentication.getName());
+                        return new RuntimeException("Użytkownik nie został znaleziony");
+                    });
 
-        comment.setRecipe(recipe);
-        comment.setUser(currentUser);
+            logger.info("Authenticated user: {}", currentUser.getUsername());
 
-        Comment savedComment = commentService.addComment(recipe, currentUser, comment.getContent(), comment.getRating());
+            Recipe recipe = recipeService.getRecipeById(recipeId)
+                    .orElseThrow(() -> {
+                        logger.error("Recipe not found with ID: {}", recipeId);
+                        return new RuntimeException("Przepis nie został znaleziony");
+                    });
 
-        return ResponseEntity.ok(savedComment);
+            comment.setRecipe(recipe);
+            comment.setUser(currentUser);
+
+            Comment savedComment = commentService.addComment(recipe, currentUser, comment.getContent(), comment.getRating());
+            logger.info("Comment successfully added for recipeId: {}, by user: {}", recipeId, currentUser.getUsername());
+
+            return ResponseEntity.ok(savedComment);
+
+        } catch (Exception e) {
+            logger.error("Error while adding comment for recipeId: {}", recipeId, e);
+            throw e;
+        }
     }
 
     @GetMapping("/{recipeId}")
     public ResponseEntity<List<Comment>> getCommentsByRecipe(@PathVariable Long recipeId) {
-        List<Comment> comments = commentService.getCommentsByRecipe(recipeId);
-        return ResponseEntity.ok(comments);
+        logger.info("Received request to fetch comments for recipeId: {}", recipeId);
+
+        try {
+            List<Comment> comments = commentService.getCommentsByRecipe(recipeId);
+            logger.info("Successfully fetched {} comments for recipeId: {}", comments.size(), recipeId);
+
+            return ResponseEntity.ok(comments);
+
+        } catch (Exception e) {
+            logger.error("Error while fetching comments for recipeId: {}", recipeId, e);
+            throw e;
+        }
     }
 }
 

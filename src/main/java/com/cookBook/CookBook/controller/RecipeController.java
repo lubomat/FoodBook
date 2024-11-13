@@ -8,6 +8,8 @@ import com.cookBook.CookBook.service.CloudinaryService;
 import com.cookBook.CookBook.service.CommentService;
 import com.cookBook.CookBook.service.RecipeService;
 import com.cookBook.CookBook.service.UserService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,28 +37,48 @@ public class RecipeController {
     @Autowired
     private CloudinaryService cloudinaryService;
 
+    private static final Logger logger = LogManager.getLogger(RecipeController.class);
+
     @GetMapping
     public List<Recipe> getAllRecipes() {
-        return recipeService.getAllRecipes();
+        logger.info("Fetching all recipes.");
+        List<Recipe> recipes = recipeService.getAllRecipes();
+        logger.info("Successfully fetched {} recipes.", recipes.size());
+        return recipes;
     }
 
     @GetMapping("/category/{categoryId}")
     public List<Recipe> getRecipesByCategory(@PathVariable Long categoryId) {
-        return recipeService.getRecipesByCategory(categoryId);
+        logger.info("Fetching recipes by category ID: {}", categoryId);
+        List<Recipe> recipes = recipeService.getRecipesByCategory(categoryId);
+        logger.info("Successfully fetched {} recipes for category ID: {}", recipes.size(), categoryId);
+        return recipes;
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Recipe> getRecipeById(@PathVariable Long id) {
+        logger.info("Fetching recipe by ID: {}", id);
         Optional<Recipe> recipe = recipeService.getRecipeById(id);
-        return recipe.map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        if (recipe.isPresent()) {
+            logger.info("Recipe found with ID: {}", id);
+            return ResponseEntity.ok(recipe.get());
+        } else {
+            logger.warn("Recipe not found with ID: {}", id);
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping("/name/{recipeName}")
     public ResponseEntity<Recipe> getRecipeByName(@PathVariable String recipeName) {
+        logger.info("Fetching recipe by name: {}", recipeName);
         Optional<Recipe> recipe = recipeService.getRecipeByName(recipeName);
-        return recipe.map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        if (recipe.isPresent()) {
+            logger.info("Recipe found with name: {}", recipeName);
+            return ResponseEntity.ok(recipe.get());
+        } else {
+            logger.warn("Recipe not found with name: {}", recipeName);
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @Secured("ROLE_USER")
@@ -67,48 +88,28 @@ public class RecipeController {
                             @RequestParam("steps") List<String> steps,
                             @RequestParam("category") Long categoryId,
                             @RequestParam("image") MultipartFile image,
-                            Authentication authentication)throws IOException {
-
+                            Authentication authentication) throws IOException {
+        logger.info("Received request to add a recipe with name: {}", name);
 
         if (recipeService.getRecipeByName(name).isPresent()) {
+            logger.warn("Recipe with name '{}' already exists.", name);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Przepis o tej nazwie już istnieje.");
         }
 
         String fileType = image.getContentType();
         if (!fileType.startsWith("image/")) {
+            logger.error("Invalid file type for recipe image: {}", fileType);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Nieprawidłowy typ pliku. Dozwolone są tylko obrazy.");
         }
 
         long maxFileSize = 5 * 1024 * 1024; // 5 MB
         if (image.getSize() > maxFileSize) {
+            logger.error("File size exceeds limit for image: {} bytes.", image.getSize());
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Rozmiar pliku przekracza dozwolone 5 MB.");
         }
 
-//        String uploadDir = "D:/obrazyfoodbook/";
-//        File directory = new File(uploadDir);
-//        if (!directory.exists()) {
-//            directory.mkdirs();
-//        }
-//
-//        File uploadFile = new File(uploadDir, image.getOriginalFilename());
-//        image.transferTo(uploadFile);
-//        String imageUrl = "/uploads/" + image.getOriginalFilename();
-//
-//        Recipe recipe = new Recipe();
-//        recipe.setName(name);
-//        recipe.setIngredients(ingredients);
-//        recipe.setImageUrl(imageUrl);
-//        recipe.setCategory(recipeService.getCategoryById(categoryId));
-//
-//        User currentUser = userService.findByUsername(authentication.getName())
-//                .orElseThrow(() -> new RuntimeException("Użytkownik nie został znaleziony"));
-//        recipe.setUser(currentUser);
-//
-//        List<RecipeStep> recipeSteps = createRecipeSteps(steps);
-//
-//        return recipeService.addRecipe(recipe, recipeSteps);
-
         String imageUrl = cloudinaryService.uploadFile(image);
+        logger.info("Image uploaded successfully to URL: {}", imageUrl);
 
         Recipe recipe = new Recipe();
         recipe.setName(name);
@@ -117,15 +118,22 @@ public class RecipeController {
         recipe.setCategory(recipeService.getCategoryById(categoryId));
 
         User currentUser = userService.findByUsername(authentication.getName())
-                .orElseThrow(() -> new RuntimeException("Użytkownik nie został znaleziony"));
-        recipe.setUser(currentUser);
+                .orElseThrow(() -> {
+                    logger.error("User not found: {}", authentication.getName());
+                    return new RuntimeException("Użytkownik nie został znaleziony");
+                });
 
+        recipe.setUser(currentUser);
         List<RecipeStep> recipeSteps = createRecipeSteps(steps);
 
-        return recipeService.addRecipe(recipe, recipeSteps);
+        Recipe savedRecipe = recipeService.addRecipe(recipe, recipeSteps);
+        logger.info("Recipe '{}' successfully added by user: {}", name, currentUser.getUsername());
+
+        return savedRecipe;
     }
 
     private List<RecipeStep> createRecipeSteps(List<String> steps) {
+        logger.debug("Creating recipe steps for {} steps.", steps.size());
         List<RecipeStep> recipeSteps = new ArrayList<>();
         for (int i = 0; i < steps.size(); i++) {
             RecipeStep step = new RecipeStep();
@@ -133,23 +141,28 @@ public class RecipeController {
             step.setDescription(steps.get(i));
             recipeSteps.add(step);
         }
+        logger.debug("Successfully created {} recipe steps.", recipeSteps.size());
         return recipeSteps;
     }
-
 
     @Secured("ROLE_USER")
     @PutMapping("/{id}")
     public ResponseEntity<Recipe> updateRecipe(@PathVariable Long id,
                                                @RequestBody Recipe updatedRecipe,
                                                @RequestParam List<String> steps) {
+        logger.info("Received request to update recipe with ID: {}", id);
         List<RecipeStep> recipeSteps = createRecipeSteps(steps);
-        return ResponseEntity.ok(recipeService.updateRecipe(id, updatedRecipe, recipeSteps));
+        Recipe updated = recipeService.updateRecipe(id, updatedRecipe, recipeSteps);
+        logger.info("Recipe with ID: {} successfully updated.", id);
+        return ResponseEntity.ok(updated);
     }
 
     @Secured("ROLE_USER")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteRecipe(@PathVariable Long id) {
+        logger.info("Received request to delete recipe with ID: {}", id);
         recipeService.deleteRecipe(id);
+        logger.info("Recipe with ID: {} successfully deleted.", id);
         return ResponseEntity.noContent().build();
     }
 
@@ -157,6 +170,9 @@ public class RecipeController {
     @GetMapping("/my-recipes")
     public List<Recipe> getMyRecipes(Authentication authentication) {
         String username = authentication.getName();
-        return recipeService.getRecipesByUser(username);
+        logger.info("Fetching recipes for user: {}", username);
+        List<Recipe> recipes = recipeService.getRecipesByUser(username);
+        logger.info("Successfully fetched {} recipes for user: {}", recipes.size(), username);
+        return recipes;
     }
 }
