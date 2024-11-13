@@ -373,7 +373,15 @@ section {
 
 #recipes-list {
     color: #ffffff; 
-    font-size: 1.3rem; 
+    font-size: 1.3rem;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+     
 }
 
 #recipes-list li {
@@ -392,6 +400,9 @@ section {
     margin-bottom: 20px;
     width: 100%;
     max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
 }
 .recipe-details-background ol li {
     color: #000000 !important; 

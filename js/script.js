@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	const accountBtn = document.getElementById('account-btn'); 
 	const myRecipesBtn = document.getElementById('my-recipes-btn');
-	const recipesSection = document.getElementById('recipes-section');
+	const myRecipesSection = document.getElementById('myRecipes-section');
 	
 	const addRecipeSection = document.getElementById('add-recipe-section');
 	const categorySection = document.getElementById('category-section');
@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		console.log("loginSection:", loginSection);
 		console.log("registerSection:", registerSection);
 		console.log("addRecipeSection:", addRecipeSection);
-		console.log("recipesSection:", recipesSection);
+		console.log("recipesSection:", myRecipesSection);
 		console.log("categorySection:", categorySection);
 		console.log("accountSection:", accountSection);
 		console.log("comments-list:", document.getElementById('comments-list'));
@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		loginSection?.classList.add('hidden');
 		registerSection?.classList.add('hidden');
 		addRecipeSection?.classList.add('hidden');
-		recipesSection?.classList.add('hidden');
+		myRecipesSection?.classList.add('hidden');
 		categorySection?.classList.add('hidden');
 		accountSection?.classList.add('hidden');
 		backToCategoriesBtn.classList.add('hidden');
@@ -326,8 +326,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 	myRecipesBtn.addEventListener('click', function () {
-		recipesSection.classList.add('hidden');
-		recipesSection.innerHTML = '';
+		myRecipesSection.classList.add('hidden');
+		myRecipesSection.innerHTML = '';
 		myRecipesList.innerHTML = '';
 
 		fetch('http://localhost:8080/api/recipes/my-recipes', {
@@ -383,18 +383,18 @@ document.addEventListener('DOMContentLoaded', function () {
 	
 				myRecipesList.classList.add('hidden');
 
-				recipesSection.classList.add('recipe-details');
+				myRecipesSection.classList.add('recipe-details');
 
 				const recipeDetailsDiv = document.createElement('div');
             	recipeDetailsDiv.classList.add('recipe-details');	 
 	
 				const nameElement = document.createElement('h3');
 				nameElement.textContent = data.name;
-				recipesSection.appendChild(nameElement);
+				myRecipesSection.appendChild(nameElement);
 	
 				const ingredientsElement = document.createElement('p');
 				ingredientsElement.innerHTML = `<strong>Składniki:</strong> ${data.ingredients}`;
-				recipesSection.appendChild(ingredientsElement);
+				myRecipesSection.appendChild(ingredientsElement);
 	
 				const stepsElement = document.createElement('div');
 				const stepsHeader = document.createElement('p');
@@ -409,10 +409,10 @@ document.addEventListener('DOMContentLoaded', function () {
 				});
 	
 				stepsElement.appendChild(stepsList);
-				recipesSection.appendChild(stepsElement);
+				myRecipesSection.appendChild(stepsElement);
 	
 				// backToMyRecipesBtn.classList.remove('hidden');
-				recipesSection.classList.remove('hidden');
+				myRecipesSection.classList.remove('hidden');
 			})
 			.catch((error) => {
 				console.error('Błąd podczas pobierania szczegółów przepisu:', error);
@@ -424,8 +424,8 @@ document.addEventListener('DOMContentLoaded', function () {
 		// Obsługa powrotu do listy moich przepisów
 		backToMyRecipesBtn.addEventListener('click', function () {
 			myRecipesList.classList.remove('hidden');
-			recipesSection.classList.add('hidden'); 
-			recipesSection.innerHTML = ''; 
+			myRecipesSection.classList.add('hidden'); 
+			myRecipesSection.innerHTML = ''; 
 			// backToMyRecipesBtn.classList.add('hidden'); 
 		});
 
