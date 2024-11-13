@@ -99,36 +99,29 @@ document.addEventListener('DOMContentLoaded', function () {
 				},
 				body: JSON.stringify({ username, email, password }),
 			})
-				.then((response) => {
-					const contentType = response.headers.get('content-type');
-					if (contentType && contentType.includes('application/json')) {
-						return response.json();
-					} else {
-						return response.text();
-					}
-				})
-				.then((data) => {
-					console.log('Odpowiedź backendu: ', data);
-
-					if (typeof data === 'object' && data.success === true) {
-						alert('Rejestracja udana!'); 
-						console.log('Przekierowanie na stronę główną...');
-						window.location.href = 'index.html'; 
-					} else if (typeof data === 'string') {
-						alert('Użytkownik zarejestrowany !');
-						window.location.href = 'index.html';
-					} else {
-						alert('Błąd rejestracji: ' + data.message); 
-					}
-				})
-				.catch((error) => {
-					console.error('Błąd podczas rejestracji:', error);
-					alert('Wystąpił problem z rejestracją: ' + error.message); 
-				});
-		} else {
-			alert('Wprowadź nazwę użytkownika, email i hasło.'); 
-		}
-	});
+			.then((response) => {
+                // Sprawdzenie statusu HTTP
+                if (response.ok) {
+                    return response.text(); // Jeśli status OK, zwracamy tekst sukcesu
+                } else {
+                    return response.text().then((error) => {
+                        throw new Error(error); // Jeśli status błędny, rzucamy błąd
+                    });
+                }
+            })
+            .then((data) => {
+                console.log('Odpowiedź backendu: ', data);
+                alert(data); // Wyświetl komunikat sukcesu (np. "User registered successfully")
+                window.location.href = 'index.html'; // Przekierowanie na stronę główną
+            })
+            .catch((error) => {
+                console.error('Błąd podczas rejestracji:', error.message);
+                alert('Błąd rejestracji: ' + error.message); // Wyświetl komunikat błędu (np. "Username already exists")
+            });
+    } else {
+        alert('Wprowadź nazwę użytkownika, email i hasło.');
+    }
+});
 
 	// Obsługa przycisku "Logowanie"
 	loginBtn.addEventListener('click', function () {
