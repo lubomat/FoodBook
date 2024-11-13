@@ -5,10 +5,10 @@ document.addEventListener('DOMContentLoaded', function () {
 	const loginBtn = document.getElementById('login-btn');
 	const logoutBtn = document.getElementById('logout-btn');
 
-	const accountBtn = document.getElementById('account-btn'); 
+	const accountBtn = document.getElementById('account-btn');
 	const myRecipesBtn = document.getElementById('my-recipes-btn');
 	const myRecipesSection = document.getElementById('myRecipes-section');
-	
+
 	const addRecipeSection = document.getElementById('add-recipe-section');
 	const categorySection = document.getElementById('category-section');
 	const registerSection = document.getElementById('register-section');
@@ -32,20 +32,23 @@ document.addEventListener('DOMContentLoaded', function () {
 	let currentPage = 1;
 	const recipesPerPage = 9;
 	let currentCategory = null;
-	let currentRecipeId = null;;
+	let currentRecipeId = null;
 
 	function hideAllSections() {
-		console.log("loginSection:", loginSection);
-		console.log("registerSection:", registerSection);
-		console.log("addRecipeSection:", addRecipeSection);
-		console.log("recipesSection:", myRecipesSection);
-		console.log("categorySection:", categorySection);
-		console.log("accountSection:", accountSection);
-		console.log("comments-list:", document.getElementById('comments-list'));
-		console.log("add-comment-section:", document.getElementById('add-comment-section'));
-		console.log("comments-header:", document.getElementById('comments-header'));
-		console.log("user-info:", document.getElementById('user-info'));
-	
+		console.log('loginSection:', loginSection);
+		console.log('registerSection:', registerSection);
+		console.log('addRecipeSection:', addRecipeSection);
+		console.log('recipesSection:', myRecipesSection);
+		console.log('categorySection:', categorySection);
+		console.log('accountSection:', accountSection);
+		console.log('comments-list:', document.getElementById('comments-list'));
+		console.log(
+			'add-comment-section:',
+			document.getElementById('add-comment-section')
+		);
+		console.log('comments-header:', document.getElementById('comments-header'));
+		console.log('user-info:', document.getElementById('user-info'));
+
 		loginSection?.classList.add('hidden');
 		registerSection?.classList.add('hidden');
 		addRecipeSection?.classList.add('hidden');
@@ -58,30 +61,28 @@ document.addEventListener('DOMContentLoaded', function () {
 		document.getElementById('add-comment-section')?.classList.add('hidden');
 		document.getElementById('comments-header')?.classList.add('hidden');
 		document.getElementById('user-info')?.classList.add('hidden');
-	
+
 		const userInfoDisplay = document.getElementById('user-info');
 		userInfoDisplay?.classList.add('hidden');
 
-		// currentRecipeId = null;
 		recipesList.innerHTML = '';
 		myRecipesList.innerHTML = '';
-		// recipesSection.innerHTML = '';
 	}
 
 	function isUserLoggedIn() {
 		const token = localStorage.getItem('jwtToken');
 		console.log('Sprawdzanie tokena JWT:', token);
-		return token !== null; 
+		return token !== null;
 	}
 
-	// Obsługa przycisku "Rejestracja"
+	// REGISTER BUTTON
 	registerBtn.addEventListener('click', function () {
 		console.log("Przycisk 'Rejestracja' został kliknięty");
 		hideAllSections();
 		registerSection.classList.remove('hidden');
 	});
 
-	// Obsługa formularza rejestracji
+	// REGISTER FORM
 	registerForm.addEventListener('submit', function (e) {
 		e.preventDefault();
 
@@ -90,7 +91,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		const password = document.getElementById('register-password').value;
 
 		if (username && email && password) {
-			console.log('Wysyłanie zapytania do backendu...');
+			console.log('Sending a request to the backend...');
 
 			fetch('http://localhost:8080/register', {
 				method: 'POST',
@@ -99,43 +100,44 @@ document.addEventListener('DOMContentLoaded', function () {
 				},
 				body: JSON.stringify({ username, email, password }),
 			})
-			.then((response) => {
-                // Sprawdzenie statusu HTTP
-                if (response.ok) {
-                    return response.text(); // Jeśli status OK, zwracamy tekst sukcesu
-                } else {
-                    return response.text().then((error) => {
-                        throw new Error(error); // Jeśli status błędny, rzucamy błąd
-                    });
-                }
-            })
-            .then((data) => {
-                console.log('Odpowiedź backendu: ', data);
-                alert(data); // Wyświetl komunikat sukcesu (np. "User registered successfully")
-                window.location.href = 'index.html'; // Przekierowanie na stronę główną
-            })
-            .catch((error) => {
-                console.error('Błąd podczas rejestracji:', error.message);
-                alert('Błąd rejestracji: ' + error.message); // Wyświetl komunikat błędu (np. "Username already exists")
-            });
-    } else {
-        alert('Wprowadź nazwę użytkownika, email i hasło.');
-    }
-});
+				.then((response) => {
+					if (response.ok) {
+						return response.text();
+					} else {
+						return response.text().then((error) => {
+							throw new Error(error);
+						});
+					}
+				})
+				.then((data) => {
+					console.log('Backend respond: ', data);
+					alert(data);
+					window.location.href = 'index.html';
+				})
+				.catch((error) => {
+					console.error('Błąd podczas rejestracji:', error.message);
+					alert('Błąd rejestracji: ' + error.message);
+				});
+		} else {
+			alert('Wprowadź nazwę użytkownika, email i hasło.');
+		}
+	});
 
-	// Obsługa przycisku "Logowanie"
+	// LOGIN BUTTON
 	loginBtn.addEventListener('click', function () {
 		console.log("Przycisk 'Logowanie' został kliknięty");
 		hideAllSections();
 		loginSection.classList.remove('hidden');
 	});
 
-	// Obsługa formularza logowania
+	// LOGIN FORM
 	loginForm.addEventListener('submit', function (e) {
 		e.preventDefault();
-		console.log('Formularz logowania wysłany!');
+		console.log('Login form sent!');
 
-		const usernameOrEmail = document.getElementById('login-usernameOrEmail').value;
+		const usernameOrEmail = document.getElementById(
+			'login-usernameOrEmail'
+		).value;
 		const password = document.getElementById('login-password').value;
 
 		if (usernameOrEmail && password) {
@@ -154,44 +156,43 @@ document.addEventListener('DOMContentLoaded', function () {
 					return response.json();
 				})
 				.then((data) => {
-					console.log('Odpowiedź serwera: ', data);
+					console.log('Server response: ', data);
 					if (data.jwt) {
 						alert('Logowanie udane!');
 						localStorage.setItem('jwtToken', data.jwt);
 
 						updateLoginState();
-						window.location.href = 'index.html'; // Zmień adres URL na stronę główną aplikacji
+						window.location.href = 'index.html'; // MAIN APPLICATION URL
 					} else {
-						alert('Błąd logowania: ' + data.message);
+						alert('Błąd podczas logowania: ' + data.message);
 					}
 				})
 				.catch((error) => {
-					console.error('Błąd podczas logowania:', error);
-					alert('Błąd podczas logowania: ' + error.message);
+					console.error('Error logging in:', error);
+					alert('Error logging in: ' + error.message);
 				});
 		} else {
-			console.log('Brak nazwy użytkownika lub hasła!');
+			console.log('No username or password!');
 		}
 	});
 
-	
-	// Funkcja do pobierania nazwy użytkownika z tokena JWT
+	// Function to retrieve username from JWT
 	function getUsernameFromToken(token) {
-    try {
-        const payload = JSON.parse(atob(token.split('.')[1]));
-        return payload.sub || payload.username;
-    } catch (error) {
-        console.error('Błąd podczas dekodowania tokena JWT:', error);
-        return null;
-    }
-}
+		try {
+			const payload = JSON.parse(atob(token.split('.')[1]));
+			return payload.sub || payload.username;
+		} catch (error) {
+			console.error('Error decoding JWT token:', error);
+			return null;
+		}
+	}
 
-	// Funkcja do ustawiania stanu zalogowania
+	// Function to set the login status
 	function updateLoginState() {
 		const userInfoDisplay = document.getElementById('user-info');
 		const token = localStorage.getItem('jwtToken');
 		console.log('Aktualny token JWT:', token);
-	
+
 		if (isUserLoggedIn()) {
 			const username = getUsernameFromToken(token);
 			loginBtn.classList.add('hidden');
@@ -209,18 +210,18 @@ document.addEventListener('DOMContentLoaded', function () {
 		}
 	}
 
-	// Obsługa wylogowania
+	// LOGOUT
 	logoutBtn.addEventListener('click', function () {
-		localStorage.removeItem('jwtToken'); 
+		localStorage.removeItem('jwtToken');
 		alert('Zostałeś wylogowany.');
 		updateLoginState();
 		window.location.reload();
 	});
 
-	// Aktualizacja stanu zalogowania przy załadowaniu strony
+	// Update the login status when the page is loaded
 	updateLoginState();
 
-	// Obsługa przechodzenia do formularza dodawania przepisu
+	// ADD RECIPE BUTTON
 	addRecipeBtn.addEventListener('click', function () {
 		if (isUserLoggedIn()) {
 			hideAllSections();
@@ -230,25 +231,25 @@ document.addEventListener('DOMContentLoaded', function () {
 		}
 	});
 
-	// Obsługa formularza dodawania przepisu
+	// ADD RECIPE FORM
 	recipeForm.addEventListener('submit', function (e) {
 		e.preventDefault();
-	
+
 		const token = localStorage.getItem('jwtToken');
 		if (!token) {
 			alert('Spróbuj ponownie się zalogować.');
 			return;
 		}
-	
+
 		if (!isUserLoggedIn()) {
 			alert('Musisz być zalogowany, aby dodać przepis.');
 			return;
 		}
-	
+
 		const formData = new FormData(recipeForm);
-	
+
 		console.log('Wysyłanie przepisu:', formData);
-	
+
 		fetch('http://localhost:8080/api/recipes', {
 			method: 'POST',
 			headers: {
@@ -260,24 +261,23 @@ document.addEventListener('DOMContentLoaded', function () {
 				if (response.ok) {
 					return response.json();
 				} else if (response.status === 409) {
-					// Obsługa konfliktu (np. nazwa przepisu już istnieje)
 					return response.text().then((text) => {
 						throw new Error(text || 'Przepis o tej nazwie już istnieje.');
 					});
 				} else if (response.status === 400) {
-					// Obsługa błędów walidacji
 					return response.text().then((text) => {
 						throw new Error(text || 'Błąd walidacji danych.');
 					});
 				} else {
-					// Obsługa innych błędów
 					return response.text().then((text) => {
-						throw new Error(text || 'Wystąpił błąd podczas dodawania przepisu.');
+						throw new Error(
+							text || 'Wystąpił błąd podczas dodawania przepisu.'
+						);
 					});
 				}
 			})
 			.then((data) => {
-				console.log('Przepis został dodany:', data);
+				console.log('The recipe has been added:', data);
 				alert('Przepis został dodany!');
 				recipeForm.reset();
 			})
@@ -286,9 +286,8 @@ document.addEventListener('DOMContentLoaded', function () {
 				alert(error.message);
 			});
 	});
-	
 
-	// Obsługa dodawania kroków do przepisu
+	// ADD RECIPE STEPS BUTTON
 	addStepBtn.addEventListener('click', function () {
 		const stepCount = stepsContainer.children.length + 1;
 		const newStepInput = document.createElement('textarea');
@@ -298,11 +297,10 @@ document.addEventListener('DOMContentLoaded', function () {
 		stepsContainer.appendChild(newStepInput);
 	});
 
-
-	// Obsługa kliknięcia kategorii
+	// CATEGORY BUTTONS
 	document.getElementById('breakfast-btn').addEventListener('click', function () {
 			fetchRecipesByCategory(1);
-	});
+		});
 
 	document.getElementById('lunch-btn').addEventListener('click', function () {
 		fetchRecipesByCategory(2);
@@ -316,14 +314,12 @@ document.addEventListener('DOMContentLoaded', function () {
 		fetchRecipesByCategory(4);
 	});
 
-
-	// Obsługa przycisku "Moje konto"
+	// MY ACCOUNT BUTTON
 	accountBtn.addEventListener('click', function () {
-    	hideAllSections();
-    	accountSection.classList.remove('hidden'); 
-    	myRecipesList.classList.remove('hidden');
+		hideAllSections();
+		accountSection.classList.remove('hidden');
+		myRecipesList.classList.remove('hidden');
 	});
-
 
 	myRecipesBtn.addEventListener('click', function () {
 		myRecipesSection.classList.add('hidden');
@@ -333,44 +329,43 @@ document.addEventListener('DOMContentLoaded', function () {
 		fetch('http://localhost:8080/api/recipes/my-recipes', {
 			method: 'GET',
 			headers: {
-				'Authorization': 'Bearer ' + localStorage.getItem('jwtToken')
-			}
+				Authorization: 'Bearer ' + localStorage.getItem('jwtToken'),
+			},
 		})
-		.then(response => response.json())
-		.then(data => {
-			console.log('Moje przepisy:', data);
-			myRecipesList.innerHTML = ''; 
+			.then((response) => response.json())
+			.then((data) => {
+				console.log('My recipes:', data);
+				myRecipesList.innerHTML = '';
 
-			data.forEach(recipe => {
-				const recipeItem = document.createElement('li');
-				const recipeLink = document.createElement('a');
-				recipeLink.textContent = recipe.name;
-				recipeLink.href = '#';
-				recipeLink.addEventListener('click', (e) => {
-					e.preventDefault();
-					fetchRecipeDetailsFromMyRecipes(recipe.id); 
+				data.forEach((recipe) => {
+					const recipeItem = document.createElement('li');
+					const recipeLink = document.createElement('a');
+					recipeLink.textContent = recipe.name;
+					recipeLink.href = '#';
+					recipeLink.addEventListener('click', (e) => {
+						e.preventDefault();
+						fetchRecipeDetailsFromMyRecipes(recipe.id);
+					});
+
+					recipeItem.appendChild(recipeLink);
+					myRecipesList.appendChild(recipeItem);
 				});
-				
-				recipeItem.appendChild(recipeLink);
-				myRecipesList.appendChild(recipeItem);
-			});
 
 				myRecipesList.classList.remove('hidden');
-      			backToMyRecipesBtn.classList.add('hidden');
-		})
-		.catch(error => {
-			console.error('Błąd podczas pobierania przepisów użytkownika:', error);
-			alert('Wystąpił problem z pobieraniem przepisów. Spróbuj ponownie.');
-		});
+				backToMyRecipesBtn.classList.add('hidden');
+			})
+			.catch((error) => {
+				console.error('Error loading user recipes:', error);
+				alert('Wystąpił problem z pobieraniem przepisów. Spróbuj ponownie.');
+			});
 	});
-	
 
-	// Funkcja do pobierania szczegółów przepisu z sekcji "Moje konto"
+	// FETCH RECIPES FROM MY ACCOUNT FUNCTION
 	function fetchRecipeDetailsFromMyRecipes(recipeId) {
 		currentRecipeId = null;
 		currentCategory = null;
 		console.log('Fetching details for recipe ID:', recipeId);
-	
+
 		fetch(`http://localhost:8080/api/recipes/${recipeId}`)
 			.then((response) => {
 				if (!response.ok) {
@@ -379,84 +374,83 @@ document.addEventListener('DOMContentLoaded', function () {
 				return response.json();
 			})
 			.then((data) => {
-				console.log('Szczegóły przepisu:', data);
-	
+				console.log('Recipe details:', data);
+
 				myRecipesList.classList.add('hidden');
 
 				myRecipesSection.classList.add('recipe-details');
 
 				const recipeDetailsDiv = document.createElement('div');
-            	recipeDetailsDiv.classList.add('recipe-details');	 
-	
+				recipeDetailsDiv.classList.add('recipe-details');
+
 				const nameElement = document.createElement('h3');
 				nameElement.textContent = data.name;
 				myRecipesSection.appendChild(nameElement);
-	
+
 				const ingredientsElement = document.createElement('p');
 				ingredientsElement.innerHTML = `<strong>Składniki:</strong> ${data.ingredients}`;
 				myRecipesSection.appendChild(ingredientsElement);
-	
+
 				const stepsElement = document.createElement('div');
 				const stepsHeader = document.createElement('p');
 				stepsHeader.innerHTML = `<strong>Kroki:</strong>`;
 				stepsElement.appendChild(stepsHeader);
-	
+
 				const stepsList = document.createElement('ol');
 				data.steps.forEach((step) => {
 					const stepItem = document.createElement('li');
 					stepItem.textContent = step.description;
 					stepsList.appendChild(stepItem);
 				});
-	
+
 				stepsElement.appendChild(stepsList);
 				myRecipesSection.appendChild(stepsElement);
-	
+
 				// backToMyRecipesBtn.classList.remove('hidden');
 				myRecipesSection.classList.remove('hidden');
 			})
 			.catch((error) => {
-				console.error('Błąd podczas pobierania szczegółów przepisu:', error);
-       			alert('Wystąpił błąd podczas pobierania szczegółów przepisu. Spróbuj ponownie.');
+				console.error('Error retrieving recipe details:', error);
+				alert(
+					'Wystąpił błąd podczas pobierania szczegółów przepisu. Spróbuj ponownie.'
+				);
 			});
 	}
-	
 
-		// Obsługa powrotu do listy moich przepisów
-		backToMyRecipesBtn.addEventListener('click', function () {
-			myRecipesList.classList.remove('hidden');
-			myRecipesSection.classList.add('hidden'); 
-			myRecipesSection.innerHTML = ''; 
-			// backToMyRecipesBtn.classList.add('hidden'); 
-		});
+	// BACK TO MY RECIPES BUTTON
+	backToMyRecipesBtn.addEventListener('click', function () {
+		myRecipesList.classList.remove('hidden');
+		myRecipesSection.classList.add('hidden');
+		myRecipesSection.innerHTML = '';
+		// backToMyRecipesBtn.classList.add('hidden');
+	});
 
-	
-	// Funkcja pobierania przepisów po kategorii
+	// FETCH RECIPE BY CATEGORY FUNCTION
 	function fetchRecipesByCategory(categoryId, page = 1) {
 		currentRecipeId = null;
 		currentCategory = categoryId;
-	
+
 		hideAllSections();
-		
+
 		myRecipesList.innerHTML = '';
 		recipesList.innerHTML = '';
-		
-	
+
 		fetch(`http://localhost:8080/api/recipes/category/${categoryId}`)
 			.then((response) => response.json())
 			.then((data) => {
 				console.log('Dane przepisów:', data);
-	
+
 				const totalRecipes = data.length;
 				const totalPages = Math.ceil(totalRecipes / recipesPerPage);
 				const paginatedRecipes = data.slice(
 					(page - 1) * recipesPerPage,
 					page * recipesPerPage
 				);
-	
+
 				paginatedRecipes.forEach((recipe) => {
 					const recipeDiv = document.createElement('div');
 					recipeDiv.classList.add('recipe-tile');
-					
+
 					const fullImageUrl = recipe.imageUrl;
 
 					const recipeImage = document.createElement('img');
@@ -466,130 +460,124 @@ document.addEventListener('DOMContentLoaded', function () {
 					recipeImage.style.height = '100%';
 					recipeImage.style.objectFit = 'cover';
 					recipeDiv.appendChild(recipeImage);
-	
+
 					const recipeTitle = document.createElement('h3');
 					recipeTitle.textContent = recipe.name;
 					recipeTitle.classList.add('recipe-title');
 					recipeDiv.appendChild(recipeTitle);
-	
+
 					recipeDiv.addEventListener('click', function () {
 						fetchRecipeDetails(recipe.name);
 					});
-	
+
 					recipesList.appendChild(recipeDiv);
 				});
-	
+
 				if (totalPages > 1) {
 					createPagination(totalPages, categoryId);
 				}
-	
-			
+
 				backToCategoriesBtn.classList.remove('hidden');
 				backToRecipesBtn.classList.add('hidden');
 			})
 			.catch((error) => {
-				console.error('Błąd podczas pobierania przepisów:', error);
+				console.error('Error loading recipes:', error);
 				alert('Wystąpił problem z pobieraniem przepisów.');
 			});
 	}
-	
 
-	// Obsługa wyświetlania przepisów
+	// DISPLAY ALL RECIPES BUTTON
 	viewRecipesBtn.addEventListener('click', function () {
 		hideAllSections();
-		currentRecipeId = null; 
-   		currentCategory = null; 
-    	recipesList.innerHTML = '';
-		myRecipesList.innerHTML = ''
+		currentRecipeId = null;
+		currentCategory = null;
+		recipesList.innerHTML = '';
+		myRecipesList.innerHTML = '';
 		categorySection.classList.remove('hidden');
 	});
 
-	
-	// Funkcja pobierania szczegółów przepisu
+	// DISPLAY RECIPE DETAILS FUNCTION
 	function fetchRecipeDetails(recipeName) {
 		currentRecipeId = null;
 		console.log('Fetching details for recipe:', recipeName);
-	
+
 		hideAllSections();
 		recipesList.innerHTML = '';
 		myRecipesList.innerHTML = '';
 		currentRecipeId = null;
-	
+
 		fetch(`http://localhost:8080/api/recipes/name/${recipeName}`)
 			.then((response) => {
 				if (!response.ok) {
-					throw new Error(`Błąd HTTP! Status: ${response.status}`);
+					throw new Error(`ERROR HTTP! Status: ${response.status}`);
 				}
 				return response.json();
 			})
 			.then((data) => {
-				console.log('Szczegóły przepisu:', data);
-	
-				// Utwórz kontener dla szczegółów przepisu z tłem
+				console.log('Recipe details:', data);
+
 				const detailsContainer = document.createElement('div');
-				detailsContainer.classList.add('recipe-details-background'); // Dodajemy klasę z tłem
-	
-				// Tworzenie elementów szczegółów przepisu
+				detailsContainer.classList.add('recipe-details-background'); 
+
 				const nameElement = document.createElement('h3');
 				nameElement.textContent = data.name;
 				detailsContainer.appendChild(nameElement);
-	
+
 				const ingredientsElement = document.createElement('p');
 				ingredientsElement.innerHTML = `<strong>Składniki:</strong> ${data.ingredients}`;
 				detailsContainer.appendChild(ingredientsElement);
-	
+
 				const stepsElement = document.createElement('div');
 				const stepsHeader = document.createElement('p');
 				stepsHeader.innerHTML = `<strong>Kroki:</strong>`;
 				stepsElement.appendChild(stepsHeader);
-	
+
 				const stepsList = document.createElement('ol');
 				data.steps.forEach((step, index) => {
 					const stepItem = document.createElement('li');
 					stepItem.textContent = step.description;
 					stepsList.appendChild(stepItem);
 				});
-	
+
 				stepsElement.appendChild(stepsList);
 				detailsContainer.appendChild(stepsElement);
-	
-				// Dodajemy kontener do listy przepisów (teraz ma tło)
+
 				recipesList.appendChild(detailsContainer);
-	
+
 				currentRecipeId = data.id;
 				document.getElementById('comments-header').classList.remove('hidden');
 				document.getElementById('comments-list').classList.remove('hidden');
 				if (isUserLoggedIn()) {
-					document.getElementById('add-comment-section').classList.remove('hidden');
+					document
+						.getElementById('add-comment-section')
+						.classList.remove('hidden');
 				}
-	
+
 				fetchCommentsForRecipe(currentRecipeId);
 				backToRecipesBtn.classList.remove('hidden');
 			})
 			.catch((error) => {
-				console.error('Błąd podczas pobierania szczegółów przepisu:', error);
+				console.error('Error retrieving recipe details:', error);
 				alert(`Błąd podczas pobierania szczegółów przepisu: ${error.message}`);
 			});
 	}
-	
 
-	// Obsługa powrotu do kategorii
+	// BACK TO CATEGORIES BUTTON
 	backToCategoriesBtn.addEventListener('click', function () {
 		hideAllSections();
-    	currentRecipeId = null;
+		currentRecipeId = null;
 		categorySection.classList.remove('hidden');
 	});
 
-
-	// Obsługa powrotu do przepisów z danej kategorii
+	// BACK TO RECIPES LIST BUTTON
 	backToRecipesBtn.addEventListener('click', function () {
-		currentRecipeId = null; // Zresetuj currentRecipeId
+		currentRecipeId = null; 
 		fetchRecipesByCategory(currentCategory, currentPage);
 		backToRecipesBtn.classList.add('hidden');
 		backToCategoriesBtn.classList.remove('hidden');
 	});
 
-	// Funkcja tworzenia paginacji
+	// PAGINATION
 	function createPagination(totalPages, categoryId) {
 		const paginationDiv = document.createElement('div');
 		paginationDiv.classList.add('pagination');
@@ -607,104 +595,103 @@ document.addEventListener('DOMContentLoaded', function () {
 		recipesList.appendChild(paginationDiv);
 	}
 
-	// Obsługa formularza dodawania komentarzy
-	document.getElementById('comment-form').addEventListener('submit', function (e) {
-    	e.preventDefault();
-    
-    const content = document.getElementById('comment-content').value;
+	// ADD COMMENT FORM
+	document.getElementById('comment-form')
+				.addEventListener('submit', function (e) {
+					e.preventDefault();
 
-    // Pobranie wartości wybranej oceny (gwiazdek)
-    const rating = document.querySelector('input[name="rating"]:checked');
-    if (!rating) {
-        alert('Proszę wybrać ocenę w gwiazdkach.');
-        return;
-    }
+			const content = document.getElementById('comment-content').value;
 
-    const token = localStorage.getItem('jwtToken');
-    
-    if (!token) {
-        alert('Brak tokena JWT, proszę zalogować się ponownie.');
-        return;
-    }
+			const rating = document.querySelector('input[name="rating"]:checked');
+			if (!rating) {
+				alert('Proszę wybrać ocenę w gwiazdkach.');
+				return;
+			}
 
-    if (!currentRecipeId) {
-        alert('Błąd: Brak ID przepisu.');
-        return;
-    }
+			const token = localStorage.getItem('jwtToken');
 
-    console.log('Dodawanie komentarza dla przepisu o ID:', currentRecipeId);
+			if (!token) {
+				alert('Brak tokena JWT, proszę zalogować się ponownie.');
+				return;
+			}
 
-    fetch(`http://localhost:8080/api/comments/${currentRecipeId}`, {
-        method: 'POST',
-        headers: {
-            'Authorization': 'Bearer ' + token, 
-            'Content-Type': 'application/json',  
-        },
-        body: JSON.stringify({
-            content: content,   
-            rating: rating.value  
-        }),
-    })
-    .then((response) => {
-        if (!response.ok) {
-            throw new Error(`Błąd HTTP! Status: ${response.status}`);
-        }
-        return response.json();
-    })
-    .then((data) => {
-        alert('Komentarz dodany!');
-        document.getElementById('comment-form').reset();  
-        fetchCommentsForRecipe(currentRecipeId); 
-    })
-    .catch((error) => {
-        console.error('Błąd podczas dodawania komentarza:', error);
-        alert('Wystąpił błąd podczas dodawania komentarza.');
-   		});
-	});
+			if (!currentRecipeId) {
+				alert('Błąd: Brak ID przepisu.');
+				return;
+			}
 
+			console.log('Adding a comment for a recipe with ID:', currentRecipeId);
 
-	// funkcja dodawania oceny *
+			fetch(`http://localhost:8080/api/comments/${currentRecipeId}`, {
+				method: 'POST',
+				headers: {
+					Authorization: 'Bearer ' + token,
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					content: content,
+					rating: rating.value,
+				}),
+			})
+				.then((response) => {
+					if (!response.ok) {
+						throw new Error(`ERROR HTTP! Status: ${response.status}`);
+					}
+					return response.json();
+				})
+				.then((data) => {
+					alert('Komentarz dodany!');
+					document.getElementById('comment-form').reset();
+					fetchCommentsForRecipe(currentRecipeId);
+				})
+				.catch((error) => {
+					console.error('Błąd podczas dodawania komentarza:', error);
+					alert('Wystąpił błąd podczas dodawania komentarza.');
+				});
+		
+		});
+
+	// ADD RATING FUNCTION IN *
 	function renderStars(rating) {
 		let stars = '';
 		for (let i = 0; i < 5; i++) {
 			if (i < rating) {
-				stars += '★';  
+				stars += '★';
 			} else {
-				stars += '☆'; 
+				stars += '☆';
 			}
 		}
 		return `<span class="stars">${stars}</span>`;
 	}
-	
-	// funkcja wyswietlania komentarzy
-	function fetchCommentsForRecipe(recipeId) {
-	console.log('Pobieranie komentarzy dla przepisu o ID:', recipeId);
-    fetch(`http://localhost:8080/api/comments/${recipeId}`)
-		.then((response) => {
-			if (!response.ok) {
-				throw new Error(`Błąd HTTP! Status: ${response.status}`);
-			}
-			return response.json();
-		})
-        .then((comments) => {
-            const commentsList = document.getElementById('comments-list');
-            commentsList.innerHTML = '';
-            
-            if (comments.length > 0) {
-                comments.forEach((comment) => {
-                    const commentItem = document.createElement('li');
-					const stars = renderStars(comment.rating);
-                    commentItem.innerHTML = `<strong>${comment.user.username}</strong>: ${comment.content} (Ocena: ${comment.rating}/5)`;
-                    commentsList.appendChild(commentItem);
-                });
-            } else {
-                commentsList.innerHTML = '<p>Brak komentarzy.</p>';
-            }
-        })
-        .catch((error) => {
-            console.error('Błąd podczas pobierania komentarzy:', error);
-            alert(`Błąd podczas pobierania komentarzy: ${error.message}`);
-        });
-	}
 
+	// DISPLAYING COMMENTS FUNCTION
+	function fetchCommentsForRecipe(recipeId) {
+		console.log('Pobieranie komentarzy dla przepisu o ID:', recipeId);
+		fetch(`http://localhost:8080/api/comments/${recipeId}`)
+			.then((response) => {
+				if (!response.ok) {
+					throw new Error(`Błąd HTTP! Status: ${response.status}`);
+				}
+				return response.json();
+			})
+			.then((comments) => {
+				const commentsList = document.getElementById('comments-list');
+				commentsList.innerHTML = '';
+
+				if (comments.length > 0) {
+					comments.forEach((comment) => {
+						const commentItem = document.createElement('li');
+						const stars = renderStars(comment.rating);
+						commentItem.innerHTML = `<strong>${comment.user.username}</strong>: ${comment.content} (Ocena: ${comment.rating}/5)`;
+						commentsList.appendChild(commentItem);
+					});
+				} else {
+					commentsList.innerHTML = '<p>Brak komentarzy.</p>';
+				}
+			})
+			.catch((error) => {
+				console.error('Błąd podczas pobierania komentarzy:', error);
+				alert(`Błąd podczas pobierania komentarzy: ${error.message}`);
+			});
+	}
 });
