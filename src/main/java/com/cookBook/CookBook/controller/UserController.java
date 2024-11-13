@@ -63,7 +63,7 @@ public class UserController {
             logger.info("Authentication successful for user/email: {}", request.getUsernameOrEmail());
         } catch (Exception e) {
             logger.error("Authentication failed for user/email: {}. Reason: {}", request.getUsernameOrEmail(), e.getMessage());
-            throw new RuntimeException("Nieprawidłowe dane uwierzytelniające");
+            throw new RuntimeException("Invalid credentials");
         }
 
         final UserDetails userDetails = userDetailsService.loadUserByUsername(request.getUsernameOrEmail());

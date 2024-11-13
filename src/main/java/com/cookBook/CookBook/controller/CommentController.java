@@ -42,7 +42,7 @@ public class CommentController {
             User currentUser = userService.findByUsername(authentication.getName())
                     .orElseThrow(() -> {
                         logger.error("User not found: {}", authentication.getName());
-                        return new RuntimeException("Użytkownik nie został znaleziony");
+                        return new RuntimeException("User not found.");
                     });
 
             logger.info("Authenticated user: {}", currentUser.getUsername());
@@ -50,7 +50,7 @@ public class CommentController {
             Recipe recipe = recipeService.getRecipeById(recipeId)
                     .orElseThrow(() -> {
                         logger.error("Recipe not found with ID: {}", recipeId);
-                        return new RuntimeException("Przepis nie został znaleziony");
+                        return new RuntimeException("Recipe not found.");
                     });
 
             comment.setRecipe(recipe);

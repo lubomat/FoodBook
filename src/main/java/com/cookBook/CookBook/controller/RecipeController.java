@@ -49,7 +49,6 @@ public class RecipeController {
 
     @GetMapping("/category/{categoryId}")
     public List<Recipe> getRecipesByCategory(@PathVariable Long categoryId) {
-        logger.info("Fetching recipes by category ID: {}", categoryId);
         List<Recipe> recipes = recipeService.getRecipesByCategory(categoryId);
         logger.info("Successfully fetched {} recipes for category ID: {}", recipes.size(), categoryId);
         return recipes;
@@ -83,53 +82,58 @@ public class RecipeController {
 
     @Secured("ROLE_USER")
     @PostMapping
-    public Recipe addRecipe(@RequestParam("name") String name,
-                            @RequestParam("ingredients") String ingredients,
-                            @RequestParam("steps") List<String> steps,
-                            @RequestParam("category") Long categoryId,
-                            @RequestParam("image") MultipartFile image,
-                            Authentication authentication) throws IOException {
+    public ResponseEntity<?> addRecipe(@RequestParam("name") String name,
+                                       @RequestParam("ingredients") String ingredients,
+                                       @RequestParam("steps") List<String> steps,
+                                       @RequestParam("category") Long categoryId,
+                                       @RequestParam("image") MultipartFile image,
+                                       Authentication authentication) {
         logger.info("Received request to add a recipe with name: {}", name);
 
         if (recipeService.getRecipeByName(name).isPresent()) {
             logger.warn("Recipe with name '{}' already exists.", name);
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Przepis o tej nazwie już istnieje.");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("A recipe with this name already exists.");
         }
 
-        String fileType = image.getContentType();
-        if (!fileType.startsWith("image/")) {
-            logger.error("Invalid file type for recipe image: {}", fileType);
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Nieprawidłowy typ pliku. Dozwolone są tylko obrazy.");
+        try {
+            String fileType = image.getContentType();
+            if (!fileType.startsWith("image/")) {
+                logger.error("Invalid file type for recipe image: {}", fileType);
+                return ResponseEntity.badRequest().body("Invalid file type. Only images are allowed.");
+            }
+
+            long maxFileSize = 5 * 1024 * 1024; // 5 MB
+            if (image.getSize() > maxFileSize) {
+                logger.error("File size exceeds limit for image: {} bytes.", image.getSize());
+                return ResponseEntity.badRequest().body("The file size exceeds the allowed 5 MB.");
+            }
+
+            String imageUrl = cloudinaryService.uploadFile(image);
+            logger.info("Image uploaded successfully to URL: {}", imageUrl);
+
+            Recipe recipe = new Recipe();
+            recipe.setName(name);
+            recipe.setIngredients(ingredients);
+            recipe.setImageUrl(imageUrl);
+            recipe.setCategory(recipeService.getCategoryById(categoryId));
+
+            User currentUser = userService.findByUsername(authentication.getName())
+                    .orElseThrow(() -> {
+                        logger.error("User not found: {}", authentication.getName());
+                        return new RuntimeException("User not found.");
+                    });
+
+            recipe.setUser(currentUser);
+            List<RecipeStep> recipeSteps = createRecipeSteps(steps);
+
+            Recipe savedRecipe = recipeService.addRecipe(recipe, recipeSteps);
+            logger.info("Recipe '{}' successfully added by user: {}", name, currentUser.getUsername());
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedRecipe);
+        } catch (IOException e) {
+            logger.error("Error uploading image for recipe '{}': {}", name, e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error while uploading image.");
         }
-
-        long maxFileSize = 5 * 1024 * 1024; // 5 MB
-        if (image.getSize() > maxFileSize) {
-            logger.error("File size exceeds limit for image: {} bytes.", image.getSize());
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Rozmiar pliku przekracza dozwolone 5 MB.");
-        }
-
-        String imageUrl = cloudinaryService.uploadFile(image);
-        logger.info("Image uploaded successfully to URL: {}", imageUrl);
-
-        Recipe recipe = new Recipe();
-        recipe.setName(name);
-        recipe.setIngredients(ingredients);
-        recipe.setImageUrl(imageUrl);
-        recipe.setCategory(recipeService.getCategoryById(categoryId));
-
-        User currentUser = userService.findByUsername(authentication.getName())
-                .orElseThrow(() -> {
-                    logger.error("User not found: {}", authentication.getName());
-                    return new RuntimeException("Użytkownik nie został znaleziony");
-                });
-
-        recipe.setUser(currentUser);
-        List<RecipeStep> recipeSteps = createRecipeSteps(steps);
-
-        Recipe savedRecipe = recipeService.addRecipe(recipe, recipeSteps);
-        logger.info("Recipe '{}' successfully added by user: {}", name, currentUser.getUsername());
-
-        return savedRecipe;
     }
 
     private List<RecipeStep> createRecipeSteps(List<String> steps) {

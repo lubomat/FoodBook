@@ -1,6 +1,9 @@
 package com.cookBook.CookBook.service;
+
 import com.cookBook.CookBook.model.User;
 import com.cookBook.CookBook.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -10,6 +13,8 @@ import java.util.Optional;
 @Service
 public class UserService {
 
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
+
     @Autowired
     private UserRepository userRepository;
 
@@ -17,20 +22,44 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
 
     public User saveUser(User user) {
+        logger.info("Attempting to save user with email: {}", user.getEmail());
+
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+            logger.error("Email {} is already registered.", user.getEmail());
             throw new RuntimeException("Email already registered.");
         }
 
-        // Szyfrowanie hasła
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
+        logger.info("Password for user with email {} has been encrypted.", user.getEmail());
+
+        User savedUser = userRepository.save(user);
+        logger.info("User with email {} saved successfully with ID: {}", user.getEmail(), savedUser.getId());
+        return savedUser;
     }
 
     public Optional<User> findByUsername(String username) {
-        return userRepository.findByUsername(username);
+        logger.info("Searching for user by username: {}", username);
+        Optional<User> user = userRepository.findByUsername(username);
+
+        if (user.isPresent()) {
+            logger.info("User with username {} found.", username);
+        } else {
+            logger.warn("User with username {} not found.", username);
+        }
+
+        return user;
     }
 
     public Optional<User> findByEmail(String email) {
-        return userRepository.findByEmail(email);
+        logger.info("Searching for user by email: {}", email);
+        Optional<User> user = userRepository.findByEmail(email);
+
+        if (user.isPresent()) {
+            logger.info("User with email {} found.", email);
+        } else {
+            logger.warn("User with email {} not found.", email);
+        }
+
+        return user;
     }
 }
