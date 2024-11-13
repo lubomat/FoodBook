@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	const backToMyRecipesBtn = document.getElementById('back-to-my-recipes-btn');
 
 	let currentPage = 1;
-	const recipesPerPage = 10;
+	const recipesPerPage = 9;
 	let currentCategory = null;
 	let currentRecipeId = null;;
 
@@ -236,7 +236,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	
 		const token = localStorage.getItem('jwtToken');
 		if (!token) {
-			alert('Token JWT nie został znaleziony. Spróbuj ponownie się zalogować.');
+			alert('Spróbuj ponownie się zalogować.');
 			return;
 		}
 	
@@ -244,23 +244,36 @@ document.addEventListener('DOMContentLoaded', function () {
 			alert('Musisz być zalogowany, aby dodać przepis.');
 			return;
 		}
-
+	
 		const formData = new FormData(recipeForm);
-
+	
 		console.log('Wysyłanie przepisu:', formData);
-
+	
 		fetch('http://localhost:8080/api/recipes', {
 			method: 'POST',
 			headers: {
-				Authorization: 'Bearer ' + localStorage.getItem('jwtToken'),
+				Authorization: 'Bearer ' + token,
 			},
 			body: formData,
 		})
 			.then((response) => {
 				if (response.ok) {
 					return response.json();
+				} else if (response.status === 409) {
+					// Obsługa konfliktu (np. nazwa przepisu już istnieje)
+					return response.text().then((text) => {
+						throw new Error(text || 'Przepis o tej nazwie już istnieje.');
+					});
+				} else if (response.status === 400) {
+					// Obsługa błędów walidacji
+					return response.text().then((text) => {
+						throw new Error(text || 'Błąd walidacji danych.');
+					});
 				} else {
-					throw new Error('Błąd podczas dodawania przepisu');
+					// Obsługa innych błędów
+					return response.text().then((text) => {
+						throw new Error(text || 'Wystąpił błąd podczas dodawania przepisu.');
+					});
 				}
 			})
 			.then((data) => {
@@ -270,9 +283,10 @@ document.addEventListener('DOMContentLoaded', function () {
 			})
 			.catch((error) => {
 				console.error('Błąd podczas dodawania przepisu:', error);
-				alert('Dodawanie nowego przepisu wymaga zalogowania!');
+				alert(error.message);
 			});
 	});
+	
 
 	// Obsługa dodawania kroków do przepisu
 	addStepBtn.addEventListener('click', function () {
@@ -443,8 +457,6 @@ document.addEventListener('DOMContentLoaded', function () {
 					const recipeDiv = document.createElement('div');
 					recipeDiv.classList.add('recipe-tile');
 					
-					// TO LOCAL USE
-					// const fullImageUrl = `http://localhost:8080${recipe.imageUrl}`;
 					const fullImageUrl = recipe.imageUrl;
 
 					const recipeImage = document.createElement('img');
