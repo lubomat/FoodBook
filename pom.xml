@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.foodbook</groupId>
 	<artifactId>FoodBook</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<name>FoodBook</name>
 	<description>Foodbook to which you can add and display recipes</description>
 	<url/>
