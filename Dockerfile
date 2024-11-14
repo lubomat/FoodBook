@@ -19,7 +19,7 @@ RUN ./mvnw dependency:go-offline
 COPY src ./src
 
 # Budujemy projekt (generujemy plik .jar)
-RUN ./mvnw clean package -DskipTests
+RUN ./mvnw clean package
 
 # Używamy skompilowanego pliku .jar
 CMD ["java", "-jar", "./target/FoodBook-0.0.1-SNAPSHOT.jar"]
