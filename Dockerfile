@@ -22,7 +22,7 @@ COPY src ./src
 RUN ./mvnw clean package
 
 # Używamy skompilowanego pliku .jar
-CMD ["java", "-jar", "./target/FoodBook-0.0.1-SNAPSHOT.jar"]
+CMD ["java", "-jar", "./target/FoodBook-0.0.2-SNAPSHOT.jar"]
 
 # Wystawiamy port 8080, na którym działa aplikacja Spring Boot
 EXPOSE 8080
