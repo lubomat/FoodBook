@@ -69,7 +69,6 @@ public class RecipeController {
 
     @GetMapping("/name/{recipeName}")
     public ResponseEntity<Recipe> getRecipeByName(@PathVariable String recipeName) {
-        logger.info("Fetching recipe by name: {}", recipeName);
         Optional<Recipe> recipe = recipeService.getRecipeByName(recipeName);
         if (recipe.isPresent()) {
             logger.info("Recipe found with name: {}", recipeName);

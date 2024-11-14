@@ -1,7 +1,5 @@
 package com.cookBook.CookBook.auth;
 
-import com.cookBook.CookBook.model.User;
-import com.cookBook.CookBook.security.AuthenticationRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,8 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -31,34 +28,64 @@ public class UserAuthTests {
 
     @BeforeEach
     public void setup() {
-        int randomNum = (int)(Math.random() * (10000 - 10 + 1)) + 10;
+        int randomNum = (int) (Math.random() * (10000 - 10 + 1)) + 10;
         this.username = "test" + randomNum;
-        this.password = "test123";
+        this.password = "Test123!";
         this.email = "test" + randomNum + "@example.com";
     }
 
     @Test
     public void testRegisterUser() throws Exception {
-        User testUser = new User();
-        testUser.setUsername(username);
-        testUser.setPassword(password);
-        testUser.setEmail(email);
-
         mockMvc.perform(post("/register")
-                        .contentType("application/json")
+                        .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"username\": \"" + username + "\", \"password\": \"" + password + "\", \"email\": \"" + email + "\"}"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("User registered successfully"));
     }
 
     @Test
-    public void testLoginUser() throws Exception {
-        mockMvc.perform(post("/login")
-                        .contentType("application/json")
-                        .content("{\"usernameOrEmail\": \"test\", \"password\": \"test1\"}"))
+    public void testLoginUserWithValidCredentials() throws Exception {
+        mockMvc.perform(post("/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"username\": \"" + username + "\", \"password\": \"" + password + "\", \"email\": \"" + email + "\"}"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json"));
+                .andExpect(content().string("User registered successfully"));
+
+        mockMvc.perform(post("/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"usernameOrEmail\": \"" + username + "\", \"password\": \"" + password + "\"}"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.jwt").exists());
     }
 
-    // LOGOUT
+    @Test
+    public void testRegisterUserWithExistingUsername() throws Exception {
+        mockMvc.perform(post("/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"username\": \"" + username + "\", \"password\": \"" + password + "\", \"email\": \"" + email + "\"}"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("User registered successfully"));
+
+        mockMvc.perform(post("/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"username\": \"" + username + "\", \"password\": \"" + password + "\", \"email\": \"different" + email + "\"}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("Username already exists"));
+    }
+
+    @Test
+    public void testRegisterUserWithExistingEmail() throws Exception {
+        mockMvc.perform(post("/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"username\": \"" + username + "\", \"password\": \"" + password + "\", \"email\": \"" + email + "\"}"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("User registered successfully"));
+
+        mockMvc.perform(post("/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"username\": \"different" + username + "\", \"password\": \"" + password + "\", \"email\": \"" + email + "\"}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("Email already exists"));
+    }
 }

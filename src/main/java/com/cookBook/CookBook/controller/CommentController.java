@@ -38,6 +38,12 @@ public class CommentController {
                                               Authentication authentication) {
         logger.info("Received request to add a comment for recipeId: {}", recipeId);
 
+        // Dodana walidacja dla rating
+        if (comment.getRating() == 0) { // Jeśli `rating` ma być 0 przy braku wartości
+            logger.error("Rating is missing or invalid.");
+            return ResponseEntity.badRequest().body(null); // wiadomość dla testu
+        }
+
         try {
             User currentUser = userService.findByUsername(authentication.getName())
                     .orElseThrow(() -> {
@@ -66,6 +72,7 @@ public class CommentController {
             throw e;
         }
     }
+
 
     @GetMapping("/{recipeId}")
     public ResponseEntity<List<Comment>> getCommentsByRecipe(@PathVariable Long recipeId) {
