@@ -29,6 +29,9 @@ document.addEventListener('DOMContentLoaded', function () {
 	const myRecipesList = document.getElementById('my-recipes-list');
 	const backToMyRecipesBtn = document.getElementById('back-to-my-recipes-btn');
 
+	const API_BASE_URL = 'https://foodbook-crcr.onrender.com';
+	//                    http://localhost:8080
+
 	let currentPage = 1;
 	const recipesPerPage = 9;
 	let currentCategory = null;
@@ -93,7 +96,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		if (username && email && password) {
 			console.log('Sending a request to the backend...');
 
-			fetch('http://localhost:8080/register', {
+			fetch(`${API_BASE_URL}/register`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -142,7 +145,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 		if (usernameOrEmail && password) {
 			console.log('Dane logowania: ' + { usernameOrEmail, password });
-			fetch('http://localhost:8080/login', {
+			fetch(`${API_BASE_URL}/login`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -250,7 +253,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 		console.log('Wysyłanie przepisu:', formData);
 
-		fetch('http://localhost:8080/api/recipes', {
+		fetch(`${API_BASE_URL}/api/recipes`, {
 			method: 'POST',
 			headers: {
 				Authorization: 'Bearer ' + token,
@@ -298,7 +301,9 @@ document.addEventListener('DOMContentLoaded', function () {
 	});
 
 	// CATEGORY BUTTONS
-	document.getElementById('breakfast-btn').addEventListener('click', function () {
+	document
+		.getElementById('breakfast-btn')
+		.addEventListener('click', function () {
 			fetchRecipesByCategory(1);
 		});
 
@@ -326,7 +331,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		myRecipesSection.innerHTML = '';
 		myRecipesList.innerHTML = '';
 
-		fetch('http://localhost:8080/api/recipes/my-recipes', {
+		fetch(`${API_BASE_URL}/api/recipes/my-recipes`, {
 			method: 'GET',
 			headers: {
 				Authorization: 'Bearer ' + localStorage.getItem('jwtToken'),
@@ -366,7 +371,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		currentCategory = null;
 		console.log('Fetching details for recipe ID:', recipeId);
 
-		fetch(`http://localhost:8080/api/recipes/${recipeId}`)
+		fetch(`${API_BASE_URL}/api/recipes/${recipeId}`)
 			.then((response) => {
 				if (!response.ok) {
 					throw new Error(`Błąd HTTP! Status: ${response.status}`);
@@ -435,7 +440,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		myRecipesList.innerHTML = '';
 		recipesList.innerHTML = '';
 
-		fetch(`http://localhost:8080/api/recipes/category/${categoryId}`)
+		fetch(`${API_BASE_URL}/api/recipes/category/${categoryId}`)
 			.then((response) => response.json())
 			.then((data) => {
 				console.log('Dane przepisów:', data);
@@ -506,7 +511,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		myRecipesList.innerHTML = '';
 		currentRecipeId = null;
 
-		fetch(`http://localhost:8080/api/recipes/name/${recipeName}`)
+		fetch(`${API_BASE_URL}/api/recipes/name/${recipeName}`)
 			.then((response) => {
 				if (!response.ok) {
 					throw new Error(`ERROR HTTP! Status: ${response.status}`);
@@ -517,7 +522,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				console.log('Recipe details:', data);
 
 				const detailsContainer = document.createElement('div');
-				detailsContainer.classList.add('recipe-details-background'); 
+				detailsContainer.classList.add('recipe-details-background');
 
 				const nameElement = document.createElement('h3');
 				nameElement.textContent = data.name;
@@ -571,7 +576,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	// BACK TO RECIPES LIST BUTTON
 	backToRecipesBtn.addEventListener('click', function () {
-		currentRecipeId = null; 
+		currentRecipeId = null;
 		fetchRecipesByCategory(currentCategory, currentPage);
 		backToRecipesBtn.classList.add('hidden');
 		backToCategoriesBtn.classList.remove('hidden');
@@ -596,9 +601,10 @@ document.addEventListener('DOMContentLoaded', function () {
 	}
 
 	// ADD COMMENT FORM
-	document.getElementById('comment-form')
-				.addEventListener('submit', function (e) {
-					e.preventDefault();
+	document
+		.getElementById('comment-form')
+		.addEventListener('submit', function (e) {
+			e.preventDefault();
 
 			const content = document.getElementById('comment-content').value;
 
@@ -622,7 +628,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 			console.log('Adding a comment for a recipe with ID:', currentRecipeId);
 
-			fetch(`http://localhost:8080/api/comments/${currentRecipeId}`, {
+			fetch(`${API_BASE_URL}/api/comments/${currentRecipeId}`, {
 				method: 'POST',
 				headers: {
 					Authorization: 'Bearer ' + token,
@@ -648,7 +654,6 @@ document.addEventListener('DOMContentLoaded', function () {
 					console.error('Błąd podczas dodawania komentarza:', error);
 					alert('Wystąpił błąd podczas dodawania komentarza.');
 				});
-		
 		});
 
 	// ADD RATING FUNCTION IN *
@@ -667,7 +672,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	// DISPLAYING COMMENTS FUNCTION
 	function fetchCommentsForRecipe(recipeId) {
 		console.log('Pobieranie komentarzy dla przepisu o ID:', recipeId);
-		fetch(`http://localhost:8080/api/comments/${recipeId}`)
+		fetch(`${API_BASE_URL}/api/comments/${recipeId}`)
 			.then((response) => {
 				if (!response.ok) {
 					throw new Error(`Błąd HTTP! Status: ${response.status}`);
