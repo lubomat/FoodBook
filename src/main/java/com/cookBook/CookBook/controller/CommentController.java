@@ -38,10 +38,9 @@ public class CommentController {
                                               Authentication authentication) {
         logger.info("Received request to add a comment for recipeId: {}", recipeId);
 
-        // Dodana walidacja dla rating
-        if (comment.getRating() == 0) { // Jeśli `rating` ma być 0 przy braku wartości
+        if (comment.getRating() == 0) {
             logger.error("Rating is missing or invalid.");
-            return ResponseEntity.badRequest().body(null); // wiadomość dla testu
+            return ResponseEntity.badRequest().body(null);
         }
 
         try {
