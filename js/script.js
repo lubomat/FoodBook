@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	const backToMyRecipesBtn = document.getElementById('back-to-my-recipes-btn');
 
 	const API_BASE_URL = 'https://foodbook-crcr.onrender.com';
-	//                    http://localhost:8080
+	//   const API_BASE_URL = 'http://localhost:8080';
 
 	let currentPage = 1;
 	const recipesPerPage = 9;
@@ -45,10 +45,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		console.log('categorySection:', categorySection);
 		console.log('accountSection:', accountSection);
 		console.log('comments-list:', document.getElementById('comments-list'));
-		console.log(
-			'add-comment-section:',
-			document.getElementById('add-comment-section')
-		);
+		console.log('add-comment-section:', document.getElementById('add-comment-section'));
 		console.log('comments-header:', document.getElementById('comments-header'));
 		console.log('user-info:', document.getElementById('user-info'));
 
@@ -92,7 +89,13 @@ document.addEventListener('DOMContentLoaded', function () {
 		const username = document.getElementById('register-username').value;
 		const email = document.getElementById('register-email').value;
 		const password = document.getElementById('register-password').value;
+		const confirmPassword = document.getElementById('register-confirm-password').value;
 
+		if (password !== confirmPassword) {
+			alert('Hasła nie są takie same. Spróbuj ponownie.');
+			return;
+		}
+		
 		if (username && email && password) {
 			console.log('Sending a request to the backend...');
 
@@ -101,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				headers: {
 					'Content-Type': 'application/json',
 				},
-				body: JSON.stringify({ username, email, password }),
+				body: JSON.stringify({ username, email, password, confirmPassword }),
 			})
 				.then((response) => {
 					if (response.ok) {
@@ -165,7 +168,7 @@ document.addEventListener('DOMContentLoaded', function () {
 						localStorage.setItem('jwtToken', data.jwt);
 
 						updateLoginState();
-						window.location.href = 'index.html'; // MAIN APPLICATION URL
+						window.location.href = 'index.html';
 					} else {
 						alert('Błąd podczas logowania: ' + data.message);
 					}
