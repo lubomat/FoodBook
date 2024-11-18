@@ -9,18 +9,6 @@ import java.util.List;
 @Table(name = "recipe", schema = "recipes")
 public class Recipe {
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,6 +31,33 @@ public class Recipe {
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<RecipeStep> steps;
+
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+
+    public Recipe() {
+
+    }
+
+    public Recipe(String name, String ingredients, String imageUrl, Category category, List<RecipeStep> steps, User user) {
+        this.name = name;
+        this.ingredients = ingredients;
+        this.imageUrl = imageUrl;
+        this.category = category;
+        this.steps = steps;
+        this.user = user;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     public Long getId() {
         return id;
