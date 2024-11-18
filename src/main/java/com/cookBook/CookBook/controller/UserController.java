@@ -17,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -40,35 +41,35 @@ public class UserController {
     public ResponseEntity<?> register(@RequestBody User user) {
         logger.info("Received registration request for username: {}", user.getUsername());
 
-        // Sprawdzenie, czy nazwa użytkownika zawiera polskie znaki
+        if (!user.getPassword().equals(user.getConfirmPassword())) {
+            logger.warn("Registration failed: Password and Confirm Password do not match.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Passwords do not match.");
+        }
+
         if (ValidationUtils.containsPolishCharacters(user.getUsername())) {
             logger.warn("Registration failed: Username '{}' contains Polish characters.", user.getUsername());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Username cannot contain Polish characters.");
         }
 
-        // Sprawdzenie, czy nazwa użytkownika zawiera słowa niecenzuralne
         if (ValidationUtils.containsForbiddenWords(user.getUsername())) {
             logger.warn("Registration failed: Username '{}' contains forbidden words.", user.getUsername());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Username contains forbidden words and is not allowed.");
         }
 
-        // Sprawdzenie, czy nazwa użytkownika już istnieje
         if (userService.findByUsername(user.getUsername()).isPresent()) {
             logger.warn("Registration failed: Username '{}' already exists.", user.getUsername());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Username already exists.");
         }
 
-        // Sprawdzenie, czy adres e-mail już istnieje
         if (userService.findByEmail(user.getEmail()).isPresent()) {
             logger.warn("Registration failed: Email '{}' already exists.", user.getEmail());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Email already exists.");
         }
 
-        // Rejestracja użytkownika
         try {
             userService.saveUser(user);
         } catch (RuntimeException ex) {
