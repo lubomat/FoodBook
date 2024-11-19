@@ -37,6 +37,18 @@ document.addEventListener('DOMContentLoaded', function () {
 	let currentCategory = null;
 	let currentRecipeId = null;
 
+		const urlPath = window.location.pathname;
+	
+		// Obsługa nawigacji do konkretnego przepisu
+		if (urlPath.startsWith('/recipe/')) {
+			const recipeId = urlPath.split('/recipe/')[1];
+			if (recipeId) {
+				fetchRecipeDetailsById(recipeId);
+			}
+		}
+	
+	
+
 	function hideAllSections() {
 		console.log('loginSection:', loginSection);
 		console.log('registerSection:', registerSection);
@@ -71,7 +83,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	function updateURL(path) {
 		window.history.pushState({}, '', path);
-	}
+	}	
 	
 
 	function isUserLoggedIn() {
@@ -515,17 +527,31 @@ document.addEventListener('DOMContentLoaded', function () {
 		categorySection.classList.remove('hidden');
 	});
 
+	// function fetchRecipeDetailsById(recipeId) {
+	// 	fetch(`${API_BASE_URL}/api/recipes/${recipeId}`)
+	// 		.then((response) => response.json())
+	// 		.then((data) => {
+	// 			console.log('Recipe details:', data);
+	// 			// Wyświetlanie szczegółów przepisu
+	// 			fetchRecipeDetails(data.name);
+	// 		})
+	// 		.catch((error) => {
+	// 			console.error('Error fetching recipe by ID:', error);
+	// 		});
+	// }
+	
+
 	// DISPLAY RECIPE DETAILS FUNCTION
-	function fetchRecipeDetails(recipeName) {
+	function fetchRecipeDetails(recipeId) {
 		currentRecipeId = null;
-		console.log('Fetching details for recipe:', recipeName);
+		console.log('Fetching details for recipe:', recipeId);
 
 		hideAllSections();
 		recipesList.innerHTML = '';
 		myRecipesList.innerHTML = '';
 		currentRecipeId = null;
 
-		fetch(`${API_BASE_URL}/api/recipes/name/${recipeName}`)
+		fetch(`${API_BASE_URL}/api/recipes/name/${recipeId}`)
 			.then((response) => {
 				if (!response.ok) {
 					throw new Error(`ERROR HTTP! Status: ${response.status}`);
