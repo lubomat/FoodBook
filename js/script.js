@@ -69,6 +69,11 @@ document.addEventListener('DOMContentLoaded', function () {
 		myRecipesList.innerHTML = '';
 	}
 
+	function updateURL(path) {
+		window.history.pushState({}, '', path);
+	}
+	
+
 	function isUserLoggedIn() {
 		const token = localStorage.getItem('jwtToken');
 		console.log('Sprawdzanie tokena JWT:', token);
@@ -303,22 +308,28 @@ document.addEventListener('DOMContentLoaded', function () {
 		stepsContainer.appendChild(newStepInput);
 	});
 
+	function updateURL(hash) {
+		window.location.hash = hash;
+	}
+
 	// CATEGORY BUTTONS
-	document
-		.getElementById('breakfast-btn')
-		.addEventListener('click', function () {
+	document.getElementById('breakfast-btn').addEventListener('click', function () {
+		updateURL('/category/breakfast');
 			fetchRecipesByCategory(1);
 		});
 
 	document.getElementById('lunch-btn').addEventListener('click', function () {
+		updateURL('/category/lunch');
 		fetchRecipesByCategory(2);
 	});
 
 	document.getElementById('dinner-btn').addEventListener('click', function () {
+		updateURL('/category/dinner');
 		fetchRecipesByCategory(3);
 	});
 
 	document.getElementById('snack-btn').addEventListener('click', function () {
+		updateURL('/category/snack');
 		fetchRecipesByCategory(4);
 	});
 
@@ -553,6 +564,9 @@ document.addEventListener('DOMContentLoaded', function () {
 				recipesList.appendChild(detailsContainer);
 
 				currentRecipeId = data.id;
+
+				updateURL(`/recipe/${data.id}`);
+
 				document.getElementById('comments-header').classList.remove('hidden');
 				document.getElementById('comments-list').classList.remove('hidden');
 				if (isUserLoggedIn()) {
