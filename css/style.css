@@ -636,6 +636,30 @@ ol li {
     font-family: Arial, sans-serif; 
 }
 
+#contact-footer {
+    position: fixed; /* Ustawienie stopki jako stałej */
+    bottom: 10px; /* Odległość od dołu ekranu */
+    right: 10px; /* Odległość od prawej krawędzi ekranu */
+    background-color: rgba(255, 255, 255, 0.6); /* Jasne tło z lekką przezroczystością */
+    color: #333; /* Kolor tekstu */
+    padding: 10px; /* Wewnętrzny odstęp */
+    border-radius: 5px; /* Zaokrąglone rogi */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Cień dla estetyki */
+    font-size: 14px; /* Rozmiar tekstu */
+    z-index: 1000; /* Priorytet widoczności */
+    text-align: left; /* Wyrównanie tekstu */
+}
+
+#contact-footer a {
+    color: #0a732f; /* Kolor linków */
+    text-decoration: none; /* Usuń podkreślenie */
+}
+
+#contact-footer a:hover {
+    text-decoration: underline; /* Podkreślenie przy najechaniu */
+}
+
+
 
 
 
