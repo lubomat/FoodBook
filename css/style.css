@@ -561,7 +561,7 @@ ol li {
 }
 
 #comment-form button {
-    background-color: #587259;
+    background-color: #d89435;
     color: white;
     padding: 10px 20px;
     border: none;
@@ -571,7 +571,7 @@ ol li {
 }
 
 #comment-form button:hover {
-    background-color: #457046;
+    background-color: #587259;
 }
 
 
