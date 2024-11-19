@@ -43,11 +43,11 @@ nav button:hover {
 }
 
 section {
-    margin: 40px auto;
-    padding: 20px;
     background-color:transparent;
-    width: 50%;
-    border-radius: 10px;
+    margin: 20px auto;
+    padding: 30px;
+    width: 100%;
+    max-width: 800px;
 }
 
 .hidden {
@@ -330,43 +330,12 @@ section {
     text-align:center; 
 }
 
-
-
-
-section {
+section#allRecipes {
     margin: 20px auto;
-    padding: 30px;
-    width: 60%;
+    padding: 0;
+    width: 100%;
     max-width: 800px;
-}
-
-
-@media (max-width: 768px) {
-    section {
-        width: 80%;
-    }
-
-    #category-section button,
-    #recipe-form button {
-        width: 100%;
-        margin: 10px 0;
-    }
-}
-
-@media (max-width: 480px) {
-    h1 {
-        font-size: 2rem;
-    }
-
-    #category-section button {
-        font-size: 0.9rem;
-    }
-
-    #recipe-form input,
-    #recipe-form textarea,
-    #recipe-form select {
-        font-size: 0.9rem;
-    }
+    box-sizing: border-box;
 }
 
 
@@ -377,14 +346,20 @@ section {
     margin-bottom: 20px;
     width: 100%;
     max-width: 800px;
-    margin-left: auto;
-    margin-right: auto;
+    /* margin-left: auto;
+    margin-right: auto; */
     box-sizing: border-box;
      
 }
 
 #recipes-list li {
     color: #faf4f3; 
+}
+
+ul#recipes-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 auto;
 }
 
 #recipes-section h2 {
@@ -408,9 +383,7 @@ section {
     padding: 15px;
     border-radius: 10px;
     margin-bottom: 20px;
-    width: 100%;
-    max-width: 800px;
-    
+    box-sizing: border-box;  
 }
 
 
@@ -546,6 +519,7 @@ ol li {
     margin-bottom: 20px;
     width: 100%;
     max-width: 800px;
+    box-sizing: border-box;
 }
 
 #add-comment-section {
@@ -555,6 +529,7 @@ ol li {
     margin-bottom: 20px;
     width: 100%;
     max-width: 800px;
+    box-sizing: border-box;
 }
 
 #comments-header {
@@ -573,6 +548,7 @@ ol li {
     border: 1px solid #ccc;
     border-radius: 5px;
     background-color: rgba(255, 255, 255, 0.8); 
+    
 }
 #comment-form .star-rating {
     width: auto;
@@ -581,6 +557,7 @@ ol li {
     border: transparent;
     border-radius: none;
     background-color: transparent; 
+    box-sizing: border-box;
 }
 
 #comment-form button {
@@ -637,26 +614,56 @@ ol li {
 }
 
 #contact-footer {
-    position: fixed; /* Ustawienie stopki jako stałej */
-    bottom: 10px; /* Odległość od dołu ekranu */
-    right: 10px; /* Odległość od prawej krawędzi ekranu */
-    background-color: rgba(255, 255, 255, 0.6); /* Jasne tło z lekką przezroczystością */
-    color: #333; /* Kolor tekstu */
-    padding: 10px; /* Wewnętrzny odstęp */
-    border-radius: 5px; /* Zaokrąglone rogi */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Cień dla estetyki */
-    font-size: 14px; /* Rozmiar tekstu */
-    z-index: 1000; /* Priorytet widoczności */
-    text-align: left; /* Wyrównanie tekstu */
+    position: fixed; 
+    bottom: 10px; 
+    right: 10px; 
+    background-color: rgba(255, 255, 255, 0.1); 
+    color: #daec56; 
+    padding: 10px; 
+    border-radius: 5px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+    font-size: 14px; 
+    z-index: 1000; 
+    text-align: left;
 }
 
 #contact-footer a {
-    color: #0a732f; /* Kolor linków */
-    text-decoration: none; /* Usuń podkreślenie */
+    color: #daec56;
+    text-decoration: none; 
 }
 
 #contact-footer a:hover {
-    text-decoration: underline; /* Podkreślenie przy najechaniu */
+    text-decoration: underline;
+}
+
+
+
+@media (max-width: 768px) {
+    section {
+        width: 80%;
+    }
+
+    #category-section button,
+    #recipe-form button {
+        width: 100%;
+        margin: 10px 0;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 2rem;
+    }
+
+    #category-section button {
+        font-size: 0.9rem;
+    }
+
+    #recipe-form input,
+    #recipe-form textarea,
+    #recipe-form select {
+        font-size: 0.9rem;
+    }
 }
 
 
