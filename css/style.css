@@ -344,12 +344,10 @@ section#allRecipes {
     font-size: 1.3rem;
     border-radius: 10px;
     margin-bottom: 20px;
+    margin: 20px auto;
     width: 100%;
     max-width: 800px;
-    /* margin-left: auto;
-    margin-right: auto; */
-    box-sizing: border-box;
-     
+    box-sizing: border-box;     
 }
 
 #recipes-list li {
@@ -360,6 +358,7 @@ ul#recipes-list {
     list-style: none;
     padding: 0;
     margin: 0 auto;
+    display: inline-block;
 }
 
 #recipes-section h2 {
@@ -436,14 +435,14 @@ ul#recipes-list {
 
 
 .recipe-tile {
-    width: 200px;
-    height: 200px;
+    width: 225px;
+    height: 225px;
     background-size:cover;
     background-position: center;
     background-repeat: no-repeat;
     position: relative;
     display: inline-block;
-    margin: 10px;
+    margin: 15px;
     text-align: center;
     color: white;
     font-weight: bold;
@@ -648,6 +647,21 @@ ol li {
         width: 100%;
         margin: 10px 0;
     }
+
+    #recipes-list {
+        text-align: center;
+    }
+
+    #contact-footer {
+        font-size: 12px; 
+        padding: 8px; 
+        bottom: 5px; 
+        right: 5px;
+    }
+
+    #contact-footer a {
+        font-size: 12px; 
+    }
 }
 
 @media (max-width: 480px) {
@@ -664,7 +678,23 @@ ol li {
     #recipe-form select {
         font-size: 0.9rem;
     }
+
+    #recipes-list {
+        text-align: center; 
+    }
+
+    #contact-footer {
+        font-size: 10px; 
+        padding: 5px; 
+        bottom: 3px; 
+        right: 3px; 
+    }
+
+    #contact-footer a {
+        font-size: 10px; 
+    }
 }
+
 
 
 
