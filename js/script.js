@@ -372,25 +372,25 @@ document.addEventListener('DOMContentLoaded', function () {
 	document.getElementById('breakfast-btn').addEventListener('click', function () {
 		const categorySlug = 'breakfast';
 		updateURL(`#/category/${categorySlug}`);
-		fetchRecipesByCategorySlug(categorySlug); 
+		// fetchRecipesByCategorySlug(categorySlug); 
 	});
 	
 	document.getElementById('lunch-btn').addEventListener('click', function () {
 		const categorySlug = 'lunch'; 
 		updateURL(`#/category/${categorySlug}`);
-		fetchRecipesByCategorySlug(categorySlug);
+		// fetchRecipesByCategorySlug(categorySlug);
 	});
 	
 	document.getElementById('dinner-btn').addEventListener('click', function () {
 		const categorySlug = 'dinner';
 		updateURL(`#/category/${categorySlug}`);
-		fetchRecipesByCategorySlug(categorySlug);
+		// fetchRecipesByCategorySlug(categorySlug);
 	});
 	
 	document.getElementById('snack-btn').addEventListener('click', function () {
 		const categorySlug = 'snack'; 
 		updateURL(`#/category/${categorySlug}`);
-		fetchRecipesByCategorySlug(categorySlug);
+		// fetchRecipesByCategorySlug(categorySlug);
 	});
 
 	// MY ACCOUNT BUTTON
