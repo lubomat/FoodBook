@@ -36,7 +36,7 @@ public class SecurityConfig {
                         .requestMatchers("/login", "/register", "/api/recipes", "/api/recipes/slug/**", "/api/recipes/category/**",
                                 "/api/recipes/name/**", "/api/recipes/{id}", "/uploads/**","/api/comments/**","/sitemap.xml"
                                 ).permitAll()
-                        .requestMatchers("/api/recipes", "/api/recipes/**").hasRole("USER")
+                        .requestMatchers("/api/recipes", "/api/recipes/**", "/api/recipes/add").hasRole("USER")
                         .requestMatchers("/api/comments","/api/comments/**").hasRole("USER")
                         .anyRequest().authenticated()
                 )

@@ -135,7 +135,7 @@ public class RecipeController {
     }
 
     @Secured("ROLE_USER")
-    @PostMapping
+    @PostMapping("/add")
     public ResponseEntity<?> addRecipe(@RequestParam("name") String name,
                                        @RequestParam("ingredients") String ingredients,
                                        @RequestParam("steps") List<String> steps,
