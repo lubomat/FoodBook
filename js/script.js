@@ -580,10 +580,10 @@ document.addEventListener('DOMContentLoaded', function () {
 		currentRecipeId = null;
 		currentCategory = categorySlug;
 	
-		hideAllSections();
-	
 		recipesList.innerHTML = '';
 		myRecipesList.innerHTML = '';
+
+		hideAllSections();
 	
 		fetch(`${API_BASE_URL}/api/recipes/category/slug/${categorySlug}`)
 			.then((response) => {
