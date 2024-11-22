@@ -29,8 +29,8 @@ document.addEventListener('DOMContentLoaded', function () {
 	const myRecipesList = document.getElementById('my-recipes-list');
 	const backToMyRecipesBtn = document.getElementById('back-to-my-recipes-btn');
 
-	const API_BASE_URL = 'https://foodbook-crcr.onrender.com';
-	//   const API_BASE_URL = 'http://localhost:8080';
+	// const API_BASE_URL = 'https://foodbook-crcr.onrender.com';
+	  const API_BASE_URL = 'http://localhost:8080';
 
 	let currentPage = 1;
 	const recipesPerPage = 9;
@@ -55,24 +55,38 @@ document.addEventListener('DOMContentLoaded', function () {
 		}
 
 		// Handle navigation based on URL hash or path
-		const currentHash = window.location.hash;
-		if (currentHash === '#/register') {
-			hideAllSections();
-			registerSection.classList.remove('hidden');
-		} else if (currentHash === '#/login') {
-			hideAllSections();
-			loginSection.classList.remove('hidden');
-		} else if (currentHash.startsWith('#/category/')) {
-			const categorySlug = currentHash.split('/category/')[1];
-			if (categorySlug) {
-				fetchRecipesByCategorySlug(categorySlug);
+		const handleHashChange = () => {
+			const currentHash = window.location.hash;
+		
+			if (currentHash === '#/register') {
+				hideAllSections();
+				registerSection.classList.remove('hidden');
+			} else if (currentHash === '#/login') {
+				hideAllSections();
+				loginSection.classList.remove('hidden');
+			} else if (currentHash.startsWith('#/category/')) {
+				const categorySlug = currentHash.split('/category/')[1];
+				if (categorySlug) {
+					fetchRecipesByCategorySlug(categorySlug);
+				}
+			} else if (currentHash.startsWith('#/recipe/')) {
+				const recipeSlug = currentHash.split('/recipe/')[1];
+				if (recipeSlug) {
+					fetchRecipeDetailsBySlug(recipeSlug);
+				}
+			} else if (currentHash === '#/add') {
+				hideAllSections();
+				addRecipeSection.classList.remove('hidden');
+			} else {
+				hideAllSections();
+				// categorySection.classList.remove('hidden');
 			}
-		} else if (currentHash.startsWith('#/recipe/')) {
-			const recipeSlug = currentHash.split('/recipe/')[1];
-			if (recipeSlug) {
-				fetchRecipeDetailsBySlug(recipeSlug);
-			}
-		}
+		};
+		
+		handleHashChange();
+		
+		window.addEventListener('hashchange', handleHashChange);
+		
 		
 
 	
@@ -278,6 +292,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		if (isUserLoggedIn()) {
 			hideAllSections();
 			addRecipeSection.classList.remove('hidden');
+			updateURL('#/add');
 		} else {
 			alert('Dodawanie przepisu wymaga zalogowania.');
 		}
