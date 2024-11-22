@@ -1,11 +1,9 @@
 package com.cookBook.CookBook.controller;
 
-import com.cookBook.CookBook.model.Comment;
 import com.cookBook.CookBook.model.Recipe;
 import com.cookBook.CookBook.model.RecipeStep;
 import com.cookBook.CookBook.model.User;
 import com.cookBook.CookBook.service.CloudinaryService;
-import com.cookBook.CookBook.service.CommentService;
 import com.cookBook.CookBook.service.RecipeService;
 import com.cookBook.CookBook.service.UserService;
 import org.apache.logging.log4j.LogManager;
@@ -17,8 +15,8 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
 
+import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +37,8 @@ public class RecipeController {
 
     private static final Logger logger = LogManager.getLogger(RecipeController.class);
 
+
+
     @GetMapping
     public List<Recipe> getAllRecipes() {
         logger.info("Fetching all recipes.");
@@ -46,6 +46,23 @@ public class RecipeController {
         logger.info("Successfully fetched {} recipes.", recipes.size());
         return recipes;
     }
+
+    @GetMapping("/slug/{slug}")
+    public ResponseEntity<Recipe> getRecipeBySlug(@PathVariable String slug) {
+        logger.info("Fetching recipe by slug: {}", slug);
+
+        slug = slug.trim();
+
+        Optional<Recipe> recipe = recipeService.getRecipeBySlug(slug);
+        if (recipe.isPresent()) {
+            logger.info("Recipe found with slug: {}", slug);
+            return ResponseEntity.ok(recipe.get());
+        } else {
+            logger.warn("Recipe not found with slug: {}", slug);
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 
     @GetMapping("/category/{categoryId}")
     public List<Recipe> getRecipesByCategory(@PathVariable Long categoryId) {
@@ -67,16 +84,42 @@ public class RecipeController {
         }
     }
 
+
+
     @GetMapping("/name/{recipeName}")
-    public ResponseEntity<Recipe> getRecipeByName(@PathVariable String recipeName) {
-        Optional<Recipe> recipe = recipeService.getRecipeByName(recipeName);
+    public ResponseEntity<Recipe> getRecipeByName(@PathVariable String slug) {
+        Optional<Recipe> recipe = recipeService.getRecipeByName(slug);
         if (recipe.isPresent()) {
-            logger.info("Recipe found with name: {}", recipeName);
+            logger.info("Recipe found with name: {}", slug);
             return ResponseEntity.ok(recipe.get());
         } else {
-            logger.warn("Recipe not found with name: {}", recipeName);
+            logger.warn("Recipe not found with name: {}", slug);
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("/sitemap.xml")
+    public ResponseEntity<String> generateSitemap(HttpServletRequest request) {
+        logger.info("Generating sitemap.xml");
+        String baseUrl = request.getScheme() + "://" + request.getServerName();
+        List<Recipe> recipes = recipeService.getAllRecipes();
+
+        StringBuilder sitemap = new StringBuilder("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+        sitemap.append("<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">");
+
+        for (Recipe recipe : recipes) {
+            sitemap.append("<url>");
+            sitemap.append("<loc>").append(baseUrl).append("/api/recipes/slug/").append(recipe.getSlug()).append("</loc>");
+            sitemap.append("<priority>0.8</priority>");
+            sitemap.append("</url>");
+        }
+
+        sitemap.append("</urlset>");
+        logger.info("Sitemap.xml generated successfully");
+
+        return ResponseEntity.ok()
+                .header("Content-Type", "application/xml")
+                .body(sitemap.toString());
     }
 
     @Secured("ROLE_USER")

@@ -49,6 +49,18 @@ public class RecipeService {
         return recipeRepository.findByName(name);
     }
 
+    public Optional<Recipe> getRecipeBySlug(String slug) {
+        logger.info("Looking for recipe with slug: {}", slug);
+        Optional<Recipe> recipe = recipeRepository.findBySlug(slug);
+        if (recipe.isPresent()) {
+            logger.info("Recipe found with slug: {}", slug);
+        } else {
+            logger.warn("No recipe found with slug: {}", slug);
+        }
+        return recipe;
+    }
+
+
     public Optional<Recipe> getRecipeById(Long id) {
         logger.info("Fetching recipe by ID: {}", id);
         return recipeRepository.findById(id);
@@ -56,6 +68,8 @@ public class RecipeService {
 
     public Recipe addRecipe(Recipe recipe, List<RecipeStep> steps) {
         logger.info("Attempting to add a new recipe: {}", recipe.getName());
+
+        recipe.generateSlug();
 
         Optional<Recipe> existingRecipe = recipeRepository.findByName(recipe.getName());
         if (existingRecipe.isPresent()) {
@@ -84,6 +98,7 @@ public class RecipeService {
                     recipe.setName(updatedRecipe.getName());
                     recipe.setIngredients(updatedRecipe.getIngredients());
                     recipe.setCategory(updatedRecipe.getCategory());
+                    recipe.generateSlug();
 
                     logger.info("Deleting existing steps for recipe ID: {}", id);
                     recipeStepRepository.deleteAll(recipe.getSteps());

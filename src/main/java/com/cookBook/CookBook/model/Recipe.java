@@ -23,6 +23,9 @@ public class Recipe {
     @Column(name = "image_url")
     private String imageUrl;
 
+    @Column(nullable = false, unique = true)
+    private String slug;
+
     @ManyToOne
     @JsonBackReference
     @JoinColumn(name = "category_id", nullable = false)
@@ -42,13 +45,29 @@ public class Recipe {
 
     }
 
-    public Recipe(String name, String ingredients, String imageUrl, Category category, List<RecipeStep> steps, User user) {
+    public Recipe(String name, String ingredients, String imageUrl, String slug, Category category, List<RecipeStep> steps, User user) {
         this.name = name;
         this.ingredients = ingredients;
         this.imageUrl = imageUrl;
+        this.slug = slug;
         this.category = category;
         this.steps = steps;
         this.user = user;
+    }
+
+    public String getSlug() {
+        return slug;
+    }
+
+    public void setSlug(String slug) {
+        this.slug = slug;
+    }
+
+    public void generateSlug() {
+        this.slug = name.toLowerCase()
+                .replaceAll("[^a-z0-9]", "-")
+                .replaceAll("-{2,}", "-")
+                .replaceAll("^-|-$", "");
     }
 
     public User getUser() {
