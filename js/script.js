@@ -37,6 +37,13 @@ document.addEventListener('DOMContentLoaded', function () {
 	let currentCategory = null;
 	let currentRecipeId = null;
 
+	
+
+	document.getElementById('foodbook-header').addEventListener('click', () => {
+		window.location.href = 'index.html';
+	});
+	
+
 		const urlPath = window.location.pathname;
 	
 		// Navigation to a specific recipe

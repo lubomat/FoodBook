@@ -70,6 +70,17 @@ section {
     color: orange;                     
 }
 
+.foodbook-link {
+    text-decoration: none;
+    color: inherit;
+    display: inline-block;
+    cursor: pointer;
+}
+.foodbook-link:hover {
+    text-decoration: underline; /* Opcjonalnie efekt najechania */
+}
+
+
 #register-form input,
 #register-form button,
 #login-form input,
