@@ -134,6 +134,11 @@ public class RecipeService {
                 });
     }
 
+    public Optional<Category> getCategoryBySlug(String slug) {
+        return categoryRepository.findBySlug(slug);
+    }
+
+
     public List<Recipe> getRecipesByUser(String username) {
         logger.info("Fetching recipes for user: {}", username);
         Optional<User> user = userRepository.findByUsername(username);

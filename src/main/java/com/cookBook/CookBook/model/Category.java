@@ -19,6 +19,18 @@ public class Category {
     @JsonManagedReference
     private List<Recipe> recipes;
 
+    @Column(nullable = false, unique = true)
+    private String slug;
+
+    public String getSlug() {
+        return slug;
+    }
+
+    public void setSlug(String slug) {
+        this.slug = slug;
+    }
+
+
     public Long getId() {
         return id;
     }

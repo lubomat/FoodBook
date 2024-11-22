@@ -1,5 +1,6 @@
 package com.cookBook.CookBook.controller;
 
+import com.cookBook.CookBook.model.Category;
 import com.cookBook.CookBook.model.Recipe;
 import com.cookBook.CookBook.model.RecipeStep;
 import com.cookBook.CookBook.model.User;
@@ -70,6 +71,17 @@ public class RecipeController {
         logger.info("Successfully fetched {} recipes for category ID: {}", recipes.size(), categoryId);
         return recipes;
     }
+
+    @GetMapping("/category/slug/{slug}")
+    public ResponseEntity<List<Recipe>> getRecipesByCategorySlug(@PathVariable String slug) {
+        Optional<Category> category = recipeService.getCategoryBySlug(slug);
+        if (category.isPresent()) {
+            List<Recipe> recipes = recipeService.getRecipesByCategory(category.get().getId());
+            return ResponseEntity.ok(recipes);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<Recipe> getRecipeById(@PathVariable Long id) {
