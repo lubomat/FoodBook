@@ -29,8 +29,8 @@ document.addEventListener('DOMContentLoaded', function () {
 	const myRecipesList = document.getElementById('my-recipes-list');
 	const backToMyRecipesBtn = document.getElementById('back-to-my-recipes-btn');
 
-	// const API_BASE_URL = 'https://foodbook-crcr.onrender.com';
-	  const API_BASE_URL = 'http://localhost:8080';
+	const API_BASE_URL = 'https://foodbook-crcr.onrender.com';
+	//   const API_BASE_URL = 'http://localhost:8080';
 
 	let currentPage = 1;
 	const recipesPerPage = 9;
