@@ -63,11 +63,21 @@ section {
 }
 
 #foodbook-header .food {
-    color: rgb(51, 125, 125);                    
+    color: rgb(51, 125, 125);  
+    background-color: transparent;                  
+}
+
+#foodbook-header .food:hover {
+    background-color: rgba(246, 243, 243, 0.2); ;
 }
 
 #foodbook-header .book {
-    color: orange;                     
+    color: orange;   
+    background-color: transparent;                  
+}
+
+#foodbook-header .book:hover {
+    background-color: rgba(246, 243, 243, 0.2);                  
 }
 
 .foodbook-link {
