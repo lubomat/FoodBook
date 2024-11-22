@@ -29,8 +29,8 @@ document.addEventListener('DOMContentLoaded', function () {
 	const myRecipesList = document.getElementById('my-recipes-list');
 	const backToMyRecipesBtn = document.getElementById('back-to-my-recipes-btn');
 
-	const API_BASE_URL = 'https://foodbook-crcr.onrender.com';
-	//   const API_BASE_URL = 'http://localhost:8080';
+	// const API_BASE_URL = 'https://foodbook-crcr.onrender.com';
+	  const API_BASE_URL = 'http://localhost:8080';
 
 	let currentPage = 1;
 	const recipesPerPage = 9;
@@ -48,18 +48,25 @@ document.addEventListener('DOMContentLoaded', function () {
 		}
 
 		// Handle navigation based on URL hash or path
-	const currentHash = window.location.hash;
-		if (currentHash.startsWith('#/category/')) {
-    const categorySlug = currentHash.split('/category/')[1];
-    	if (categorySlug) {
-        	fetchRecipesByCategorySlug(categorySlug);
-    		}
+		const currentHash = window.location.hash;
+		if (currentHash === '#/register') {
+			hideAllSections();
+			registerSection.classList.remove('hidden');
+		} else if (currentHash === '#/login') {
+			hideAllSections();
+			loginSection.classList.remove('hidden');
+		} else if (currentHash.startsWith('#/category/')) {
+			const categorySlug = currentHash.split('/category/')[1];
+			if (categorySlug) {
+				fetchRecipesByCategorySlug(categorySlug);
+			}
 		} else if (currentHash.startsWith('#/recipe/')) {
-    const recipeSlug = currentHash.split('/recipe/')[1];
-    	if (recipeSlug) {
-        	fetchRecipeDetailsBySlug(recipeSlug);
-    	}
-	}
+			const recipeSlug = currentHash.split('/recipe/')[1];
+			if (recipeSlug) {
+				fetchRecipeDetailsBySlug(recipeSlug);
+			}
+		}
+		
 
 	
 	function hideAllSections() {
@@ -107,9 +114,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	// REGISTER BUTTON
 	registerBtn.addEventListener('click', function () {
-		console.log("Przycisk 'Rejestracja' został kliknięty");
+		console.log("The 'Registration' button has been clicked");
 		hideAllSections();
 		registerSection.classList.remove('hidden');
+		updateURL('#/register');
 	});
 
 	// REGISTER FORM
@@ -164,6 +172,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		console.log("Przycisk 'Logowanie' został kliknięty");
 		hideAllSections();
 		loginSection.classList.remove('hidden');
+		updateURL('#/login');
 	});
 
 	// LOGIN FORM
@@ -286,7 +295,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 		console.log('Wysyłanie przepisu:', formData);
 
-		fetch(`${API_BASE_URL}/api/recipes`, {
+		fetch(`${API_BASE_URL}/api/recipes/add`, {
 			method: 'POST',
 			headers: {
 				Authorization: 'Bearer ' + token,
