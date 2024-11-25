@@ -398,6 +398,8 @@ document.addEventListener('DOMContentLoaded', function () {
 		hideAllSections();
 		accountSection.classList.remove('hidden');
 		myRecipesList.classList.remove('hidden');
+		updateURL('#/my-account');
+		
 	});
 
 	myRecipesBtn.addEventListener('click', function () {
