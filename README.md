@@ -72,6 +72,7 @@ To log in and test the application's functionality, you can use:
       - `repository/` - Spring Data JPA repositories
       - `service/` - Business logic
       - `security/` - JWT handling and authorization
+      - `utils/` - Validation tools (profanity filter and Polish character detection)
     - `resources/`
       - `static/` - Frontend (HTML, CSS, JS)
       - `db/migration/` - Flyway migrations
@@ -197,6 +198,7 @@ Aby zalogować się i przetestować funkcjonalności aplikacji, możesz użyć:
       - `repository/` - Repozytoria Spring Data JPA
       - `service/` - Logika biznesowa
       - `security/` - Obsługa JWT i autoryzacji
+      - `utils/` - Narzędzia walidacyjne (blokada niecenzuralnych słów i polskich znaków)
     - `resources/`
       - `static/` - Frontend (HTML, CSS, JS)
       - `db/migration/` - Migracje Flyway
