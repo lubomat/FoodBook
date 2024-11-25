@@ -1,4 +1,128 @@
-# FoodBook
+# FoodBook (English version)
+
+## Author
+This project was created by **[Mateusz Lubowiecki](https://github.com/lubomat)**.
+
+---
+
+## Project Description
+FoodBook is a web application designed for managing culinary recipes. Users can create accounts, add their own recipes, browse recipes from other users, and manage their favorite categories. The project is implemented as a full-stack application using both backend and frontend technologies.
+
+---
+
+## Features
+- **User Registration and Login**:
+  - Secure login using JWT.
+  - Registration and login forms.
+- **Recipe Management**:
+  - Adding recipes (name, ingredients, steps, image, category).
+  - Browsing recipes by category or searching by name.
+  - Viewing detailed recipes with a list of steps and ingredients.
+- **Comments and Ratings**:
+  - Adding comments and ratings to recipes.
+  - Displaying the average rating of a recipe.
+- **Recipe Categories**:
+  - Managing recipe categories (e.g., breakfast, lunch, dinner).
+  - Dynamically displaying categories on the website.
+- **Responsive Design**:
+  - A frontend optimized for both mobile and desktop devices.
+
+---
+
+## Technologies
+**Backend**:
+- Java 17
+- Spring Boot
+  - Spring Security (authentication and authorization)
+  - Spring Data JPA (database management)
+  - Spring Validation (form validation)
+- Hibernate (ORM)
+- Database: PostgreSQL
+- Flyway (database migration management)
+- Cloudinary (image storage)
+
+**Frontend**:
+- HTML5, CSS3
+- JavaScript (Vanilla JS)
+- Responsive user interface
+- Fetch API (communication with the backend)
+
+---
+
+## Online Demo
+The application is available at:  
+**[FoodBook on Render](https://foodbook-1.onrender.com/)**
+
+> **Note**: The application is hosted on the free tier of the Render platform, so the first load may take a few minutes as the backend server starts up.
+
+### Test Credentials
+To log in and test the application's functionality, you can use:
+- Login: **usertest**
+- Password: **test**
+
+---
+
+## Project Structure
+- `src/`
+  - `main/`
+    - `java/com/cookBook/CookBook/`
+      - `config/` - Spring configuration (e.g., Spring Security)
+      - `controller/` - REST controllers
+      - `model/` - JPA entities (Category, Recipe, User)
+      - `repository/` - Spring Data JPA repositories
+      - `service/` - Business logic
+      - `security/` - JWT handling and authorization
+    - `resources/`
+      - `static/` - Frontend (HTML, CSS, JS)
+      - `db/migration/` - Flyway migrations
+      - `application.yml` - Application configuration
+- `README.md` - Project documentation
+
+---
+
+## Installation and Running Locally
+
+### Requirements:
+- **Java 17**
+- **Maven**
+- **PostgreSQL** (with a created database, e.g., `foodbook`)
+
+---
+
+### Steps:
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/lubomat/FoodBook.git
+   cd FoodBook
+   
+2. **Configure the .env file**:
+   ```bash
+   DB_URL=jdbc:postgresql://localhost:5432/foodbook
+   DB_USERNAME=your_database_username
+   DB_PASSWORD=your_database_password
+   
+3. **Set up Cloudinary (optional, if you want to use Cloudinary for image management):**:
+   ```bash
+   CLOUDINARY_CLOUD_NAME=your_cloudinary_name
+   CLOUDINARY_API_KEY=your_cloudinary_api_key
+   CLOUDINARY_API_SECRET=your_cloudinary_api_secret
+   
+4. **Build the project: Run the following command in the terminal from the root directory of the project:**:
+   ```bash
+   mvn clean install
+   
+
+5. **Access the application: The application will be available at:**:
+   ```bash
+   http://localhost:8080
+
+
+
+---
+
+
+
+# FoodBook (Polska wersja)
 
 ## Autor
 Projekt został stworzony przez **[Mateusz Lubowiecki](https://github.com/lubomat)**.
@@ -119,6 +243,3 @@ Aby zalogować się i przetestować funkcjonalności aplikacji, możesz użyć:
    http://localhost:8080
 
 ---
-
-
-
