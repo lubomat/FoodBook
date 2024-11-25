@@ -16,7 +16,7 @@ FoodBook is a web application designed for managing culinary recipes. Users can 
   - Registration and login forms.
 - **Recipe Management**:
   - Adding recipes (name, ingredients, steps, image, category).
-  - Browsing recipes by category or searching by name.
+  - Browsing recipes by category.
   - Viewing detailed recipes with a list of steps and ingredients.
 - **Comments and Ratings**:
   - Adding comments and ratings to recipes.
@@ -142,7 +142,7 @@ Projekt jest zrealizowany jako pełnoprawna aplikacja typu full-stack z użyciem
     - Formularz rejestracji i logowania.
 - **Zarządzanie przepisami**:
     - Dodawanie przepisów (nazwa, składniki, kroki, obrazek, kategoria).
-    - Przeglądanie przepisów według kategorii lub wyszukiwanie po nazwie.
+    - Przeglądanie przepisów według kategorii.
     - Wyświetlanie szczegółów przepisu z listą kroków i składników.
 - **Komentarze i oceny**:
     - Możliwość dodawania komentarzy oraz ocen do przepisów.
