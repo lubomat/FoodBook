@@ -565,13 +565,14 @@ document.addEventListener('DOMContentLoaded', function () {
 			});
 	}
 
-	// DISPLAY ALL RECIPES BUTTON
+	// DISPLAY CATEGORIES BUTTON
 	viewRecipesBtn.addEventListener('click', function () {
 		hideAllSections();
 		currentRecipeId = null;
 		currentCategory = null;
 		recipesList.innerHTML = '';
 		myRecipesList.innerHTML = '';
+		updateURL('#/categories');
 		categorySection.classList.remove('hidden');
 	});
 
