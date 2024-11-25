@@ -3,11 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="FoodBook to strona, gdzie znajdziesz przepisy na każde danie. Zarejestruj się i dodaj własne przepisy lub odkryj nowe inspiracje kulinarne!">
+    <meta name="description" content="FoodBook to strona, gdzie znajdziesz przepisy na każde danie. Zarejestruj się i dodaj własne przepisy, przeglądaj kategorie kulinarne i oceniaj ulubione potrawy. Odkryj nowe inspiracje i dziel się swoją pasją gotowania!">
     <meta name="keywords" content="przepisy, jedzenie, kulinaria, gotowanie, FoodBook, przepisy kulinarne">
     <title>FoodBook - Najlepsze przepisy kulinarne w jednym miejscu</title>
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="css/style.css">
+
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Recipe",
+            "name": "FoodBook",
+            "description": "Przepisy kulinarne",
+            "author": {
+                "@type": "Person",
+                "name": "Mateusz Lubowiecki"
+            },
+            "url": "https://foodbook-1.onrender.com/",
+            "image": "https://foodbook-1.onrender.com/images/logo.jpg",
+            "datePublished": "2024-11-25",
+            "keywords": ["przepisy", "jedzenie", "kulinarne"],
+            "recipeCategory": "Recipes"
+        }
+        </script>
+        
 </head>
 <body>
     <header>
@@ -156,6 +175,6 @@
     </footer>
 
 
-    <script src="js/script.js"></script>
+    <script src="js/script.js" defer></script>
 </body>
 </html>
