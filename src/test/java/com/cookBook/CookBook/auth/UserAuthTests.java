@@ -94,7 +94,7 @@ public class UserAuthTests {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"username\": \"" + username + "\", " +
                                 "\"password\": \"" + password + "\", " +
-                                "\"confirmPassword\": \"" + password + "\", " + // Dodano `confirmPassword`
+                                "\"confirmPassword\": \"" + password + "\", " +
                                 "\"email\": \"" + email + "\"}"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("User registered successfully."));
@@ -103,7 +103,7 @@ public class UserAuthTests {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"username\": \"different_" + username + "\", " +
                                 "\"password\": \"" + password + "\", " +
-                                "\"confirmPassword\": \"" + password + "\", " + // Dodano `confirmPassword`
+                                "\"confirmPassword\": \"" + password + "\", " +
                                 "\"email\": \"" + email + "\"}"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string("Email already exists."));
