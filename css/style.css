@@ -87,7 +87,7 @@ section {
     cursor: pointer;
 }
 .foodbook-link:hover {
-    text-decoration: underline; /* Opcjonalnie efekt najechania */
+    text-decoration: none;
 }
 
 
