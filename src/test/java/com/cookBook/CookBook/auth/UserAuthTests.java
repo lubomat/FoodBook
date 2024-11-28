@@ -34,33 +34,25 @@ public class UserAuthTests {
         this.email = "test" + randomNum + "@example.com";
     }
 
-    /**
-     * Test rejestracji użytkownika.
-     * Dodano pole `confirmPassword`, aby test był zgodny z logiką kontrolera.
-     */
     @Test
     public void testRegisterUser() throws Exception {
         mockMvc.perform(post("/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"username\": \"" + username + "\", " +
                                 "\"password\": \"" + password + "\", " +
-                                "\"confirmPassword\": \"" + password + "\", " + // Dodano `confirmPassword`
+                                "\"confirmPassword\": \"" + password + "\", " +
                                 "\"email\": \"" + email + "\"}"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("User registered successfully."));
     }
 
-    /**
-     * Test logowania użytkownika z poprawnymi danymi.
-     * Rejestracja użytkownika zawiera teraz pole `confirmPassword`.
-     */
     @Test
     public void testLoginUserWithValidCredentials() throws Exception {
         mockMvc.perform(post("/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"username\": \"" + username + "\", " +
                                 "\"password\": \"" + password + "\", " +
-                                "\"confirmPassword\": \"" + password + "\", " + // Dodano `confirmPassword`
+                                "\"confirmPassword\": \"" + password + "\", " +
                                 "\"email\": \"" + email + "\"}"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("User registered successfully."));
@@ -74,40 +66,30 @@ public class UserAuthTests {
                 .andExpect(jsonPath("$.jwt").exists());
     }
 
-    /**
-     * Test rejestracji użytkownika z istniejącą nazwą użytkownika.
-     * Pole `confirmPassword` zostało dodane w obu wywołaniach.
-     */
+
     @Test
     public void testRegisterUserWithExistingUsername() throws Exception {
-        // Pierwsza rejestracja
         mockMvc.perform(post("/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"username\": \"" + username + "\", " +
                                 "\"password\": \"" + password + "\", " +
-                                "\"confirmPassword\": \"" + password + "\", " + // Dodano `confirmPassword`
+                                "\"confirmPassword\": \"" + password + "\", " +
                                 "\"email\": \"" + email + "\"}"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("User registered successfully."));
 
-        // Próba ponownej rejestracji z tą samą nazwą użytkownika
         mockMvc.perform(post("/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"username\": \"" + username + "\", " +
                                 "\"password\": \"" + password + "\", " +
-                                "\"confirmPassword\": \"" + password + "\", " + // Dodano `confirmPassword`
+                                "\"confirmPassword\": \"" + password + "\", " +
                                 "\"email\": \"different_" + email + "\"}"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string("Username already exists."));
     }
 
-    /**
-     * Test rejestracji użytkownika z istniejącym adresem email.
-     * Pole `confirmPassword` zostało dodane w obu wywołaniach.
-     */
     @Test
     public void testRegisterUserWithExistingEmail() throws Exception {
-        // Pierwsza rejestracja
         mockMvc.perform(post("/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"username\": \"" + username + "\", " +
@@ -117,7 +99,6 @@ public class UserAuthTests {
                 .andExpect(status().isOk())
                 .andExpect(content().string("User registered successfully."));
 
-        // Próba ponownej rejestracji z tym samym adresem email
         mockMvc.perform(post("/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"username\": \"different_" + username + "\", " +
