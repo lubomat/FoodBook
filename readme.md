@@ -76,13 +76,13 @@ FoodBook is a dynamic web application designed to help users discover, share, an
 
 ## Project Structure
 
-FoodBook
-├── index.html       - Main HTML file
-├── css/
-│   └── style.css    - Application styling
-├── js/
-│   └── script.js    - Main JavaScript logic
-└── images/          - Logo and wallpaper
+- **index.html** - Main HTML file for the application
+- **css/**
+  - **style.css** - Application styling
+- **js/**
+  - **script.js** - Main JavaScript logic for the application
+- **images/** - Contains images used in the application 
+- **README.md** - Project documentation
     
 ---
 
