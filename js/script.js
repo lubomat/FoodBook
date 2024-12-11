@@ -574,7 +574,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		currentCategory = null;
 		recipesList.innerHTML = '';
 		myRecipesList.innerHTML = '';
-		updateURL('#/categories');
+		// updateURL('#/category');
 		categorySection.classList.remove('hidden');
 	});
 
